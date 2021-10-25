@@ -1,4 +1,5 @@
-.blend1
+*.blend1
+.DS_Store
 
 ##From python ignore template
 # Byte-compiled / optimized / DLL files

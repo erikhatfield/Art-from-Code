@@ -46,22 +46,22 @@ t4dtz.data.body = now.strftime('%m%d%y @%H:%M ') + timeZDifferenceStr
 #this will only work with the CYCLES rendering engine selected - if cycles
 
 #RENDER SAMPLE COUNT
-bpy.context.scene.cycles.samples = 32
+bpy.context.scene.cycles.samples = 48
 cyclesRenderSamples=bpy.data.objects['CYCLES_RENDER_SAMPLES']
 cyclesRenderSamples.data.body=str(bpy.context.scene.cycles.samples)
 
 
 #LIGHT PATHS (MAX BOUNCES)
-bpy.context.scene.cycles.max_bounces = 8
+bpy.context.scene.cycles.max_bounces = 24
 maxBounces=bpy.data.objects['MAX_BOUNCES']
 maxBounces.data.body=str(bpy.context.scene.cycles.max_bounces)
 
 #LIGHT PATHS (diffuse, glossy, transparency, transmission, volume)
-bpy.context.scene.cycles.diffuse_bounces = 8
-bpy.context.scene.cycles.glossy_bounces = 1
-bpy.context.scene.cycles.transparent_max_bounces = 8
-bpy.context.scene.cycles.transmission_bounces = 8
-bpy.context.scene.cycles.volume_bounces = 8
+bpy.context.scene.cycles.diffuse_bounces = 12
+bpy.context.scene.cycles.glossy_bounces = 4
+bpy.context.scene.cycles.transparent_max_bounces = 12
+bpy.context.scene.cycles.transmission_bounces = 16
+bpy.context.scene.cycles.volume_bounces = 24
 
 lightPathsCollective=bpy.data.objects['LIGHT_PATHS_COLLECTIVE']
 lightPathsCollective.data.body="      ++      diffuse_bounces:    "+str(bpy.context.scene.cycles.diffuse_bounces)+"\n      ++      glossy_bounces:    "+str(bpy.context.scene.cycles.glossy_bounces)+"\n      ++      transparent_max_bounces:    "+str(bpy.context.scene.cycles.transparent_max_bounces)+"\n      ++      transmission_bounces:    "+str(bpy.context.scene.cycles.transmission_bounces)+"\n      ++      volume_bounces:    "+str(bpy.context.scene.cycles.volume_bounces)
@@ -87,13 +87,13 @@ otherRenderInfo.data.body+="adaptive_sampling: "+str(bpy.context.scene.cycles.us
 #######################################################
 #######################################################
 
-##Render the default render (same as F12)
-bpy.context.scene.render.filepath = "/Users/magichat/Desktop/HOLODECK_blendrndr/out_" + now.strftime('%m%d%y_%H%M')+".jpg"
+#output settings
+bpy.context.scene.render.resolution_x = 1920
+bpy.context.scene.render.resolution_y = 1080
+
+bpy.context.scene.render.filepath = "./out_" + now.strftime('%m%d%y_%H%M')+".jpg"
 bpy.context.scene.render.image_settings.file_format = 'JPEG'
 bpy.context.scene.render.image_settings.quality = 80
-
-
     
+##Render the default render (same as F12 only better)
 bpy.ops.render.render('INVOKE_DEFAULT', animation=False, write_still=True)
-#PRINT OUT OR ECHO IN IMAGE: bpy.context.scene.world.light_settings.use_ambient_occlusion = False
-

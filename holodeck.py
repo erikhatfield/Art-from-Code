@@ -94,6 +94,6 @@ bpy.context.scene.render.resolution_y = 1080
 bpy.context.scene.render.filepath = "./out_" + now.strftime('%m%d%y_%H%M')+".jpg"
 bpy.context.scene.render.image_settings.file_format = 'JPEG'
 bpy.context.scene.render.image_settings.quality = 80
-    
+
 ##Render the default render (same as F12 only better)
 bpy.ops.render.render('INVOKE_DEFAULT', animation=False, write_still=True)

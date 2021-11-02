@@ -30,18 +30,21 @@ bpy.context.scene.render.ffmpeg.format = 'MPEG4'
 ######################################
 #########
 # WORLD #
-bpy.data.worlds["World"].node_tree.nodes["Background"].inputs[0].default_value = (0.02, 0.03, 0.07, 1)
+randr = 0.02 + (0.05-0.02)*random.random()
+randg = 0.02 + (0.05-0.02)*random.random()
+randb = 0.02 + (0.05-0.02)*random.random()
+bpy.data.worlds["World"].node_tree.nodes["Background"].inputs[0].default_value = (randr, randg, randb, 1)
 #########
 #########################
 # EEVEE RENDER SETTINGS #
 bpy.context.scene.eevee.taa_render_samples = 64
 # Ambient Occlusions
 bpy.context.scene.eevee.use_gtao = True
-bpy.context.scene.eevee.gtao_distance = 10
+bpy.context.scene.eevee.gtao_distance = 50
 # Bloom
 bpy.context.scene.eevee.use_bloom = True
 # Subsurface Scattering
-bpy.context.scene.eevee.sss_jitter_threshold = 0.5
+bpy.context.scene.eevee.sss_jitter_threshold = 0.3
 # Screen Space Reflections
 bpy.context.scene.eevee.use_ssr = True
 bpy.context.scene.eevee.use_ssr_refraction = True

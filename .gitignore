@@ -1,3 +1,7 @@
+/output/*
+!/output/grid*
+!/output/simple.jpg
+
 *.blend1
 .DS_Store
 

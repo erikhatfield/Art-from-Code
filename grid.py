@@ -28,6 +28,32 @@ bpy.context.scene.render.image_settings.file_format = 'FFMPEG'
 bpy.context.scene.render.ffmpeg.format = 'MPEG4'
 
 ######################################
+#########
+# WORLD #
+bpy.data.worlds["World"].node_tree.nodes["Background"].inputs[0].default_value = (0.02, 0.03, 0.07, 1)
+#########
+#########################
+# EEVEE RENDER SETTINGS #
+bpy.context.scene.eevee.taa_render_samples = 64
+# Ambient Occlusions
+bpy.context.scene.eevee.use_gtao = True
+bpy.context.scene.eevee.gtao_distance = 10
+# Bloom
+bpy.context.scene.eevee.use_bloom = True
+# Subsurface Scattering
+bpy.context.scene.eevee.sss_jitter_threshold = 0.5
+# Screen Space Reflections
+bpy.context.scene.eevee.use_ssr = True
+bpy.context.scene.eevee.use_ssr_refraction = True
+# Volumetrics
+bpy.context.scene.eevee.use_volumetric_lights = True
+bpy.context.scene.eevee.volumetric_end = 150
+bpy.context.scene.eevee.use_volumetric_shadows = True
+# Hair
+bpy.context.scene.render.hair_type = 'STRIP'
+bpy.context.scene.render.hair_subdiv = 1
+
+
 
 #########################################################################
 # create a few CONSTANTS, for subtle uniqueness at the foundation level #
@@ -165,7 +191,8 @@ for x in range(randomrange):
 bpy.ops.object.editmode_toggle()
 
 # position default camera on the ground
-camx = int(-1 * (PLANESIZE / 2))
+#camx = int(-1 * (PLANESIZE / WILDCARD))
+camx = 0
 camz = WILDCARD * 0.420
 bpy.ops.object.camera_add(enter_editmode=False, align='VIEW', location=(camx, 0, camz), rotation=(1.5708, 0, -1.5708), scale=(1, 1, 1))
 
@@ -178,11 +205,85 @@ obj_camera.data.lens = random.randint(12, 70)
 # X, Y, and Z location to set
 obj_camera.location = (camx, 0.0, camz)
 # Set the keyframe with that location, and which frame.
-obj_camera.keyframe_insert(data_path="location", frame=1)
+obj_camera.keyframe_insert(data_path="location", frame=0)
+
+
+
+
+# Select the plane again (plane of mountains)
+mountains=bpy.data.objects['Plane']
+
+# Add mirror modifier
+mirrorMountains = mountains.modifiers.new("mountainMirror", "MIRROR")
+# Move to y axis (beginning camera location)
+mountains.location[0]=(buildcount - (PLANESIZE/2) )
+print(PLANESIZE)
+# Add array modifier
+arrayOfMountains = mountains.modifiers.new("mountainArray", "ARRAY")
+mountainArrayCount = random.randint(3, 7)
+arrayOfMountains.count = mountainArrayCount
+# Add wireframe modifier
+wireframedMountains = mountains.modifiers.new("mountainArray", "WIREFRAME")
+wireframedMountains.use_replace = False
+wireframeThickness = 0.0007 + (0.002-0.0007)*random.random()
+wireframedMountains.thickness = wireframeThickness
+wireframedMountains.material_offset = random.randint(2, 4)
+
+
+# Add materials to mountains
+###################
+# Add base material
+
+mountainBaseMat = bpy.data.materials.new(name="Mountain Base")
+
+# Assign it to object
+if mountains.data.materials:
+    # assign to 1st material slot
+    mountains.data.materials[0] = mountainBaseMat
+else:
+    # no slots
+    mountains.data.materials.append(mountainBaseMat)
+
+mountainBaseMat.use_nodes = True
+randr = 0.0007 + (0.007-0.0007)*random.random()
+randg = 0.0007 + (0.007-0.0007)*random.random()
+randb = 0.0007 + (0.007-0.0007)*random.random()
+mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[0].default_value = (randr, randg, randb, 1)
+randmetalic = ( (random.randint(4, 8)) * 0.111)
+mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[4].default_value = randmetalic
+
+
+###################
+# Add glow material
+mountainGlowMat= bpy.data.materials.new(name = "Mountain Glow")
+mountains.data.materials.append(mountainGlowMat)
+
+mountainGlowMat.use_nodes = True
+nodes = mountainGlowMat.node_tree.nodes
+
+material_output = nodes.get("Material Output")
+node_emission = nodes.new(type="ShaderNodeEmission")
+
+randr = 0.1 + (0.9-0.1)*random.random()
+randg = 0.1 + (0.9-0.1)*random.random()
+randb = 0.1 + (0.9-0.1)*random.random()
+node_emission.inputs[0].default_value = (randr, randg, randb, 1) # color
+#node_emission.inputs[0].default_value = ( 0.1, 0.5, 0.8, 0.9) # color
+randstrength = random.randint(50, 250)
+node_emission.inputs[1].default_value = randstrength # strength
+#node_emission.inputs[1].default_value = 1.234 # strength
+
+links = mountainGlowMat.node_tree.links
+new_link = links.new(node_emission.outputs[0], material_output.inputs[0])
+
+
+
+
 #bpy.ops.action.interpolation_type(type='LINEAR')
 
-
-obj_camera.location = ((buildcount/ 2), 0.0, camz)
+#camx_end = ( ((buildcount/2) * mountainArrayCount) + (PLANESIZE*WILDCARD))
+camx_end = (2 * ((buildcount*2) - PLANESIZE) )
+obj_camera.location = (camx_end, 0.0, camz)
 # setting it for frame 250
 obj_camera.keyframe_insert(data_path="location", frame=250)
 
@@ -195,6 +296,11 @@ obj_camera.keyframe_insert(data_path="location", frame=250)
 #Then change it back again after you’re done with:
 ###bpy.context.user_preferences.edit.keyframe_new_interpolation_type = keyInterp
 
-    
+
+bpy.context.scene.render.image_settings.file_format = 'JPEG'
+bpy.context.scene.render.image_settings.quality = 80
+
+bpy.ops.render.render('INVOKE_DEFAULT', animation=False, write_still=True)
+
 ##Render the default render (same as F12 only better)
-bpy.ops.render.render('INVOKE_DEFAULT', animation=True, write_still=True)
+#bpy.ops.render.render('INVOKE_DEFAULT', animation=True, write_still=True)

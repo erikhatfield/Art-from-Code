@@ -23,7 +23,7 @@ if bpy.context.scene.objects.get("Plane"):
 bpy.context.scene.render.resolution_x = 1536
 bpy.context.scene.render.resolution_y = 1536
 bpy.context.scene.render.fps = 30
-bpy.context.scene.render.filepath = "./output/grid_" + now.strftime('%m%d%y_%H%M') + "-"
+bpy.context.scene.render.filepath = "//../output/temp_grid_" + now.strftime('%m%d%y_%H%M')
 bpy.context.scene.render.image_settings.file_format = 'FFMPEG'
 bpy.context.scene.render.ffmpeg.format = 'MPEG4'
 

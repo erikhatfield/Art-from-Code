@@ -17,15 +17,23 @@ if bpy.context.scene.objects.get("Camera"):
 if bpy.context.scene.objects.get("Plane"):
     bpy.data.objects['Plane'].select_set(True)
     bpy.ops.object.delete()
+# Remove Default Light
+if bpy.context.scene.objects.get("Light"):
+    bpy.data.objects['Light'].select_set(True)
+    bpy.ops.object.delete()
     
 ######################################
 # Set a few render/output influences #
-bpy.context.scene.render.resolution_x = 1536
+bpy.context.scene.render.resolution_x = 2048
 bpy.context.scene.render.resolution_y = 1536
+#bpy.context.scene.render.resolution_x = 400
+#bpy.context.scene.render.resolution_y = 300
 bpy.context.scene.render.fps = 30
-bpy.context.scene.render.filepath = "//../output/temp_grid_" + now.strftime('%m%d%y_%H%M')
-bpy.context.scene.render.image_settings.file_format = 'FFMPEG'
-bpy.context.scene.render.ffmpeg.format = 'MPEG4'
+bpy.context.scene.render.filepath = "//../output/temp_grid_" + now.strftime('%m%d%y_%H%M') + "-out"
+# if isANIM logic needed for easy switch between image and animation (mp4)
+# for now these are controlled at the end of the script - near the f12 command
+#bpy.context.scene.render.image_settings.file_format = 'FFMPEG'
+#bpy.context.scene.render.ffmpeg.format = 'MPEG4'
 
 ######################################
 #########
@@ -188,6 +196,7 @@ for x in range(randomrange):
 
 ###############
 ### NEXT UP ###
+### organize ##
 ###############
 
 # disable edit mode
@@ -228,9 +237,9 @@ arrayOfMountains.count = mountainArrayCount
 # Add wireframe modifier
 wireframedMountains = mountains.modifiers.new("mountainArray", "WIREFRAME")
 wireframedMountains.use_replace = False
-wireframeThickness = 0.0007 + (0.002-0.0007)*random.random()
+wireframeThickness = 0.0009 + (0.007-0.0009)*random.random()
 wireframedMountains.thickness = wireframeThickness
-wireframedMountains.material_offset = random.randint(2, 4)
+wireframedMountains.material_offset = random.randint(2, 12)
 
 
 # Add materials to mountains
@@ -302,8 +311,11 @@ obj_camera.keyframe_insert(data_path="location", frame=250)
 
 bpy.context.scene.render.image_settings.file_format = 'JPEG'
 bpy.context.scene.render.image_settings.quality = 80
-
+##Render the default render (same as F12 only better)
 bpy.ops.render.render('INVOKE_DEFAULT', animation=False, write_still=True)
 
-##Render the default render (same as F12 only better)
+
+#bpy.context.scene.render.image_settings.file_format = 'FFMPEG'
+#bpy.context.scene.render.ffmpeg.format = 'MPEG4'
+##Render the default render (same as fan-F12 only better)
 #bpy.ops.render.render('INVOKE_DEFAULT', animation=True, write_still=True)

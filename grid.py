@@ -38,9 +38,9 @@ bpy.context.scene.render.filepath = "//../output/temp_grid_" + now.strftime('%m%
 ######################################
 #########
 # WORLD #
-randr = 0.02 + (0.05-0.02)*random.random()
-randg = 0.02 + (0.05-0.02)*random.random()
-randb = 0.02 + (0.05-0.02)*random.random()
+randr = 0.007 + (0.05-0.007)*random.random()
+randg = 0.007 + (0.05-0.007)*random.random()
+randb = 0.007 + (0.05-0.007)*random.random()
 bpy.data.worlds["World"].node_tree.nodes["Background"].inputs[0].default_value = (randr, randg, randb, 1)
 #########
 #########################
@@ -52,7 +52,7 @@ bpy.context.scene.eevee.gtao_distance = 50
 # Bloom
 bpy.context.scene.eevee.use_bloom = True
 # Subsurface Scattering
-bpy.context.scene.eevee.sss_jitter_threshold = 0.3
+bpy.context.scene.eevee.sss_jitter_threshold = 0.8
 # Screen Space Reflections
 bpy.context.scene.eevee.use_ssr = True
 bpy.context.scene.eevee.use_ssr_refraction = True
@@ -74,7 +74,7 @@ WILDCARD = random.randint(1, 2)
 # PLANESIZE applies to size of plane created
 PLANESIZE = WILDCARD * 16
 #print build parameters
-print("Using CONSTANTS: " + "WILDCARD = " + str(WILDCARD) + ", PLANESIZE = " + str(PLANESIZE) )
+print( "Using CONSTANTS: " + "WILDCARD = " + str(WILDCARD) + ", PLANESIZE = " + str(PLANESIZE) )
 #########################################################################
 
 ##################################################################################################
@@ -186,7 +186,7 @@ def mountainGenerator(buildcountparameter):
 ##################################################################################################
 ##################################################################################################
 ##################################################################################################
-randomrange = random.randint(3, 12)
+randomrange = random.randint(4, 20)
 
 for x in range(randomrange):
     #update the build count returned from the iteration of the mountainGenerator() function
@@ -229,7 +229,7 @@ mountains=bpy.data.objects['Plane']
 mirrorMountains = mountains.modifiers.new("mountainMirror", "MIRROR")
 # Move to y axis (beginning camera location)
 mountains.location[0]=(buildcount - (PLANESIZE/2) )
-print(PLANESIZE)
+
 # Add array modifier
 arrayOfMountains = mountains.modifiers.new("mountainArray", "ARRAY")
 mountainArrayCount = random.randint(3, 7)
@@ -263,7 +263,7 @@ randb = 0.0007 + (0.007-0.0007)*random.random()
 mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[0].default_value = (randr, randg, randb, 1)
 randmetalic = ( (random.randint(4, 8)) * 0.111)
 mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[4].default_value = randmetalic
-
+###################
 
 ###################
 # Add glow material
@@ -281,16 +281,15 @@ randg = 0.1 + (0.9-0.1)*random.random()
 randb = 0.1 + (0.9-0.1)*random.random()
 node_emission.inputs[0].default_value = (randr, randg, randb, 1) # color
 #node_emission.inputs[0].default_value = ( 0.1, 0.5, 0.8, 0.9) # color
-randstrength = random.randint(50, 250)
+randstrength = random.randint(25, 250)
 node_emission.inputs[1].default_value = randstrength # strength
-#node_emission.inputs[1].default_value = 1.234 # strength
 
 links = mountainGlowMat.node_tree.links
 new_link = links.new(node_emission.outputs[0], material_output.inputs[0])
+###################
 
 
-
-
+# need solution for linear interpolation curve so the camera y movement is steady
 #bpy.ops.action.interpolation_type(type='LINEAR')
 
 #camx_end = ( ((buildcount/2) * mountainArrayCount) + (PLANESIZE*WILDCARD))

@@ -21,21 +21,7 @@ if bpy.context.scene.objects.get("Plane"):
 if bpy.context.scene.objects.get("Light"):
     bpy.data.objects['Light'].select_set(True)
     bpy.ops.object.delete()
-    
-######################################
-# Set a few render/output influences #
-bpy.context.scene.render.resolution_x = 2048
-bpy.context.scene.render.resolution_y = 1536
-#bpy.context.scene.render.resolution_x = 400
-#bpy.context.scene.render.resolution_y = 300
-bpy.context.scene.render.fps = 30
-bpy.context.scene.render.filepath = "//../output/temp_grid_" + now.strftime('%m%d%y_%H%M') + "-out"
-# if isANIM logic needed for easy switch between image and animation (mp4)
-# for now these are controlled at the end of the script - near the f12 command
-#bpy.context.scene.render.image_settings.file_format = 'FFMPEG'
-#bpy.context.scene.render.ffmpeg.format = 'MPEG4'
 
-######################################
 #########
 # WORLD #
 randr = 0.007 + (0.05-0.007)*random.random()
@@ -110,7 +96,7 @@ def mountainGenerator(buildcountparameter):
     bpy.context.scene.tool_settings.use_proportional_connected = True
     bpy.context.scene.tool_settings.proportional_edit_falloff = 'RANDOM'
 
-    #print("Build count = " + str(buildcountparameter))
+    #%#print("Build count = " + str(buildcountparameter))
     #increment buildcount by PLANESIZE
     buildcountparameter = buildcountparameter + PLANESIZE
 
@@ -125,7 +111,7 @@ def mountainGenerator(buildcountparameter):
         # range of y is the size (in y) of the effected area on the (y) sides of the plane
         rangeofy = (PLANESIZE / random.randint((PLANESIZE/(WILDCARD*4)), ((PLANESIZE/4)+WILDCARD)))
         # so, that is, a range of y that is i.e. 16/ divided by a int in the range of 2,4 through 5,6
-        print("Using rangeofy: " + str(rangeofy) )
+        #%#print("Using rangeofy: " + str(rangeofy) )
         
         # Get the active mesh (in edit mode)
         obj = bpy.context.edit_object
@@ -139,7 +125,7 @@ def mountainGenerator(buildcountparameter):
         # Generate a random interger between 93-99
         # Lower numbers represent more vertices selected (93% represents 7% selected) 
         outlyerVerts = random.randint(93, 99)
-        print("outlyer vertices choosen from " + str(100 - outlyerVerts) + "% of eligable range")
+        #%#print("outlyer vertices choosen from " + str(100 - outlyerVerts) + "% of eligable range")
         
         # Modify the BMesh, can do anything here...
         for v in bm.verts:
@@ -192,15 +178,22 @@ for x in range(randomrange):
     #update the build count returned from the iteration of the mountainGenerator() function
     buildcount = mountainGenerator(buildcount)
 
-
-
-###############
-### NEXT UP ###
-### organize ##
-###############
-
 # disable edit mode
 bpy.ops.object.editmode_toggle()
+
+###############################################################
+#    ______   ______  __       __ ________ _______   ______  
+#   /      \ /      \|  \     /  \        \       \ /      \ 
+#  |  ▓▓▓▓▓▓\  ▓▓▓▓▓▓\ ▓▓\   /  ▓▓ ▓▓▓▓▓▓▓▓ ▓▓▓▓▓▓▓\  ▓▓▓▓▓▓\
+#  | ▓▓   \▓▓ ▓▓__| ▓▓ ▓▓▓\ /  ▓▓▓ ▓▓__   | ▓▓__| ▓▓ ▓▓__| ▓▓
+#  | ▓▓     | ▓▓    ▓▓ ▓▓▓▓\  ▓▓▓▓ ▓▓  \  | ▓▓    ▓▓ ▓▓    ▓▓
+#  | ▓▓   __| ▓▓▓▓▓▓▓▓ ▓▓\▓▓ ▓▓ ▓▓ ▓▓▓▓▓  | ▓▓▓▓▓▓▓\ ▓▓▓▓▓▓▓▓
+#  | ▓▓__/  \ ▓▓  | ▓▓ ▓▓ \▓▓▓| ▓▓ ▓▓_____| ▓▓  | ▓▓ ▓▓  | ▓▓
+#   \▓▓    ▓▓ ▓▓  | ▓▓ ▓▓  \▓ | ▓▓ ▓▓     \ ▓▓  | ▓▓ ▓▓  | ▓▓
+#    \▓▓▓▓▓▓ \▓▓   \▓▓\▓▓      \▓▓\▓▓▓▓▓▓▓▓\▓▓   \▓▓\▓▓   \▓▓
+#                                                          
+# CAMERA TWEEKS                                                          
+########## ASCII ART GEN: texteditor.com/multiline-text-art/
 
 # position default camera on the ground
 #camx = int(-1 * (PLANESIZE / WILDCARD))
@@ -209,10 +202,7 @@ camz = WILDCARD * 0.420
 bpy.ops.object.camera_add(enter_editmode=False, align='VIEW', location=(camx, 0, camz), rotation=(1.5708, 0, -1.5708), scale=(1, 1, 1))
 
 obj_camera = bpy.data.objects["Camera"]
-obj_camera.data.lens = random.randint(12, 70)
-
-
-
+obj_camera.data.lens = random.randint(18, 135)
 
 # X, Y, and Z location to set
 obj_camera.location = (camx, 0.0, camz)
@@ -220,7 +210,32 @@ obj_camera.location = (camx, 0.0, camz)
 obj_camera.keyframe_insert(data_path="location", frame=0)
 
 
+# need solution for linear interpolation curve so the camera y movement is steady
+#bpy.ops.action.interpolation_type(type='LINEAR')
 
+#camx_end = ( ((buildcount/2) * mountainArrayCount) + (PLANESIZE*WILDCARD))
+camx_end = (2 * ((buildcount*2) - PLANESIZE) )
+obj_camera.location = (camx_end, 0.0, camz)
+# setting it for frame 250
+obj_camera.keyframe_insert(data_path="location", frame=250)
+
+
+# Set keyframe curve to linear
+#First save the default type:
+##keyInterp = bpy.context.user_preferences.edit.keyframe_new_interpolation_type
+#Then change it to what you want:
+#bpy.context.user_preferences.edit.keyframe_new_interpolation_type ='LINEAR'
+#Then change it back again after you’re done with:
+###bpy.context.user_preferences.edit.keyframe_new_interpolation_type = keyInterp
+
+###############################################################
+
+
+
+
+
+########################
+# ADD MATERIALS to plane
 
 # Select the plane again (plane of mountains)
 mountains=bpy.data.objects['Plane']
@@ -237,7 +252,7 @@ arrayOfMountains.count = mountainArrayCount
 # Add wireframe modifier
 wireframedMountains = mountains.modifiers.new("mountainArray", "WIREFRAME")
 wireframedMountains.use_replace = False
-wireframeThickness = 0.0009 + (0.007-0.0009)*random.random()
+wireframeThickness = 0.0009 + (0.01-0.0009)*random.random()
 wireframedMountains.thickness = wireframeThickness
 wireframedMountains.material_offset = random.randint(2, 12)
 
@@ -263,6 +278,15 @@ randb = 0.0007 + (0.007-0.0007)*random.random()
 mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[0].default_value = (randr, randg, randb, 1)
 randmetalic = ( (random.randint(4, 8)) * 0.111)
 mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[4].default_value = randmetalic
+# add magic texture as base color to principled BSDF base color input
+# ref: https://docs.blender.org/api/current/bpy.types.html
+magicTextureNode = mountainBaseMat.node_tree.nodes.new(type="ShaderNodeTexMagic")
+magicTextureNode.turbulence_depth = random.randint(2, 3)
+magicTextureNode.inputs[1].default_value = ( 1.3 + (3.7-1.3)*random.random() ) #scale
+magicTextureNode.inputs[2].default_value = ( 1.5 + (4.1-1.5)*random.random() ) #distortion
+
+mountainBaseMat.node_tree.links.new(magicTextureNode.outputs[0], mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[0])
+
 ###################
 
 ###################
@@ -281,7 +305,7 @@ randg = 0.1 + (0.9-0.1)*random.random()
 randb = 0.1 + (0.9-0.1)*random.random()
 node_emission.inputs[0].default_value = (randr, randg, randb, 1) # color
 #node_emission.inputs[0].default_value = ( 0.1, 0.5, 0.8, 0.9) # color
-randstrength = random.randint(25, 250)
+randstrength = random.randint(10, 210)
 node_emission.inputs[1].default_value = randstrength # strength
 
 links = mountainGlowMat.node_tree.links
@@ -289,25 +313,35 @@ new_link = links.new(node_emission.outputs[0], material_output.inputs[0])
 ###################
 
 
-# need solution for linear interpolation curve so the camera y movement is steady
-#bpy.ops.action.interpolation_type(type='LINEAR')
 
-#camx_end = ( ((buildcount/2) * mountainArrayCount) + (PLANESIZE*WILDCARD))
-camx_end = (2 * ((buildcount*2) - PLANESIZE) )
-obj_camera.location = (camx_end, 0.0, camz)
-# setting it for frame 250
-obj_camera.keyframe_insert(data_path="location", frame=250)
+    
 
+##########################################################
+#   _______  ________ __    __ _______  ________ _______  
+#  |       \|        \  \  |  \       \|        \       \ 
+#  | ▓▓▓▓▓▓▓\ ▓▓▓▓▓▓▓▓ ▓▓\ | ▓▓ ▓▓▓▓▓▓▓\ ▓▓▓▓▓▓▓▓ ▓▓▓▓▓▓▓\
+#  | ▓▓__| ▓▓ ▓▓__   | ▓▓▓\| ▓▓ ▓▓  | ▓▓ ▓▓__   | ▓▓__| ▓▓
+#  | ▓▓    ▓▓ ▓▓  \  | ▓▓▓▓\ ▓▓ ▓▓  | ▓▓ ▓▓  \  | ▓▓    ▓▓
+#  | ▓▓▓▓▓▓▓\ ▓▓▓▓▓  | ▓▓\▓▓ ▓▓ ▓▓  | ▓▓ ▓▓▓▓▓  | ▓▓▓▓▓▓▓\
+#  | ▓▓  | ▓▓ ▓▓_____| ▓▓ \▓▓▓▓ ▓▓__/ ▓▓ ▓▓_____| ▓▓  | ▓▓
+#  | ▓▓  | ▓▓ ▓▓     \ ▓▓  \▓▓▓ ▓▓    ▓▓ ▓▓     \ ▓▓  | ▓▓
+#   \▓▓   \▓▓\▓▓▓▓▓▓▓▓\▓▓   \▓▓\▓▓▓▓▓▓▓ \▓▓▓▓▓▓▓▓\▓▓   \▓▓
+#                                                         
+# Set a few render/output influences #
+bpy.context.scene.render.resolution_x = 2048
+bpy.context.scene.render.resolution_y = 1536
+#bpy.context.scene.render.resolution_x = 400
+#bpy.context.scene.render.resolution_y = 300
 
-# Set keyframe curve to linear
-#First save the default type:
-##keyInterp = bpy.context.user_preferences.edit.keyframe_new_interpolation_type
-#Then change it to what you want:
-#bpy.context.user_preferences.edit.keyframe_new_interpolation_type ='LINEAR'
-#Then change it back again after you’re done with:
-###bpy.context.user_preferences.edit.keyframe_new_interpolation_type = keyInterp
+bpy.context.scene.render.fps = 30
+bpy.context.scene.render.filepath = "//../output/temp_grid_" + now.strftime('%m%d%y_%H%M') + "-out"
 
-
+# if isANIM logic needed for easy switch between image and animation (mp4)
+# for now these are controlled at the end of the script - near the f12 command
+#bpy.context.scene.render.image_settings.file_format = 'FFMPEG'
+#bpy.context.scene.render.ffmpeg.format = 'MPEG4'
+                                                 
+                                                       
 bpy.context.scene.render.image_settings.file_format = 'JPEG'
 bpy.context.scene.render.image_settings.quality = 80
 ##Render the default render (same as F12 only better)
@@ -318,3 +352,16 @@ bpy.ops.render.render('INVOKE_DEFAULT', animation=False, write_still=True)
 #bpy.context.scene.render.ffmpeg.format = 'MPEG4'
 ##Render the default render (same as fan-F12 only better)
 #bpy.ops.render.render('INVOKE_DEFAULT', animation=True, write_still=True)
+
+##########################################################
+
+
+
+
+
+
+
+###########################IDEADROP:
+##################the ability to save settings. when u really like the artwork produced
+#################and therefore, the ability to load settings too
+###################or maybe just the recording of settings integrated into the artwork?

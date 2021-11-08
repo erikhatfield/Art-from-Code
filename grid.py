@@ -232,8 +232,6 @@ obj_camera.keyframe_insert(data_path="location", frame=250)
 
 
 
-
-
 ########################
 # ADD MATERIALS to plane
 
@@ -313,9 +311,6 @@ new_link = links.new(node_emission.outputs[0], material_output.inputs[0])
 ###################
 
 
-
-    
-
 ##########################################################
 #   _______  ________ __    __ _______  ________ _______  
 #  |       \|        \  \  |  \       \|        \       \ 
@@ -328,8 +323,8 @@ new_link = links.new(node_emission.outputs[0], material_output.inputs[0])
 #   \▓▓   \▓▓\▓▓▓▓▓▓▓▓\▓▓   \▓▓\▓▓▓▓▓▓▓ \▓▓▓▓▓▓▓▓\▓▓   \▓▓
 #                                                         
 # Set a few render/output influences #
-bpy.context.scene.render.resolution_x = 2048
-bpy.context.scene.render.resolution_y = 1536
+bpy.context.scene.render.resolution_x = 1600
+bpy.context.scene.render.resolution_y = 1200
 #bpy.context.scene.render.resolution_x = 400
 #bpy.context.scene.render.resolution_y = 300
 
@@ -339,8 +334,7 @@ bpy.context.scene.render.filepath = "//../output/temp_grid_" + now.strftime('%m%
 # if isANIM logic needed for easy switch between image and animation (mp4)
 # for now these are controlled at the end of the script - near the f12 command
 #bpy.context.scene.render.image_settings.file_format = 'FFMPEG'
-#bpy.context.scene.render.ffmpeg.format = 'MPEG4'
-                                                 
+#bpy.context.scene.render.ffmpeg.format = 'MPEG4'                                          
                                                        
 bpy.context.scene.render.image_settings.file_format = 'JPEG'
 bpy.context.scene.render.image_settings.quality = 80
@@ -354,9 +348,6 @@ bpy.ops.render.render('INVOKE_DEFAULT', animation=False, write_still=True)
 #bpy.ops.render.render('INVOKE_DEFAULT', animation=True, write_still=True)
 
 ##########################################################
-
-
-
 
 
 

@@ -52,16 +52,16 @@ cyclesRenderSamples.data.body=str(bpy.context.scene.cycles.samples)
 
 
 #LIGHT PATHS (MAX BOUNCES)
-bpy.context.scene.cycles.max_bounces = 24
+bpy.context.scene.cycles.max_bounces = 12
 maxBounces=bpy.data.objects['MAX_BOUNCES']
 maxBounces.data.body=str(bpy.context.scene.cycles.max_bounces)
 
 #LIGHT PATHS (diffuse, glossy, transparency, transmission, volume)
 bpy.context.scene.cycles.diffuse_bounces = 12
-bpy.context.scene.cycles.glossy_bounces = 4
+bpy.context.scene.cycles.glossy_bounces = 12
 bpy.context.scene.cycles.transparent_max_bounces = 12
-bpy.context.scene.cycles.transmission_bounces = 16
-bpy.context.scene.cycles.volume_bounces = 24
+bpy.context.scene.cycles.transmission_bounces = 12
+bpy.context.scene.cycles.volume_bounces = 12
 
 lightPathsCollective=bpy.data.objects['LIGHT_PATHS_COLLECTIVE']
 lightPathsCollective.data.body="      ++      diffuse_bounces:    "+str(bpy.context.scene.cycles.diffuse_bounces)+"\n      ++      glossy_bounces:    "+str(bpy.context.scene.cycles.glossy_bounces)+"\n      ++      transparent_max_bounces:    "+str(bpy.context.scene.cycles.transparent_max_bounces)+"\n      ++      transmission_bounces:    "+str(bpy.context.scene.cycles.transmission_bounces)+"\n      ++      volume_bounces:    "+str(bpy.context.scene.cycles.volume_bounces)
@@ -88,12 +88,26 @@ otherRenderInfo.data.body+="adaptive_sampling: "+str(bpy.context.scene.cycles.us
 #######################################################
 
 #output settings
-bpy.context.scene.render.resolution_x = 1920
-bpy.context.scene.render.resolution_y = 1080
+isAnim = False
+if (isAnim):
+    #anim settings
+    bpy.context.scene.render.resolution_x = 1920
+    bpy.context.scene.render.resolution_y = 1080
 
-bpy.context.scene.render.filepath = "./out_" + now.strftime('%m%d%y_%H%M')+".jpg"
-bpy.context.scene.render.image_settings.file_format = 'JPEG'
-bpy.context.scene.render.image_settings.quality = 80
+    #bpy.context.scene.render.filepath = "Desktop/outs-lost-found/holodeck_anim_" + now.strftime('%m%d%y-%H%M')+".mp4"
+    bpy.context.scene.render.image_settings.file_format = 'FFMPEG'
+    bpy.context.scene.render.ffmpeg.format = 'MPEG4'
 
-##Render the default render (same as F12 only better)
-bpy.ops.render.render('INVOKE_DEFAULT', animation=False, write_still=True)
+    ##Render the default render (same as F12 only better)
+    bpy.ops.render.render('INVOKE_DEFAULT', animation=True, write_still=True)
+else:
+    bpy.context.scene.render.resolution_x = 1920
+    bpy.context.scene.render.resolution_y = 1080
+
+    #bpy.context.scene.render.filepath = "Desktop/outs-lost-found/holodeck_" + now.strftime('%m%d%y-%H%M')+".jpg"
+    bpy.context.scene.render.filepath = "//holodeck-outs/holodeck_" + now.strftime('%m%d%y-%H%M')+".jpg"
+    bpy.context.scene.render.image_settings.file_format = 'JPEG'
+    bpy.context.scene.render.image_settings.quality = 80
+
+    ##Render the default render (same as F12 only better)
+    bpy.ops.render.render('INVOKE_DEFAULT', animation=False, write_still=True)

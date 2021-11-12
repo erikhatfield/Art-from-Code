@@ -134,6 +134,9 @@ def mountainGenerator(buildcountparameter):
                 if random.randint(0, 100) > outlyerVerts:
                     v.select = True
                     v.co.z += random.random()
+            
+            ###if v.co.x == 0:
+            ###    print(v.co.x, v.co.y, v.co.z)
 
         # Show the updates in the viewport
         # and recalculate n-gon tessellation.
@@ -183,62 +186,13 @@ for x in range(randomrange):
     #update the build count returned from the iteration of the mountainGenerator() function
     buildcount = mountainGenerator(buildcount)
 
+
+
 # disable edit mode
 bpy.ops.object.editmode_toggle()
 
-###############################################################
-#    ______   ______  __       __ ________ _______   ______  
-#   /      \ /      \|  \     /  \        \       \ /      \ 
-#  |  ▓▓▓▓▓▓\  ▓▓▓▓▓▓\ ▓▓\   /  ▓▓ ▓▓▓▓▓▓▓▓ ▓▓▓▓▓▓▓\  ▓▓▓▓▓▓\
-#  | ▓▓   \▓▓ ▓▓__| ▓▓ ▓▓▓\ /  ▓▓▓ ▓▓__   | ▓▓__| ▓▓ ▓▓__| ▓▓
-#  | ▓▓     | ▓▓    ▓▓ ▓▓▓▓\  ▓▓▓▓ ▓▓  \  | ▓▓    ▓▓ ▓▓    ▓▓
-#  | ▓▓   __| ▓▓▓▓▓▓▓▓ ▓▓\▓▓ ▓▓ ▓▓ ▓▓▓▓▓  | ▓▓▓▓▓▓▓\ ▓▓▓▓▓▓▓▓
-#  | ▓▓__/  \ ▓▓  | ▓▓ ▓▓ \▓▓▓| ▓▓ ▓▓_____| ▓▓  | ▓▓ ▓▓  | ▓▓
-#   \▓▓    ▓▓ ▓▓  | ▓▓ ▓▓  \▓ | ▓▓ ▓▓     \ ▓▓  | ▓▓ ▓▓  | ▓▓
-#    \▓▓▓▓▓▓ \▓▓   \▓▓\▓▓      \▓▓\▓▓▓▓▓▓▓▓\▓▓   \▓▓\▓▓   \▓▓
-#                                                          
-# CAMERA TWEEKS                                                          
-########## ASCII ART GEN: texteditor.com/multiline-text-art/
-
-# position default camera on the ground
-#camx = int(-1 * (PLANESIZE / WILDCARD))
-camx = 0
-camz = WILDCARD * 0.420
-bpy.ops.object.camera_add(enter_editmode=False, align='VIEW', location=(camx, 0, camz), rotation=(1.5708, 0, -1.5708), scale=(1, 1, 1))
-
-obj_camera = bpy.data.objects["Camera"]
-obj_camera.data.lens = random.randint(18, 135)
-
-# X, Y, and Z location to set
-obj_camera.location = (camx, 0.0, camz)
-# Set the keyframe with that location, and which frame.
-obj_camera.keyframe_insert(data_path="location", frame=0)
-
-
-# need solution for linear interpolation curve so the camera y movement is steady
-#bpy.ops.action.interpolation_type(type='LINEAR')
-
-#camx_end = ( ((buildcount/2) * mountainArrayCount) + (PLANESIZE*WILDCARD))
-camx_end = (2 * ((buildcount*2) - PLANESIZE) )
-obj_camera.location = (camx_end, 0.0, camz)
-# setting it for frame 250
-obj_camera.keyframe_insert(data_path="location", frame=250)
-
-
-# Set keyframe curve to linear
-#First save the default type:
-##keyInterp = bpy.context.user_preferences.edit.keyframe_new_interpolation_type
-#Then change it to what you want:
-#bpy.context.user_preferences.edit.keyframe_new_interpolation_type ='LINEAR'
-#Then change it back again after you’re done with:
-###bpy.context.user_preferences.edit.keyframe_new_interpolation_type = keyInterp
-
-###############################################################
-
-
-
 ########################
-# ADD MATERIALS to plane
+# ADD MODIFIERS to mountain plane
 
 # Select the plane again (plane of mountains)
 mountains=bpy.data.objects['MountainPlane']
@@ -253,11 +207,17 @@ arrayOfMountains = mountains.modifiers.new("mountainArray", "ARRAY")
 mountainArrayCount = random.randint(3, 7)
 arrayOfMountains.count = mountainArrayCount
 # Add wireframe modifier
-wireframedMountains = mountains.modifiers.new("mountainArray", "WIREFRAME")
+wireframedMountains = mountains.modifiers.new("wireframeArray", "WIREFRAME")
 wireframedMountains.use_replace = False
 wireframeThickness = 0.0009 + (0.02-0.0009)*random.random()
 wireframedMountains.thickness = wireframeThickness
-wireframedMountains.material_offset = random.randint(0, 7)
+wireframedMountains.material_offset = random.randint(0, 7) #0 creates a moonlit scene :)
+
+# Apply wireframeArray modifier here for a different material application
+bpy.ops.object.modifier_apply(modifier="mountainMirror")
+bpy.ops.object.modifier_apply(modifier="mountainArray")
+#bpy.ops.object.modifier_apply(modifier="wireframeArray")
+
 
 
 # Add materials to mountains
@@ -343,6 +303,64 @@ node_emission.inputs[1].default_value = randstrength # strength
 links = mountainGlowMat.node_tree.links
 new_link = links.new(node_emission.outputs[0], material_output.inputs[0])
 ###################
+# Apply wireframeArray modifier earlier for a different material look
+#bpy.ops.object.modifier_apply(modifier="mountainMirror")
+#bpy.ops.object.modifier_apply(modifier="mountainArray")
+bpy.ops.object.modifier_apply(modifier="wireframeArray")
+
+###############################################################
+#    ______   ______  __       __ ________ _______   ______  
+#   /      \ /      \|  \     /  \        \       \ /      \ 
+#  |  ▓▓▓▓▓▓\  ▓▓▓▓▓▓\ ▓▓\   /  ▓▓ ▓▓▓▓▓▓▓▓ ▓▓▓▓▓▓▓\  ▓▓▓▓▓▓\
+#  | ▓▓   \▓▓ ▓▓__| ▓▓ ▓▓▓\ /  ▓▓▓ ▓▓__   | ▓▓__| ▓▓ ▓▓__| ▓▓
+#  | ▓▓     | ▓▓    ▓▓ ▓▓▓▓\  ▓▓▓▓ ▓▓  \  | ▓▓    ▓▓ ▓▓    ▓▓
+#  | ▓▓   __| ▓▓▓▓▓▓▓▓ ▓▓\▓▓ ▓▓ ▓▓ ▓▓▓▓▓  | ▓▓▓▓▓▓▓\ ▓▓▓▓▓▓▓▓
+#  | ▓▓__/  \ ▓▓  | ▓▓ ▓▓ \▓▓▓| ▓▓ ▓▓_____| ▓▓  | ▓▓ ▓▓  | ▓▓
+#   \▓▓    ▓▓ ▓▓  | ▓▓ ▓▓  \▓ | ▓▓ ▓▓     \ ▓▓  | ▓▓ ▓▓  | ▓▓
+#    \▓▓▓▓▓▓ \▓▓   \▓▓\▓▓      \▓▓\▓▓▓▓▓▓▓▓\▓▓   \▓▓\▓▓   \▓▓
+#                                                          
+# CAMERA TWEEKS                                                          
+########## ASCII ART GEN: texteditor.com/multiline-text-art/
+
+# position default camera on the ground
+#camx = int(-1 * (PLANESIZE / WILDCARD))
+camx = 0
+camz = WILDCARD * 0.420
+bpy.ops.object.camera_add(enter_editmode=False, align='VIEW', location=(camx, 0, camz), rotation=(1.5708, 0, -1.5708), scale=(1, 1, 1))
+
+obj_camera = bpy.data.objects["Camera"]
+obj_camera.data.lens = random.randint(18, 135)
+
+# X, Y, and Z location to set
+obj_camera.location = (camx, 0.0, camz)
+# Set the keyframe with that location, and which frame.
+obj_camera.keyframe_insert(data_path="location", frame=0)
+
+
+# need solution for linear interpolation curve so the camera y movement is steady
+#bpy.ops.action.interpolation_type(type='LINEAR')
+
+#camx_end = ( ((buildcount/2) * mountainArrayCount) + (PLANESIZE*WILDCARD))
+camx_end = (2 * ((buildcount*2) - PLANESIZE) )
+obj_camera.location = (camx_end, 0.0, camz)
+# setting it for frame 250
+obj_camera.keyframe_insert(data_path="location", frame=250)
+
+# Set keyframe curve to linear
+#First save the default type:
+##keyInterp = bpy.context.user_preferences.edit.keyframe_new_interpolation_type
+#Then change it to what you want:
+#bpy.context.user_preferences.edit.keyframe_new_interpolation_type ='LINEAR'
+#Then change it back again after you’re done with:
+###bpy.context.user_preferences.edit.keyframe_new_interpolation_type = keyInterp
+
+#Finish with camera obj (DESELECT)
+#obj_camera.select_all(action='DESELECT')
+bpy.ops.object.select_all(action='DESELECT')
+###############################################################
+
+
+
 
 
 ##########################################################
@@ -382,6 +400,63 @@ bpy.ops.render.render('INVOKE_DEFAULT', animation=False, write_still=True)
 #bpy.ops.render.render('INVOKE_DEFAULT', animation=True, write_still=True)
 
 ##########################################################
+##########################################################
+
+#######################################################################################
+
+#######################################################################################
+#Example on how to select a certain object in the scene and make it the active object #
+#ob = bpy.context.scene.objects["MountainPlane"]         # Get the object
+#bpy.ops.object.select_all(action='DESELECT')            # Deselect all objects
+#bpy.context.view_layer.objects.active = ob              # Make the MountainPlane the active object 
+#ob.select_set(True)           
+#######################################################################################
+mountains = bpy.context.scene.objects.get("MountainPlane")      # Get the object
+bpy.context.view_layer.objects.active = mountains               # Make it the the active object 
+bpy.ops.object.editmode_toggle()
+
+#########################################################
+# calculate and add base plate before exiting edit mode #
+#########################################################
+def calcBasePlate():
+    #########################################################
+    # 
+    # Get the active mesh (in edit mode)
+    obj = bpy.context.edit_object
+    me = obj.data
+
+    # Get a BMesh representation
+    bm = bmesh.from_edit_mesh(me)
+    bm.faces.active = None
+    bpy.ops.mesh.select_all(action='DESELECT')
+
+    # Modify the BMesh, can do anything here...
+    for v in bm.verts:
+        #print(v.co)
+        if v.co.x == 0:
+            print(v.co)
+            v.select = True
+
+    # Show the updates in the viewport
+    # and recalculate n-gon tessellation.
+    bmesh.update_edit_mesh(me, True)
+    #########################################################
+
+#########################################################
+# END def calcBasePlate():                              #
+#########################################################
+
+#calcBasePlate()
+
+
+# disable edit mode
+bpy.ops.object.editmode_toggle()
+
+#######################################################################################
+
+#######################################################################################
+
+
 
 ###########################IDEADROP:
 ##################the ability to save settings. when u really like the artwork produced

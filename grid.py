@@ -24,9 +24,9 @@ if bpy.context.scene.objects.get("Light"):
 
 #########
 # WORLD #
-randr = 0.007 + (0.05-0.007)*random.random()
-randg = 0.007 + (0.05-0.007)*random.random()
-randb = 0.007 + (0.05-0.007)*random.random()
+randr = 0.0007 + (0.04-0.0007)*random.random()
+randg = 0.0007 + (0.04-0.0007)*random.random()
+randb = 0.0007 + (0.04-0.0007)*random.random()
 bpy.data.worlds["World"].node_tree.nodes["Background"].inputs[0].default_value = (randr, randg, randb, 1)
 #########
 #########################
@@ -47,7 +47,7 @@ bpy.context.scene.eevee.use_volumetric_lights = True
 bpy.context.scene.eevee.volumetric_end = 150
 bpy.context.scene.eevee.use_volumetric_shadows = True
 # Hair
-bpy.context.scene.render.hair_type = 'STRIP'
+bpy.context.scene.render.hair_type = 'STRAND'
 bpy.context.scene.render.hair_subdiv = 1
 
 
@@ -162,10 +162,10 @@ def mountainGenerator(buildcountparameter):
     # END def editModeVertZ():                                                      #
     #################################################################################
     
-    # Call the function three times. Because seperate random numbers are created each time which gives it a slightly different outcome everytime 3 fold.
-    editModeVertZ()
-    editModeVertZ()
-    editModeVertZ()
+    # Call the function 2-4 times. Because seperate random numbers are created each time which gives it a slightly different outcome everytime 3 fold.
+    randomrange = random.randint(2, 4)
+    for x in range(randomrange):
+        editModeVertZ()
 
     return buildcountparameter
 # END mountainGenerator()                                                                        #
@@ -250,9 +250,9 @@ arrayOfMountains.count = mountainArrayCount
 # Add wireframe modifier
 wireframedMountains = mountains.modifiers.new("mountainArray", "WIREFRAME")
 wireframedMountains.use_replace = False
-wireframeThickness = 0.0009 + (0.01-0.0009)*random.random()
+wireframeThickness = 0.0009 + (0.02-0.0009)*random.random()
 wireframedMountains.thickness = wireframeThickness
-wireframedMountains.material_offset = random.randint(2, 12)
+wireframedMountains.material_offset = random.randint(0, 7)
 
 
 # Add materials to mountains
@@ -270,19 +270,39 @@ else:
     mountains.data.materials.append(mountainBaseMat)
 
 mountainBaseMat.use_nodes = True
-randr = 0.0007 + (0.007-0.0007)*random.random()
-randg = 0.0007 + (0.007-0.0007)*random.random()
-randb = 0.0007 + (0.007-0.0007)*random.random()
+#generate three random r,g,b values near 0
+randr = 0.0007 + (0.07-0.0007)*random.random()
+randg = 0.0007 + (0.07-0.0007)*random.random()
+randb = 0.0007 + (0.07-0.0007)*random.random()
 mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[0].default_value = (randr, randg, randb, 1)
-randmetalic = ( (random.randint(4, 8)) * 0.111)
+randmetalic = ( (random.randint(5, 8)) * 0.111)
 mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[4].default_value = randmetalic
+####################################################
+# randomize a bunch of values within principled BSDF
+mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[5].default_value = ((random.randint(2, 8)) * 0.111) #specular
+mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[6].default_value = ((random.randint(1, 9)) * 0.111) #specular tint
+mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[7].default_value = 0.007 + (1.0-0.007)*random.random() #roughness
+mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[8].default_value = ((random.randint(0, 5)) * 0.111) #anisotropic
+mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[9].default_value = ((random.randint(0, 9)) * 0.111) #anisotropic rotation
+mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[10].default_value = ((random.randint(0, 5)) * 0.111) #sheen
+mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[11].default_value = ((random.randint(4, 7)) * 0.111) #sheen tint
+mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[12].default_value = ((random.randint(0, 8)) * 0.111) #clearcoat
+mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[13].default_value = 0.007 + (0.07-0.007)*random.random()  #cleatcoat roughness
+mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[14].default_value = 1.007 + (1.777-1.007)*random.random() #IOR
+mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[15].default_value = 0.0007 + (0.07-0.0007)*random.random() #transmission
+mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[16].default_value = 0.007 + (1.0-0.007)*random.random() #transmission roughness
+####################################################
+
+
 # add magic texture as base color to principled BSDF base color input
 # ref: https://docs.blender.org/api/current/bpy.types.html
+######################################################################################
 magicTextureNode = mountainBaseMat.node_tree.nodes.new(type="ShaderNodeTexMagic")
-magicTextureNode.turbulence_depth = random.randint(2, 3)
-magicTextureNode.inputs[1].default_value = ( 1.3 + (3.7-1.3)*random.random() ) #scale
-magicTextureNode.inputs[2].default_value = ( 1.5 + (4.1-1.5)*random.random() ) #distortion
+magicTextureNode.turbulence_depth = random.randint(0, 3)
+magicTextureNode.inputs[1].default_value = ( 0.007 + (0.420-0.007)*random.random() ) #scale
+magicTextureNode.inputs[2].default_value = ( 0.1 + (11.11-0.1)*random.random() ) #distortion
 
+######################################################################################
 mountainBaseMat.node_tree.links.new(magicTextureNode.outputs[0], mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[0])
 
 ###################
@@ -298,12 +318,12 @@ nodes = mountainGlowMat.node_tree.nodes
 material_output = nodes.get("Material Output")
 node_emission = nodes.new(type="ShaderNodeEmission")
 
-randr = 0.1 + (0.9-0.1)*random.random()
-randg = 0.1 + (0.9-0.1)*random.random()
-randb = 0.1 + (0.9-0.1)*random.random()
+randr = 0.09 + (0.9-0.09)*random.random()
+randg = 0.09 + (0.9-0.09)*random.random()
+randb = 0.09 + (0.9-0.09)*random.random()
 node_emission.inputs[0].default_value = (randr, randg, randb, 1) # color
 #node_emission.inputs[0].default_value = ( 0.1, 0.5, 0.8, 0.9) # color
-randstrength = random.randint(10, 210)
+randstrength = random.randint(4, 108)
 node_emission.inputs[1].default_value = randstrength # strength
 
 links = mountainGlowMat.node_tree.links

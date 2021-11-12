@@ -13,9 +13,9 @@ if bpy.context.scene.objects.get("Cube"):
 if bpy.context.scene.objects.get("Camera"):
     bpy.data.objects['Camera'].select_set(True)
     bpy.ops.object.delete()
-# Remove Plane, to allow for multiple runs
-if bpy.context.scene.objects.get("Plane"):
-    bpy.data.objects['Plane'].select_set(True)
+# Remove MountainPlane, to allow for multiple runs
+if bpy.context.scene.objects.get("MountainPlane"):
+    bpy.data.objects['MountainPlane'].select_set(True)
     bpy.ops.object.delete()
 # Remove Default Light
 if bpy.context.scene.objects.get("Light"):
@@ -85,7 +85,7 @@ def mountainGenerator(buildcountparameter):
     
     #add a plane and enter edit mode (use build count on the x axis)
     bpy.ops.mesh.primitive_plane_add(size=PLANESIZE, enter_editmode=True, align='WORLD', location=(buildcountparameter, 0, 0), scale=(1, 1, 1))
-    #thePlane=bpy.context.active_object
+    bpy.context.selected_objects[0].name = "MountainPlane"
 
     #subdivide the plane
     bpy.ops.mesh.subdivide()
@@ -139,22 +139,27 @@ def mountainGenerator(buildcountparameter):
         # and recalculate n-gon tessellation.
         bmesh.update_edit_mesh(me, True)
 
+        #specific range for x
+        min = -0.01
+        max = 0.01
+        #generate a random floating point number for x
+        fx = min + (max-min)*random.random()
+        
         #specific range for y
-        min = -.05
-        max = .3
-
+        min = -0.28
+        max = 0.28
         #generate a random floating point number for y
         fy = min + (max-min)*random.random()
 
         #specific range for z
-        min = 0.123
-        max = 1.234
+        min = 0.111
+        max = 1.111
         #generate a random floating point number for X
         fz = min + (max-min)*random.random()
 
         #print(fz)
 
-        bpy.ops.transform.translate(value=(0, fy, fz), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', mirror=False, use_proportional_edit=True, proportional_edit_falloff='RANDOM', proportional_size=random.randint(2, 4), use_proportional_connected=True, use_proportional_projected=False)
+        bpy.ops.transform.translate(value=(fx, fy, fz), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', mirror=False, use_proportional_edit=True, proportional_edit_falloff='RANDOM', proportional_size=random.randint(2, 4), use_proportional_connected=True, use_proportional_projected=False)
         # Show the updates in the viewport (and recalculate n-gon tessellation)
         bmesh.update_edit_mesh(me, True)
 
@@ -236,7 +241,7 @@ obj_camera.keyframe_insert(data_path="location", frame=250)
 # ADD MATERIALS to plane
 
 # Select the plane again (plane of mountains)
-mountains=bpy.data.objects['Plane']
+mountains=bpy.data.objects['MountainPlane']
 
 # Add mirror modifier
 mirrorMountains = mountains.modifiers.new("mountainMirror", "MIRROR")
@@ -303,7 +308,16 @@ magicTextureNode.inputs[1].default_value = ( 0.007 + (0.420-0.007)*random.random
 magicTextureNode.inputs[2].default_value = ( 0.1 + (11.11-0.1)*random.random() ) #distortion
 
 ######################################################################################
+#magic texture color output TO base color input
 mountainBaseMat.node_tree.links.new(magicTextureNode.outputs[0], mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[0])
+#magic texture color output TO emission color input (17)
+mountainBaseMat.node_tree.links.new(magicTextureNode.outputs[0], mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[17])
+mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[18].default_value = 0.00004 + (0.0003-0.00004)*random.random() #emission strength
+
+#magic texture Fac output TO normal (20) or clearcoat normal (21) or tangent (22)
+mountainBaseMat.node_tree.links.new(magicTextureNode.outputs[1], mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[20])
+mountainBaseMat.node_tree.links.new(magicTextureNode.outputs[1], mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[21])
+mountainBaseMat.node_tree.links.new(magicTextureNode.outputs[1], mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[22])
 
 ###################
 
@@ -368,9 +382,6 @@ bpy.ops.render.render('INVOKE_DEFAULT', animation=False, write_still=True)
 #bpy.ops.render.render('INVOKE_DEFAULT', animation=True, write_still=True)
 
 ##########################################################
-
-
-
 
 ###########################IDEADROP:
 ##################the ability to save settings. when u really like the artwork produced

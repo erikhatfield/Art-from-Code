@@ -17,6 +17,10 @@ if bpy.context.scene.objects.get("Camera"):
 if bpy.context.scene.objects.get("MountainPlane"):
     bpy.data.objects['MountainPlane'].select_set(True)
     bpy.ops.object.delete()
+# Remove Plane, to allow for multiple runs
+#if bpy.context.scene.objects.get("Plane"):
+#    bpy.data.objects['Plane'].select_set(True)
+#    bpy.ops.object.delete()
 # Remove Default Light
 if bpy.context.scene.objects.get("Light"):
     bpy.data.objects['Light'].select_set(True)
@@ -49,8 +53,6 @@ bpy.context.scene.eevee.use_volumetric_shadows = True
 # Hair
 bpy.context.scene.render.hair_type = 'STRAND'
 bpy.context.scene.render.hair_subdiv = 1
-
-
 
 #########################################################################
 # create a few CONSTANTS, for subtle uniqueness at the foundation level #
@@ -110,8 +112,11 @@ def mountainGenerator(buildcountparameter):
         # create a rangeofy, for subtle uniqueness every time #
         # range of y is the size (in y) of the effected area on the (y) sides of the plane
         rangeofy = (PLANESIZE / random.randint((PLANESIZE/(WILDCARD*4)), ((PLANESIZE/4)+WILDCARD)))
-        # so, that is, a range of y that is i.e. 16/ divided by a int in the range of 2,4 through 5,6
+        # so, that is, a range of y that is i.e. 16/ divided by an int in the range of 2,4 through 5,6
         #%#print("Using rangeofy: " + str(rangeofy) )
+        
+        #rangeofx is to avoid raising z on verts near the edge of the plane's x cords
+        rangeofx = ( (PLANESIZE /1) - 1 )
         
         # Get the active mesh (in edit mode)
         obj = bpy.context.edit_object
@@ -129,11 +134,15 @@ def mountainGenerator(buildcountparameter):
         
         # Modify the BMesh, can do anything here...
         for v in bm.verts:
-            ##print(v.co.x, v.co.y, v.co.z)
+            ###print(v.co.x, v.co.y, v.co.z)
             if v.co.y > rangeofy or v.co.y < -rangeofy:
                 if random.randint(0, 100) > outlyerVerts:
                     v.select = True
                     v.co.z += random.random()
+                    #if v.co.x < 2:
+                    #if v.co.x > -rangeofx or v.co.x < rangeofx:
+                    #    v.select = True
+                    #    v.co.z += random.random()
             
             ###if v.co.x == 0:
             ###    print(v.co.x, v.co.y, v.co.z)
@@ -171,7 +180,8 @@ def mountainGenerator(buildcountparameter):
     #################################################################################
     
     # Call the function 2-4 times. Because seperate random numbers are created each time which gives it a slightly different outcome everytime 3 fold.
-    randomrange = random.randint(2, 4)
+    #randomrange = random.randint(2, 4) #increasing this range can create heavy blend files
+	randomrange = random.randint(2, 3) #decreased range for now - elh111521
     for x in range(randomrange):
         editModeVertZ()
 
@@ -180,16 +190,17 @@ def mountainGenerator(buildcountparameter):
 ##################################################################################################
 ##################################################################################################
 ##################################################################################################
-randomrange = random.randint(4, 20)
+#randomrange = random.randint(4, 20) #upper bounds of this range can generate heavy files (1GB)
+randomrange = random.randint(4, 7) #decreased range for now - elh111521
 
 for x in range(randomrange):
     #update the build count returned from the iteration of the mountainGenerator() function
     buildcount = mountainGenerator(buildcount)
 
 
-
 # disable edit mode
 bpy.ops.object.editmode_toggle()
+
 
 ########################
 # ADD MODIFIERS to mountain plane
@@ -360,9 +371,6 @@ bpy.ops.object.select_all(action='DESELECT')
 ###############################################################
 
 
-
-
-
 ##########################################################
 #   _______  ________ __    __ _______  ________ _______  
 #  |       \|        \  \  |  \       \|        \       \ 
@@ -392,7 +400,6 @@ bpy.context.scene.render.image_settings.file_format = 'JPEG'
 bpy.context.scene.render.image_settings.quality = 80
 ##Render the default render (same as F12 only better)
 bpy.ops.render.render('INVOKE_DEFAULT', animation=False, write_still=True)
-
 
 #bpy.context.scene.render.image_settings.file_format = 'FFMPEG'
 #bpy.context.scene.render.ffmpeg.format = 'MPEG4'
@@ -448,14 +455,20 @@ def calcBasePlate():
 
 #calcBasePlate()
 
-
 # disable edit mode
 bpy.ops.object.editmode_toggle()
 
 #######################################################################################
 
 #######################################################################################
+#print(buildcount)
 
+# add base plate
+#bpy.ops.mesh.primitive_plane_add(size=PLANESIZE, enter_editmode=False, align='WORLD', location=(0,0,0), scale=(1, 1, 1))
+
+#bpy.ops.transform.resize(value=((buildcount/PLANESIZE), 1, 1), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(True, False, False), mirror=True, use_proportional_edit=False, proportional_edit_falloff='RANDOM', proportional_size=1.61051, use_proportional_connected=False, use_proportional_projected=False)
+
+#bpy.ops.transform.translate(value=(((buildcount/2)+(PLANESIZE/2)), 0, 0), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(True, False, False), mirror=True, use_proportional_edit=False, proportional_edit_falloff='RANDOM', proportional_size=1.61051, use_proportional_connected=False, use_proportional_projected=False)
 
 
 ###########################IDEADROP:

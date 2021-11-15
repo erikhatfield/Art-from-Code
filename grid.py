@@ -53,6 +53,8 @@ bpy.context.scene.eevee.use_volumetric_shadows = True
 # Hair
 bpy.context.scene.render.hair_type = 'STRAND'
 bpy.context.scene.render.hair_subdiv = 1
+# Animation timeline
+bpy.context.scene.frame_end = 750
 
 #########################################################################
 # create a few CONSTANTS, for subtle uniqueness at the foundation level #
@@ -102,7 +104,6 @@ def mountainGenerator(buildcountparameter):
     #increment buildcount by PLANESIZE
     buildcountparameter = buildcountparameter + PLANESIZE
 
-
     #################################################################################
     # This function assumes it is called when there is a mesh object in edit-mode   #
     # NOTE2SELF: Python Function Syntax doesn't use brackets- relies on indentation #
@@ -112,6 +113,8 @@ def mountainGenerator(buildcountparameter):
         # create a rangeofy, for subtle uniqueness every time #
         # range of y is the size (in y) of the effected area on the (y) sides of the plane
         rangeofy = (PLANESIZE / random.randint((PLANESIZE/(WILDCARD*4)), ((PLANESIZE/4)+WILDCARD)))
+        # create a different range of y for the R side
+        rangeofyR = (PLANESIZE / random.randint((PLANESIZE/(WILDCARD*4)), ((PLANESIZE/4)+WILDCARD)))
         # so, that is, a range of y that is i.e. 16/ divided by an int in the range of 2,4 through 5,6
         #%#print("Using rangeofy: " + str(rangeofy) )
         
@@ -135,7 +138,7 @@ def mountainGenerator(buildcountparameter):
         # Modify the BMesh, can do anything here...
         for v in bm.verts:
             ###print(v.co.x, v.co.y, v.co.z)
-            if v.co.y > rangeofy or v.co.y < -rangeofy:
+            if v.co.y > rangeofyR or v.co.y < -rangeofy:
                 if random.randint(0, 100) > outlyerVerts:
                     v.select = True
                     v.co.z += random.random()
@@ -181,7 +184,7 @@ def mountainGenerator(buildcountparameter):
     
     # Call the function 2-4 times. Because seperate random numbers are created each time which gives it a slightly different outcome everytime 3 fold.
     #randomrange = random.randint(2, 4) #increasing this range can create heavy blend files
-	randomrange = random.randint(2, 3) #decreased range for now - elh111521
+    randomrange = random.randint(2, 3) #decreased range for now - elh111521
     for x in range(randomrange):
         editModeVertZ()
 
@@ -347,7 +350,6 @@ obj_camera.location = (camx, 0.0, camz)
 # Set the keyframe with that location, and which frame.
 obj_camera.keyframe_insert(data_path="location", frame=0)
 
-
 # need solution for linear interpolation curve so the camera y movement is steady
 #bpy.ops.action.interpolation_type(type='LINEAR')
 
@@ -355,7 +357,7 @@ obj_camera.keyframe_insert(data_path="location", frame=0)
 camx_end = (2 * ((buildcount*2) - PLANESIZE) )
 obj_camera.location = (camx_end, 0.0, camz)
 # setting it for frame 250
-obj_camera.keyframe_insert(data_path="location", frame=250)
+obj_camera.keyframe_insert(data_path="location", frame=750)
 
 # Set keyframe curve to linear
 #First save the default type:

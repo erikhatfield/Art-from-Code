@@ -38,7 +38,9 @@ bpy.data.worlds["World"].node_tree.nodes["Background"].inputs[0].default_value =
 bpy.context.scene.eevee.taa_render_samples = 64
 # Ambient Occlusions
 bpy.context.scene.eevee.use_gtao = True
-bpy.context.scene.eevee.gtao_distance = 50
+bpy.context.scene.eevee.gtao_distance = 1200
+bpy.context.scene.eevee.gtao_quality = 0.86
+
 # Bloom
 bpy.context.scene.eevee.use_bloom = True
 # Subsurface Scattering
@@ -48,13 +50,13 @@ bpy.context.scene.eevee.use_ssr = True
 bpy.context.scene.eevee.use_ssr_refraction = True
 # Volumetrics
 bpy.context.scene.eevee.use_volumetric_lights = True
-bpy.context.scene.eevee.volumetric_end = 150
+bpy.context.scene.eevee.volumetric_end = 250
 bpy.context.scene.eevee.use_volumetric_shadows = True
 # Hair
 bpy.context.scene.render.hair_type = 'STRAND'
-bpy.context.scene.render.hair_subdiv = 1
+bpy.context.scene.render.hair_subdiv = 2
 # Animation timeline
-bpy.context.scene.frame_end = 750
+bpy.context.scene.frame_end = 500
 
 #########################################################################
 # create a few CONSTANTS, for subtle uniqueness at the foundation level #
@@ -230,7 +232,8 @@ wireframedMountains.material_offset = random.randint(0, 7) #0 creates a moonlit 
 
 # Apply wireframeArray modifier here for a different material application
 bpy.ops.object.modifier_apply(modifier="mountainMirror")
-bpy.ops.object.modifier_apply(modifier="mountainArray")
+#bpy.ops.object.modifier_apply(modifier="mountainArray")
+
 #bpy.ops.object.modifier_apply(modifier="wireframeArray")
 
 
@@ -342,11 +345,12 @@ bpy.ops.object.modifier_apply(modifier="wireframeArray")
 camx = 0
 camz = WILDCARD * 0.420
 bpy.ops.object.camera_add(enter_editmode=False, align='VIEW', location=(camx, 0, camz), rotation=(1.5708, 0, -1.5708), scale=(1, 1, 1))
+bpy.ops.object.transforms_to_deltas(mode='ALL')
 
 obj_camera = bpy.data.objects["Camera"]
-obj_camera.data.lens = random.randint(18, 135)
+lensangle = random.randint(18, 135)
+obj_camera.data.lens = lensangle
 obj_camera.data.clip_end = 5000
-
 
 # X, Y, and Z location to set
 obj_camera.location = (camx, 0.0, camz)
@@ -360,7 +364,7 @@ obj_camera.keyframe_insert(data_path="location", frame=0)
 camx_end = (2 * ((buildcount*2) - PLANESIZE) )
 obj_camera.location = (camx_end, 0.0, camz)
 # setting it for frame 250
-obj_camera.keyframe_insert(data_path="location", frame=750)
+obj_camera.keyframe_insert(data_path="location", frame=500)
 
 # Set keyframe curve to linear
 #First save the default type:
@@ -376,43 +380,6 @@ bpy.ops.object.select_all(action='DESELECT')
 ###############################################################
 
 
-##########################################################
-#   _______  ________ __    __ _______  ________ _______  
-#  |       \|        \  \  |  \       \|        \       \ 
-#  | ▓▓▓▓▓▓▓\ ▓▓▓▓▓▓▓▓ ▓▓\ | ▓▓ ▓▓▓▓▓▓▓\ ▓▓▓▓▓▓▓▓ ▓▓▓▓▓▓▓\
-#  | ▓▓__| ▓▓ ▓▓__   | ▓▓▓\| ▓▓ ▓▓  | ▓▓ ▓▓__   | ▓▓__| ▓▓
-#  | ▓▓    ▓▓ ▓▓  \  | ▓▓▓▓\ ▓▓ ▓▓  | ▓▓ ▓▓  \  | ▓▓    ▓▓
-#  | ▓▓▓▓▓▓▓\ ▓▓▓▓▓  | ▓▓\▓▓ ▓▓ ▓▓  | ▓▓ ▓▓▓▓▓  | ▓▓▓▓▓▓▓\
-#  | ▓▓  | ▓▓ ▓▓_____| ▓▓ \▓▓▓▓ ▓▓__/ ▓▓ ▓▓_____| ▓▓  | ▓▓
-#  | ▓▓  | ▓▓ ▓▓     \ ▓▓  \▓▓▓ ▓▓    ▓▓ ▓▓     \ ▓▓  | ▓▓
-#   \▓▓   \▓▓\▓▓▓▓▓▓▓▓\▓▓   \▓▓\▓▓▓▓▓▓▓ \▓▓▓▓▓▓▓▓\▓▓   \▓▓
-#                                                         
-# Set a few render/output influences #
-bpy.context.scene.render.resolution_x = 1600
-bpy.context.scene.render.resolution_y = 1200
-#bpy.context.scene.render.resolution_x = 400
-#bpy.context.scene.render.resolution_y = 300
-
-bpy.context.scene.render.fps = 30
-bpy.context.scene.render.filepath = "//../output/temp_grid_" + now.strftime('%m%d%y_%H%M') + "-out"
-
-# if isANIM logic needed for easy switch between image and animation (mp4)
-# for now these are controlled at the end of the script - near the f12 command
-#bpy.context.scene.render.image_settings.file_format = 'FFMPEG'
-#bpy.context.scene.render.ffmpeg.format = 'MPEG4'                                          
-                                                       
-bpy.context.scene.render.image_settings.file_format = 'JPEG'
-bpy.context.scene.render.image_settings.quality = 80
-##Render the default render (same as F12 only better)
-bpy.ops.render.render('INVOKE_DEFAULT', animation=False, write_still=True)
-
-#bpy.context.scene.render.image_settings.file_format = 'FFMPEG'
-#bpy.context.scene.render.ffmpeg.format = 'MPEG4'
-##Render the default render (same as fan-F12 only better)
-#bpy.ops.render.render('INVOKE_DEFAULT', animation=True, write_still=True)
-
-##########################################################
-##########################################################
 
 #######################################################################################
 
@@ -487,18 +454,32 @@ bpy.ops.object.editmode_toggle()
 #######################################################
 def birthOfAStar():
     # add star with random size floating point (near zero)
-    starscale = 0.01 + (0.5-0.01)*random.random()
     bpy.ops.mesh.primitive_uv_sphere_add(enter_editmode=False, align='WORLD', location=(0, 0, 0), scale=(1.0, 1.0, 1.0))
     this_star=bpy.context.active_object
+
     #make the star's parent relation that of the camera
     #this_star.parent = obj_camera
     bpy.context.object.parent = bpy.data.objects["Camera"]
     bpy.context.object.track_axis = 'POS_X'
+    bpy.context.object.up_axis = 'Z'
 
     #this_star.location[0]=( buildcount * 2 )
     #this_star.location[2]=40
-    bpy.context.object.location[0]=( buildcount * 2 )
-    bpy.context.object.location[2]=random.randint(10, 60)
+    # for some reason, the X is the -Z
+    bpy.context.object.location[2]= ( buildcount * -2 )
+    # and Z is Y
+    bpy.context.object.location[1]= random.randint(10, (180 - lensangle))
+    # and Y is X
+    starrangey = 0.1 + ((255.5 - lensangle)-0.1)*random.random()
+    if random.randint(1, 2) == 1:
+        starrangey = starrangey * -1
+    
+    bpy.context.object.location[0]= starrangey
+
+    starscale = 0.001 + (0.1-0.001)*random.random()
+    bpy.context.object.scale[0]= starscale
+    bpy.context.object.scale[1]= starscale
+    bpy.context.object.scale[2]= starscale
 
     # MATERIAL
     w00t_mat = bpy.data.materials.new(name = "starGlow")
@@ -511,9 +492,51 @@ def birthOfAStar():
     node_emission = nodes.new(type="ShaderNodeEmission")
 
     node_emission.inputs[0].default_value = ( 0.8, 0.8, 0.8, 1.0) # color
-    node_emission.inputs[1].default_value = ( 12.45 + (111.11-12.45)*random.random() ) # strength
+    node_emission.inputs[1].default_value = ( 12.45 + (222.22-12.45)*random.random() ) # strength
 
     links = w00t_mat.node_tree.links
     new_link = links.new(node_emission.outputs[0], material_output.inputs[0])
 
-birthOfAStar()
+randomrange = random.randint(100, 1000) 
+for x in range(randomrange):
+    birthOfAStar()
+
+
+
+##########################################################
+#   _______  ________ __    __ _______  ________ _______  
+#  |       \|        \  \  |  \       \|        \       \ 
+#  | ▓▓▓▓▓▓▓\ ▓▓▓▓▓▓▓▓ ▓▓\ | ▓▓ ▓▓▓▓▓▓▓\ ▓▓▓▓▓▓▓▓ ▓▓▓▓▓▓▓\
+#  | ▓▓__| ▓▓ ▓▓__   | ▓▓▓\| ▓▓ ▓▓  | ▓▓ ▓▓__   | ▓▓__| ▓▓
+#  | ▓▓    ▓▓ ▓▓  \  | ▓▓▓▓\ ▓▓ ▓▓  | ▓▓ ▓▓  \  | ▓▓    ▓▓
+#  | ▓▓▓▓▓▓▓\ ▓▓▓▓▓  | ▓▓\▓▓ ▓▓ ▓▓  | ▓▓ ▓▓▓▓▓  | ▓▓▓▓▓▓▓\
+#  | ▓▓  | ▓▓ ▓▓_____| ▓▓ \▓▓▓▓ ▓▓__/ ▓▓ ▓▓_____| ▓▓  | ▓▓
+#  | ▓▓  | ▓▓ ▓▓     \ ▓▓  \▓▓▓ ▓▓    ▓▓ ▓▓     \ ▓▓  | ▓▓
+#   \▓▓   \▓▓\▓▓▓▓▓▓▓▓\▓▓   \▓▓\▓▓▓▓▓▓▓ \▓▓▓▓▓▓▓▓\▓▓   \▓▓
+#                                                         
+# Set a few render/output influences #
+bpy.context.scene.render.resolution_x = 1600
+bpy.context.scene.render.resolution_y = 1200
+#bpy.context.scene.render.resolution_x = 400
+#bpy.context.scene.render.resolution_y = 300
+
+bpy.context.scene.render.fps = 30
+bpy.context.scene.render.filepath = "//../output/temp_grid_" + now.strftime('%m%d%y_%H%M') + "-out"
+
+# if isANIM logic needed for easy switch between image and animation (mp4)
+# for now these are controlled at the end of the script - near the f12 command
+#bpy.context.scene.render.image_settings.file_format = 'FFMPEG'
+#bpy.context.scene.render.ffmpeg.format = 'MPEG4'                                          
+                                                       
+bpy.context.scene.render.image_settings.file_format = 'JPEG'
+bpy.context.scene.render.image_settings.quality = 80
+##Render the default render (same as F12 only better)
+bpy.ops.render.render('INVOKE_DEFAULT', animation=False, write_still=True)
+
+#bpy.context.scene.render.image_settings.file_format = 'FFMPEG'
+#bpy.context.scene.render.ffmpeg.format = 'MPEG4'
+##Render the default render (same as fan-F12 only better)
+#bpy.ops.render.render('INVOKE_DEFAULT', animation=True, write_still=True)
+
+##########################################################
+##########################################################

@@ -195,6 +195,7 @@ def mountainGenerator(buildcountparameter):
 ##################################################################################################
 #randomrange = random.randint(4, 20) #upper bounds of this range can generate heavy files (1GB)
 randomrange = random.randint(4, 7) #decreased range for now - elh111521
+randomrange = random.randint(11, 17)
 
 for x in range(randomrange):
     #update the build count returned from the iteration of the mountainGenerator() function
@@ -344,6 +345,8 @@ bpy.ops.object.camera_add(enter_editmode=False, align='VIEW', location=(camx, 0,
 
 obj_camera = bpy.data.objects["Camera"]
 obj_camera.data.lens = random.randint(18, 135)
+obj_camera.data.clip_end = 5000
+
 
 # X, Y, and Z location to set
 obj_camera.location = (camx, 0.0, camz)
@@ -477,3 +480,40 @@ bpy.ops.object.editmode_toggle()
 ##################the ability to save settings. when u really like the artwork produced
 #################and therefore, the ability to load settings too
 ###################or maybe just the recording of settings integrated into the artwork?
+
+#######################################################
+# birthOfAStar()                                      #
+# create a sphere, assign relation to parent (camera) #
+#######################################################
+def birthOfAStar():
+    # add star with random size floating point (near zero)
+    starscale = 0.01 + (0.5-0.01)*random.random()
+    bpy.ops.mesh.primitive_uv_sphere_add(enter_editmode=False, align='WORLD', location=(0, 0, 0), scale=(1.0, 1.0, 1.0))
+    this_star=bpy.context.active_object
+    #make the star's parent relation that of the camera
+    #this_star.parent = obj_camera
+    bpy.context.object.parent = bpy.data.objects["Camera"]
+    bpy.context.object.track_axis = 'POS_X'
+
+    #this_star.location[0]=( buildcount * 2 )
+    #this_star.location[2]=40
+    bpy.context.object.location[0]=( buildcount * 2 )
+    bpy.context.object.location[2]=random.randint(10, 60)
+
+    # MATERIAL
+    w00t_mat = bpy.data.materials.new(name = "starGlow")
+    bpy.context.object.data.materials.append(w00t_mat)
+
+    w00t_mat.use_nodes = True
+    nodes = w00t_mat.node_tree.nodes
+
+    material_output = nodes.get("Material Output")
+    node_emission = nodes.new(type="ShaderNodeEmission")
+
+    node_emission.inputs[0].default_value = ( 0.8, 0.8, 0.8, 1.0) # color
+    node_emission.inputs[1].default_value = ( 12.45 + (111.11-12.45)*random.random() ) # strength
+
+    links = w00t_mat.node_tree.links
+    new_link = links.new(node_emission.outputs[0], material_output.inputs[0])
+
+birthOfAStar()

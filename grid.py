@@ -312,7 +312,7 @@ randg = 0.09 + (0.9-0.09)*random.random()
 randb = 0.09 + (0.9-0.09)*random.random()
 node_emission.inputs[0].default_value = (randr, randg, randb, 1) # color
 #node_emission.inputs[0].default_value = ( 0.1, 0.5, 0.8, 0.9) # color
-randstrength = random.randint(4, 108)
+randstrength = random.randint(2, 108)
 node_emission.inputs[1].default_value = randstrength # strength
 
 links = mountainGlowMat.node_tree.links

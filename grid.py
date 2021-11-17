@@ -465,9 +465,9 @@ def birthOfAStar():
     # for some reason, the X is the -Z
     bpy.context.object.location[2]= ( buildcount * -2 )
     # and Z is Y
-    bpy.context.object.location[1]= random.randint(4, (420 - lensangle))
+    bpy.context.object.location[1]= random.randint(4, (420 - lensangle*2))
     # and Y is X
-    starrangey = 0.1 + ((488.8 - lensangle)-0.1)*random.random()
+    starrangey = 0.1 + ((555.5 - lensangle)-0.1)*random.random()
     if random.randint(1, 2) == 1:
         starrangey = starrangey * -1
     

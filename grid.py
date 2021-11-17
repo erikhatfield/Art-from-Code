@@ -221,7 +221,7 @@ mountains.location[0]=(buildcount - (PLANESIZE/2) )
 
 # Add array modifier
 arrayOfMountains = mountains.modifiers.new("mountainArray", "ARRAY")
-mountainArrayCount = random.randint(3, 7)
+mountainArrayCount = random.randint(5, 6)
 arrayOfMountains.count = mountainArrayCount
 # Add wireframe modifier
 wireframedMountains = mountains.modifiers.new("wireframeArray", "WIREFRAME")
@@ -468,9 +468,9 @@ def birthOfAStar():
     # for some reason, the X is the -Z
     bpy.context.object.location[2]= ( buildcount * -2 )
     # and Z is Y
-    bpy.context.object.location[1]= random.randint(10, (180 - lensangle))
+    bpy.context.object.location[1]= random.randint(4, (360 - lensangle))
     # and Y is X
-    starrangey = 0.1 + ((255.5 - lensangle)-0.1)*random.random()
+    starrangey = 0.1 + ((355.5 - lensangle)-0.1)*random.random()
     if random.randint(1, 2) == 1:
         starrangey = starrangey * -1
     
@@ -492,7 +492,7 @@ def birthOfAStar():
     node_emission = nodes.new(type="ShaderNodeEmission")
 
     node_emission.inputs[0].default_value = ( 0.8, 0.8, 0.8, 1.0) # color
-    node_emission.inputs[1].default_value = ( 12.45 + (222.22-12.45)*random.random() ) # strength
+    node_emission.inputs[1].default_value = ( 1.23 + (123.45-1.23)*random.random() ) # strength
 
     links = w00t_mat.node_tree.links
     new_link = links.new(node_emission.outputs[0], material_output.inputs[0])

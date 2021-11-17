@@ -186,7 +186,7 @@ def mountainGenerator(buildcountparameter):
     
     # Call the function 2-4 times. Because seperate random numbers are created each time which gives it a slightly different outcome everytime 3 fold.
     #randomrange = random.randint(2, 4) #increasing this range can create heavy blend files
-    randomrange = random.randint(2, 3) #decreased range for now - elh111521
+    randomrange = random.randint(1, 3) #decreased range for now - elh111521
     for x in range(randomrange):
         editModeVertZ()
 
@@ -195,9 +195,8 @@ def mountainGenerator(buildcountparameter):
 ##################################################################################################
 ##################################################################################################
 ##################################################################################################
-#randomrange = random.randint(4, 20) #upper bounds of this range can generate heavy files (1GB)
-randomrange = random.randint(4, 7) #decreased range for now - elh111521
-randomrange = random.randint(11, 17)
+randomrange = random.randint(2, 22) #upper bounds of this range can generate heavy files (1GB)
+
 
 for x in range(randomrange):
     #update the build count returned from the iteration of the mountainGenerator() function
@@ -231,10 +230,8 @@ wireframedMountains.thickness = wireframeThickness
 wireframedMountains.material_offset = random.randint(0, 7) #0 creates a moonlit scene :)
 
 # Apply wireframeArray modifier here for a different material application
-bpy.ops.object.modifier_apply(modifier="mountainMirror")
+#bpy.ops.object.modifier_apply(modifier="mountainMirror")
 #bpy.ops.object.modifier_apply(modifier="mountainArray")
-
-#bpy.ops.object.modifier_apply(modifier="wireframeArray")
 
 
 
@@ -468,9 +465,9 @@ def birthOfAStar():
     # for some reason, the X is the -Z
     bpy.context.object.location[2]= ( buildcount * -2 )
     # and Z is Y
-    bpy.context.object.location[1]= random.randint(4, (360 - lensangle))
+    bpy.context.object.location[1]= random.randint(4, (420 - lensangle))
     # and Y is X
-    starrangey = 0.1 + ((355.5 - lensangle)-0.1)*random.random()
+    starrangey = 0.1 + ((488.8 - lensangle)-0.1)*random.random()
     if random.randint(1, 2) == 1:
         starrangey = starrangey * -1
     

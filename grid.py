@@ -5,26 +5,28 @@ import datetime
 # Record time stamp
 now = datetime.datetime.now()
 
+# Remove all objects
+# ^^^ useful for multiple runs of this script
+# compile list of objects by type
+for o in bpy.context.scene.objects:
+    if o.type == 'MESHYMCMESHFACE':
+        o.select_set(False)
+    else:
+        o.select_set(True)
+
+# Call the operator only once (best-practice practice?)
+bpy.ops.object.delete()
+
+# CONSIDER performing garbage collection
+# Save and re-open the file to clean up the data blocks
+####bpy.ops.wm.save_as_mainfile(filepath=bpy.data.filepath)
+####bpy.ops.wm.open_mainfile(filepath=bpy.data.filepath)
+
 # Remove Cube, because.
-if bpy.context.scene.objects.get("Cube"):
-    bpy.data.objects['Cube'].select_set(True)
-    bpy.ops.object.delete()
-# Remove Camera, will recreate.
-if bpy.context.scene.objects.get("Camera"):
-    bpy.data.objects['Camera'].select_set(True)
-    bpy.ops.object.delete()
-# Remove MountainPlane, to allow for multiple runs
-if bpy.context.scene.objects.get("MountainPlane"):
-    bpy.data.objects['MountainPlane'].select_set(True)
-    bpy.ops.object.delete()
-# Remove Plane, to allow for multiple runs
-#if bpy.context.scene.objects.get("Plane"):
-#    bpy.data.objects['Plane'].select_set(True)
-#    bpy.ops.object.delete()
-# Remove Default Light
-if bpy.context.scene.objects.get("Light"):
-    bpy.data.objects['Light'].select_set(True)
-    bpy.ops.object.delete()
+####if bpy.context.scene.objects.get("Cube"):
+####    bpy.data.objects['Cube'].select_set(True)
+####    bpy.ops.object.delete()
+
 
 #########
 # WORLD #
@@ -250,15 +252,17 @@ else:
     mountains.data.materials.append(mountainBaseMat)
 
 mountainBaseMat.use_nodes = True
-#generate three random r,g,b values near 0
+#generate three random r,g,b floating points
 randr = 0.0007 + (0.07-0.0007)*random.random()
 randg = 0.0007 + (0.07-0.0007)*random.random()
 randb = 0.0007 + (0.07-0.0007)*random.random()
-mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[0].default_value = (randr, randg, randb, 1)
-randmetalic = ( (random.randint(5, 8)) * 0.111)
-mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[4].default_value = randmetalic
+#Use random floats on subsurface color, the base color recieves input from magic texture
+#mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[0].default_value = (randr, randg, randb, 1)
 ####################################################
 # randomize a bunch of values within principled BSDF
+mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[1].default_value = 0.007 + (1.0-0.007)*random.random() #subsurface
+mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[3].default_value = (randr, randg, randb, 1)
+mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[4].default_value = ((random.randint(5, 8)) * 0.111)
 mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[5].default_value = ((random.randint(2, 8)) * 0.111) #specular
 mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[6].default_value = ((random.randint(1, 9)) * 0.111) #specular tint
 mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[7].default_value = 0.007 + (1.0-0.007)*random.random() #roughness
@@ -285,6 +289,8 @@ magicTextureNode.inputs[2].default_value = ( 0.1 + (11.11-0.1)*random.random() )
 ######################################################################################
 #magic texture color output TO base color input
 mountainBaseMat.node_tree.links.new(magicTextureNode.outputs[0], mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[0])
+#magic texture fac output TO subsurface radius input
+mountainBaseMat.node_tree.links.new(magicTextureNode.outputs[1], mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[2])
 #magic texture color output TO emission color input (17)
 mountainBaseMat.node_tree.links.new(magicTextureNode.outputs[0], mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[17])
 mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[18].default_value = 0.00004 + (0.0003-0.00004)*random.random() #emission strength
@@ -319,9 +325,9 @@ links = mountainGlowMat.node_tree.links
 new_link = links.new(node_emission.outputs[0], material_output.inputs[0])
 ###################
 # Apply wireframeArray modifier earlier for a different material look
-#bpy.ops.object.modifier_apply(modifier="mountainMirror")
-#bpy.ops.object.modifier_apply(modifier="mountainArray")
-bpy.ops.object.modifier_apply(modifier="wireframeArray")
+####bpy.ops.object.modifier_apply(modifier="mountainMirror")
+####bpy.ops.object.modifier_apply(modifier="mountainArray")
+#bpy.ops.object.modifier_apply(modifier="wireframeArray")
 
 ###############################################################
 #    ______   ______  __       __ ________ _______   ______  

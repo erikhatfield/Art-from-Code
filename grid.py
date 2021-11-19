@@ -9,7 +9,7 @@ now = datetime.datetime.now()
 # ^^^ useful for multiple runs of this script
 # compile list of objects by type
 for o in bpy.context.scene.objects:
-    if o.type == 'MESHYMCMESHFACE':
+    if o.name == 'Spaceship':
         o.select_set(False)
     else:
         o.select_set(True)
@@ -66,7 +66,7 @@ bpy.context.scene.frame_end = 500
 # wildcard should have a 50% chance of multiplier influence
 WILDCARD = random.randint(1, 2)
 # PLANESIZE applies to size of plane created
-PLANESIZE = WILDCARD * 16
+PLANESIZE = WILDCARD * 48
 #print build parameters
 print( "Using CONSTANTS: " + "WILDCARD = " + str(WILDCARD) + ", PLANESIZE = " + str(PLANESIZE) )
 #########################################################################
@@ -351,17 +351,41 @@ bpy.ops.object.camera_add(enter_editmode=False, align='VIEW', location=(camx, 0,
 bpy.ops.object.transforms_to_deltas(mode='ALL')
 
 obj_camera = bpy.data.objects["Camera"]
-lensangle = random.randint(18, 135)
+#lensangle = random.randint(18, 135)
+lensangle = random.randint(18, 35) #35 max zoom for spaceship cockpit for now
 obj_camera.data.lens = lensangle
 obj_camera.data.clip_end = 5000
+
+
+# if exists- attach spaceship to camera
+if bpy.context.scene.objects.get("Spaceship"):
+    bpy.data.objects['Spaceship'].parent = bpy.data.objects["Camera"]
+    bpy.data.objects['Spaceship'].track_axis = 'POS_X'
+    bpy.data.objects['Spaceship'].up_axis = 'Z'
+    bpy.data.objects['Spaceship'].rotation_euler[0] = -1.5708
+    bpy.data.objects['Spaceship'].rotation_euler[1] = 1.5708
+    bpy.data.objects['Spaceship'].rotation_euler[2] = 0
+    spaceshipAltitudeVariance = 0.007 + (0.2-0.007)*random.random() #
+    spaceshipAltitudeVariance = spaceshipAltitudeVariance * random.randint(-1, 1)
+    bpy.data.objects['Spaceship'].location[1] = spaceshipAltitudeVariance #z is y somehow... hmm
+
+# need solution for linear interpolation curve so the camera y movement is steady
+#bpy.ops.action.interpolation_type(type='LINEAR')
+# Create F-Curve
+action = bpy.data.actions.new("cube_linear")
+action.fcurves.new("location", action_group="location")
+action.fcurves[0].keyframe_points.insert(0, 0)
+action.fcurves[0].keyframe_points.insert(10000, 1000)
+
+action.fcurves[0].extrapolation = 'LINEAR'
+
+obj_camera.animation_data_create()
+obj_camera.animation_data.action=action
 
 # X, Y, and Z location to set
 obj_camera.location = (camx, 0.0, camz)
 # Set the keyframe with that location, and which frame.
 obj_camera.keyframe_insert(data_path="location", frame=0)
-
-# need solution for linear interpolation curve so the camera y movement is steady
-#bpy.ops.action.interpolation_type(type='LINEAR')
 
 #camx_end = ( ((buildcount/2) * mountainArrayCount) + (PLANESIZE*WILDCARD))
 camx_end = (2 * ((buildcount*2) - PLANESIZE) )
@@ -369,20 +393,10 @@ obj_camera.location = (camx_end, 0.0, camz)
 # setting it for frame 250
 obj_camera.keyframe_insert(data_path="location", frame=500)
 
-# Set keyframe curve to linear
-#First save the default type:
-##keyInterp = bpy.context.user_preferences.edit.keyframe_new_interpolation_type
-#Then change it to what you want:
-#bpy.context.user_preferences.edit.keyframe_new_interpolation_type ='LINEAR'
-#Then change it back again after you’re done with:
-###bpy.context.user_preferences.edit.keyframe_new_interpolation_type = keyInterp
-
 #Finish with camera obj (DESELECT)
 #obj_camera.select_all(action='DESELECT')
 bpy.ops.object.select_all(action='DESELECT')
 ###############################################################
-
-
 
 #######################################################################################
 
@@ -518,8 +532,8 @@ for x in range(randomrange):
 #   \▓▓   \▓▓\▓▓▓▓▓▓▓▓\▓▓   \▓▓\▓▓▓▓▓▓▓ \▓▓▓▓▓▓▓▓\▓▓   \▓▓
 #                                                         
 # Set a few render/output influences #
-bpy.context.scene.render.resolution_x = 1600
-bpy.context.scene.render.resolution_y = 1200
+bpy.context.scene.render.resolution_x = 1920
+bpy.context.scene.render.resolution_y = 1080
 #bpy.context.scene.render.resolution_x = 400
 #bpy.context.scene.render.resolution_y = 300
 

@@ -365,8 +365,8 @@ if bpy.context.scene.objects.get("Spaceship"):
     bpy.data.objects['Spaceship'].rotation_euler[0] = -1.5708
     bpy.data.objects['Spaceship'].rotation_euler[1] = 1.5708
     bpy.data.objects['Spaceship'].rotation_euler[2] = 0
-    spaceshipAltitudeVariance = 0.007 + (0.2-0.007)*random.random() #
-    spaceshipAltitudeVariance = spaceshipAltitudeVariance * random.randint(-1, 1)
+    spaceshipAltitudeVariance = -1 * (0.0 + (0.02-0.0)*random.random() )#
+    #spaceshipAltitudeVariance = spaceshipAltitudeVariance * random.randint(-1, 1)
     bpy.data.objects['Spaceship'].location[1] = spaceshipAltitudeVariance #z is y somehow... hmm
 
 # need solution for linear interpolation curve so the camera y movement is steady
@@ -483,17 +483,23 @@ def birthOfAStar():
     #this_star.location[0]=( buildcount * 2 )
     #this_star.location[2]=40
     # for some reason, the X is the -Z
-    bpy.context.object.location[2]= ( buildcount * -2 )
+    bpy.context.object.location[2]= ( 768 * -2 ) #distance from camera
     # and Z is Y
-    bpy.context.object.location[1]= random.randint(4, (420 - lensangle*2))
+    bpy.context.object.location[1]= random.randint(4, (420 - lensangle*2)) #vertical
     # and Y is X
-    starrangey = 0.1 + ((555.5 - lensangle)-0.1)*random.random()
+    starrangey = 0.1 + (1280.0-0.1)*random.random() #horizontal
+    
     if random.randint(1, 2) == 1:
-        starrangey = starrangey * -1
+        starrangey = starrangey * -1 # both sides of center line
     
     bpy.context.object.location[0]= starrangey
 
-    starscale = 0.001 + (0.1-0.001)*random.random()
+    specialBoundaries = random.randint(9989, 9999)
+    if random.randint(0, 10000) > specialBoundaries:
+        starscale = 10.1 + (45.1-10.1)*random.random()
+    else:
+        starscale = 0.001 + (0.1-0.001)*random.random()
+
     bpy.context.object.scale[0]= starscale
     bpy.context.object.scale[1]= starscale
     bpy.context.object.scale[2]= starscale
@@ -514,8 +520,8 @@ def birthOfAStar():
     links = w00t_mat.node_tree.links
     new_link = links.new(node_emission.outputs[0], material_output.inputs[0])
 
-randomrange = random.randint(100, 1000) 
-for x in range(randomrange):
+numberofstars = random.randint(100, 1000) 
+for x in range(numberofstars):
     birthOfAStar()
 
 

@@ -7,7 +7,7 @@ now = datetime.datetime.now()
 
 # Remove all objects
 # ^^^ useful for multiple runs of this script
-# compile list of objects by type
+# except for spaceship (for now)
 for o in bpy.context.scene.objects:
     if o.name == 'Spaceship':
         o.select_set(False)
@@ -123,7 +123,7 @@ def mountainGenerator(buildcountparameter):
         #%#print("Using rangeofy: " + str(rangeofy) )
         
         #rangeofx is to avoid raising z on verts near the edge of the plane's x cords
-        rangeofx = ( (PLANESIZE /1) - 1 )
+        #rangeofx = ( (PLANESIZE /lol) - 1 )
         
         # Get the active mesh (in edit mode)
         obj = bpy.context.edit_object
@@ -187,8 +187,8 @@ def mountainGenerator(buildcountparameter):
     #################################################################################
     
     # Call the function 2-4 times. Because seperate random numbers are created each time which gives it a slightly different outcome everytime 3 fold.
-    #randomrange = random.randint(2, 4) #increasing this range can create heavy blend files
-    randomrange = random.randint(1, 3) #decreased range for now - elh111521
+    randomrange = random.randint(2, 4) #increasing this range can create heavy blend files
+
     for x in range(randomrange):
         editModeVertZ()
 
@@ -197,7 +197,7 @@ def mountainGenerator(buildcountparameter):
 ##################################################################################################
 ##################################################################################################
 ##################################################################################################
-randomrange = random.randint(2, 22) #upper bounds of this range can generate heavy files (1GB)
+randomrange = random.randint(2, 22) #upper bounds of this range can generate heavy files (1GB) when combined with applied modifiers
 
 
 for x in range(randomrange):
@@ -346,13 +346,14 @@ new_link = links.new(node_emission.outputs[0], material_output.inputs[0])
 # position default camera on the ground
 #camx = int(-1 * (PLANESIZE / WILDCARD))
 camx = 0
-camz = WILDCARD * 0.420
+#camz = WILDCARD * 0.420
+camz = (( 0.3 + (0.6-0.3)*random.random() ) * WILDCARD)
 bpy.ops.object.camera_add(enter_editmode=False, align='VIEW', location=(camx, 0, camz), rotation=(1.5708, 0, -1.5708), scale=(1, 1, 1))
 bpy.ops.object.transforms_to_deltas(mode='ALL')
 
 obj_camera = bpy.data.objects["Camera"]
 #lensangle = random.randint(18, 135)
-lensangle = random.randint(18, 35) #35 max zoom for spaceship cockpit for now
+lensangle = random.randint(20, 50) #35 max zoom for spaceship cockpit for now
 obj_camera.data.lens = lensangle
 obj_camera.data.clip_end = 5000
 
@@ -365,9 +366,11 @@ if bpy.context.scene.objects.get("Spaceship"):
     bpy.data.objects['Spaceship'].rotation_euler[0] = -1.5708
     bpy.data.objects['Spaceship'].rotation_euler[1] = 1.5708
     bpy.data.objects['Spaceship'].rotation_euler[2] = 0
-    spaceshipAltitudeVariance = -1 * (0.0 + (0.02-0.0)*random.random() )#
-    #spaceshipAltitudeVariance = spaceshipAltitudeVariance * random.randint(-1, 1)
-    bpy.data.objects['Spaceship'].location[1] = spaceshipAltitudeVariance #z is y somehow... hmm
+
+    spaceshipPOVX = ((0.15 + (0.25-0.15)*random.random()) *-1)
+    spaceshipPOVZ = 0.009 + (0.02-0.009)*random.random()
+    bpy.data.objects['Spaceship'].location[1] = spaceshipPOVZ # y is actually z... 
+    bpy.data.objects['Spaceship'].location[2] = spaceshipPOVX # z is actually x... 
 
 # need solution for linear interpolation curve so the camera y movement is steady
 #bpy.ops.action.interpolation_type(type='LINEAR')
@@ -485,7 +488,7 @@ def birthOfAStar():
     # for some reason, the X is the -Z
     bpy.context.object.location[2]= ( 768 * -2 ) #distance from camera
     # and Z is Y
-    bpy.context.object.location[1]= random.randint(4, (420 - lensangle*2)) #vertical
+    bpy.context.object.location[1]= random.randint(4, (480 - lensangle*2)) #vertical
     # and Y is X
     starrangey = 0.1 + (1280.0-0.1)*random.random() #horizontal
     

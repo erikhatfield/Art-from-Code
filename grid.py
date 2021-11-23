@@ -2,8 +2,11 @@ import bpy
 import bmesh
 import random
 import datetime
-# Record time stamp
+import time
+# Record time stamps
 now = datetime.datetime.now()
+initial_timestamp = time.time()
+print('initial_timestamp = ' + str(initial_timestamp))
 
 # Remove all objects
 # ^^^ useful for multiple runs of this script
@@ -565,3 +568,7 @@ bpy.ops.render.render('INVOKE_DEFAULT', animation=False, write_still=True)
 
 ##########################################################
 ##########################################################
+# print out run time of this py
+second_timestamp = time.time()
+run_time = int(round(initial_timestamp - second_timestamp))
+print('run_time = ' + str(run_time))

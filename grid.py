@@ -570,5 +570,5 @@ bpy.ops.render.render('INVOKE_DEFAULT', animation=False, write_still=True)
 ##########################################################
 # print out run time of this py
 second_timestamp = time.time()
-run_time = int(round(initial_timestamp - second_timestamp))
-print('run_time = ' + str(run_time))
+run_time = int(round(second_timestamp - initial_timestamp))
+print('run_time (before rendering time) is ' + str(run_time) + " seconds.")

@@ -19,7 +19,8 @@ import time
 now = datetime.datetime.now()
 initial_timestamp = time.time()
 print('initial_timestamp = ' + str(initial_timestamp))
-
+# Set some manual parameters:
+isMinimalDraft = False
 # Remove all objects
 # ^^^ useful for multiple runs of this script
 # except for spaceship (for now)
@@ -201,8 +202,11 @@ def mountainGenerator(buildcountparameter):
     # END def editModeVertZ():                                                      #
     #################################################################################
     
-    # Call the function 2-4 times. Because seperate random numbers are created each time which gives it a slightly different outcome everytime 3 fold.
-    randomrange = random.randint(2, 4) #increasing this range can create heavy blend files
+    if isMinimalDraft == True:
+        randomrange = 1
+    else:
+        # Call the function 2-4 times. Because seperate random numbers are created each time which gives it a slightly different outcome everytime 3 fold.
+        randomrange = random.randint(2, 4) #increasing this range can create heavy blend files
 
     for x in range(randomrange):
         editModeVertZ()
@@ -212,7 +216,11 @@ def mountainGenerator(buildcountparameter):
 ##################################################################################################
 ##################################################################################################
 ##################################################################################################
-randomrange = random.randint(2, 22) #upper bounds of this range can generate heavy files (1GB) when combined with applied modifiers
+
+if isMinimalDraft == True:
+    randomrange = 1
+else:
+    randomrange = random.randint(2, 22) #upper bounds of this range can generate heavy files (1GB) when combined with applied modifiers
 
 
 for x in range(randomrange):
@@ -368,7 +376,7 @@ bpy.ops.object.transforms_to_deltas(mode='ALL')
 
 obj_camera = bpy.data.objects["Camera"]
 #lensangle = random.randint(18, 135)
-lensangle = random.randint(20, 50) #35 max zoom for spaceship cockpit for now
+lensangle = random.randint(20, 70) #35 max zoom for spaceship cockpit for now
 obj_camera.data.lens = lensangle
 obj_camera.data.clip_end = 5000
 
@@ -537,10 +545,100 @@ def birthOfAStar():
 
     links = w00t_mat.node_tree.links
     new_link = links.new(node_emission.outputs[0], material_output.inputs[0])
+    
+if isMinimalDraft == True:
+    numberofstars = 1
+else:
+    numberofstars = random.randint(100, 1000)
 
-numberofstars = random.randint(100, 1000) 
 for x in range(numberofstars):
     birthOfAStar()
+
+
+
+
+
+def cockpitLCD():
+    #add a plane and enter edit mode (use build count on the x axis)
+    bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=True, align='WORLD', location=(0, 0, 0), scale=(1, 1, 1))
+
+    bpy.context.selected_objects[0].name = "LCD_CUBE"
+    bpy.context.object.parent = bpy.data.objects["Spaceship"]
+
+    bpy.context.object.scale[0]= (0.05	 * 0.1)
+    bpy.context.object.scale[1]= 0.1
+    bpy.context.object.scale[2]= 0.1
+
+
+    bpy.context.object.rotation_euler[1] = 00.32
+
+    bpy.context.scene.tool_settings.use_proportional_edit = False
+    #bpy.context.object.data.use_mirror_y = True
+    bpy.context.object.location[0] = 0.67
+    #bpy.context.object.location[1] = 0
+    bpy.context.object.location[2] = -0.125
+
+    bpy.ops.object.editmode_toggle()
+
+    # MATERIAL
+    lcd_mat = bpy.data.materials.new(name = "LCD1")
+    bpy.context.object.data.materials.append(lcd_mat)
+
+    lcd_mat.use_nodes = True
+    nodes = lcd_mat.node_tree.nodes
+
+    material_output = nodes.get("Material Output")
+    node_emission = nodes.new(type="ShaderNodeEmission")
+
+    node_emission.inputs[0].default_value = ( 0.0, 0.004, 0.027, 1.0) # color
+    node_emission.inputs[1].default_value = 2 # strength
+
+    links = lcd_mat.node_tree.links
+    new_link = links.new(node_emission.outputs[0], material_output.inputs[0])
+
+
+    bpy.context.area.type = 'VIEW_3D'
+    bpy.ops.view3d.snap_cursor_to_selected()
+    bpy.context.area.type = 'TEXT_EDITOR'
+    bpy.ops.object.text_add(enter_editmode=False, align='WORLD', location=(0, 0, 0), scale=(1, 1, 1))
+    bpy.context.selected_objects[0].name = "LCD_TEXT"
+    bpy.context.object.parent = bpy.data.objects["LCD_CUBE"]
+
+    bpy.context.object.rotation_euler[0] = 1.5708
+    #bpy.context.object.rotation_euler[1] = 0.32
+    bpy.context.object.rotation_euler[2] = -1.5708
+
+    bpy.context.object.location[0] = -0.51 #IS Z
+
+    bpy.context.object.scale[0] = 0.025
+    bpy.context.object.scale[1] = 0.025
+    bpy.context.object.scale[2] = 0.025
+
+
+    # MATERIAL
+    lcd_mat = bpy.data.materials.new(name = "LCD1TEXT")
+    bpy.context.object.data.materials.append(lcd_mat)
+
+    lcd_mat.use_nodes = True
+    nodes = lcd_mat.node_tree.nodes
+
+    material_output = nodes.get("Material Output")
+    node_emission = nodes.new(type="ShaderNodeEmission")
+
+    node_emission.inputs[0].default_value = ( 0.0, 0.9, 1.0, 1.0) # color
+    node_emission.inputs[1].default_value = 2 # strength
+
+    links = lcd_mat.node_tree.links
+    new_link = links.new(node_emission.outputs[0], material_output.inputs[0])
+
+    second_timestamp = time.time()
+    run_time = int(round(second_timestamp - initial_timestamp))
+    LCD_MESSAGE_CLEANMEUP = 'run_time (before rendering time) is ' + str(run_time) + " seconds."
+
+    t4dw=bpy.data.objects['LCD_TEXT']
+    t4dw.data.body = LCD_MESSAGE_CLEANMEUP
+
+#cockpitLCD()
 
 
 ##########################################################

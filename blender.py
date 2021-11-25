@@ -136,7 +136,7 @@ class LiquidCrystalDisplay:
             mat = bpy.data.materials.new(name="defaultTextLCD")
             mat.use_nodes = True
             mat.use_backface_culling = True
-            matColor = (0.5, 1, 1, 1)
+            matColor = (0, 1, 1, 1)
             mat.node_tree.nodes.get("Principled BSDF").inputs[0].default_value = matColor # base color
             mat.node_tree.nodes.get("Principled BSDF").inputs[7].default_value = 0 # roughness
             mat.node_tree.nodes.get("Principled BSDF").inputs[17].default_value = matColor # emission color
@@ -158,3 +158,6 @@ lcd1 = LiquidCrystalDisplay()
 lcd2 = LiquidCrystalDisplay()
 
 lcd2.textObj.data.body = str(lcd2.textObj.data.body) + "w00000\n"
+lcd2.backLitPlane.location = [0,2,0]
+
+lcd1.backLitPlane.location = [0,-2,0]

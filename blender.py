@@ -124,6 +124,11 @@ class LiquidCrystalDisplay:
         self.textObj.scale = [0.1,0.1,0.1]
         # move slightly on x axis to put on top of backlight
         self.textObj.location = [0.001,0,0]
+        # move again to place in top left hand corner of LCD backlit plane (will need calc function here but for now, plane is 2m x 1.5m) -0.05 for padding
+        self.textObj.location = [0, -0.95, 0.70]
+        # set text origin as top left
+        self.textObj.data.align_y = 'TOP'
+        ####NEXTUP create text box, use b64 string to generate lots of text?
         # apply rotation transforms
         #######self.textObj.transform_apply(location=False, rotation=False, scale=True)
         # rotate text for to match it's parent/backLitPlane

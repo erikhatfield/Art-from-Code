@@ -45,7 +45,7 @@ t4dtz.data.body = now.strftime('%m%d%y @%H:%M ') + timeZDifferenceStr
 
 #this will only work with the CYCLES rendering engine selected - if cycles
 #output settings
-useTheseSettings = False
+useTheseSettings = True
 if (useTheseSettings):
     #RENDER SAMPLE COUNT
     bpy.context.scene.cycles.samples = 128
@@ -64,8 +64,9 @@ if (useTheseSettings):
     #ambient occulusion
     bpy.context.scene.world.light_settings.use_ambient_occlusion = False
     #render tiles
-    bpy.context.scene.render.tile_x = 48
-    bpy.context.scene.render.tile_y = 48    #caustics_reflective & caustics_refractive
+    bpy.context.scene.render.tile_x = 96
+    bpy.context.scene.render.tile_y = 96
+    #caustics_reflective & caustics_refractive
     bpy.context.scene.cycles.caustics_reflective = True
     bpy.context.scene.cycles.caustics_refractive = True
     #sampling > adaptive sampling

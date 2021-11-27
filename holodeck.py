@@ -34,8 +34,9 @@ timeZDifferenceStr = "[-"+ str(timeZDifference) + "00]"
 t4dtz=bpy.data.objects['Text4Date+Time+Zone']
 t4dtz.data.body = now.strftime('%m%d%y @%H:%M ') + timeZDifferenceStr
 
-
-
+new_line = "\n"
+ceiling_display1_text=bpy.data.objects['CEILING_D1_details_textbox']
+ceiling_display1_text.data.body = new_line + "" + new_line + ">>> help(string) # on Python 3" + new_line + "...." + new_line + "DATA" + new_line + "    ascii_letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'" + new_line + "    ascii_lowercase = 'abcdefghijklmnopqrstuvwxyz'" + new_line + "    ascii_uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'" + new_line + "    digits = '0123456789'" + new_line + "    hexdigits = '0123456789abcdefABCDEF'" + new_line + "    octdigits = '01234567'" + new_line + "    printable = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~ \t\n\r\x0b\x0c'" + new_line + "    punctuation = '!#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~'" + new_line + "    whitespace = ' \t\n\r\x0b\x0c'"
 
 ##"""
 ##
@@ -48,14 +49,14 @@ t4dtz.data.body = now.strftime('%m%d%y @%H:%M ') + timeZDifferenceStr
 useTheseSettings = True
 if (useTheseSettings):
     #RENDER SAMPLE COUNT
-    bpy.context.scene.cycles.samples = 128
+    bpy.context.scene.cycles.samples = 64
 
     #LIGHT PATHS (MAX BOUNCES)
     bpy.context.scene.cycles.max_bounces = 32
 
     #LIGHT PATHS (diffuse, glossy, transparency, transmission, volume)
-    bpy.context.scene.cycles.diffuse_bounces = 30
-    bpy.context.scene.cycles.glossy_bounces = 30
+    bpy.context.scene.cycles.diffuse_bounces = 29
+    bpy.context.scene.cycles.glossy_bounces = 28
     bpy.context.scene.cycles.transparent_max_bounces = 31
     bpy.context.scene.cycles.transmission_bounces = 32
     bpy.context.scene.cycles.volume_bounces = 32
@@ -92,7 +93,7 @@ otherRenderInfo.data.body+="adaptive_sampling: "+str(bpy.context.scene.cycles.us
 #######################################################
 
 #output settings
-isAnim = False
+isAnim = True
 if (isAnim):
     #anim settings
     bpy.context.scene.render.resolution_x = 1920

@@ -638,7 +638,7 @@ def cockpitLCD():
     t4dw=bpy.data.objects['LCD_TEXT']
     t4dw.data.body = LCD_MESSAGE_CLEANMEUP
 
-#cockpitLCD()
+cockpitLCD()
 
 
 

@@ -114,17 +114,27 @@ class LiquidCrystalDisplay:
             self.backLitPlane.data.materials.append(mat)
         # add text to LCD screen
         font_curve = bpy.data.curves.new(type="FONT", name="FontCurve"+str(LiquidCrystalDisplay.count))
-        font_curve.body = "LCD instance " + str(LiquidCrystalDisplay.count) + " \n "
+        font_curve.body = "################################" + "\n "
+        font_curve.body = font_curve.body + "LCD instance " + str(LiquidCrystalDisplay.count) + " \n "
         ### ^^^ use 'instancevarname.textObj.data.body = "w00000"' as reference to body/main text input
         self.textObj = bpy.data.objects.new(name="mainTextLCD"+str(LiquidCrystalDisplay.count), object_data=font_curve)
         self.collective.objects.link(self.textObj)
+        #####self.textObj.select_set(True)
+        #####self.textObj.transform_apply(scale=True)
+        self.textObj.data.text_boxes[0].width = (1.9)/.1
+        self.textObj.data.text_boxes[0].height = (1.4)/.1
+        self.textObj.data.text_boxes[0].y = (-0.1)/.1 #offset
+        # set fill mode to front
+        self.textObj.data.fill_mode = 'FRONT'
         # add text parent as backLitPlane
         self.textObj.parent = self.backLitPlane
-        ###
+        ### i dont understand how textboxes work here...
         self.textObj.scale = [0.1,0.1,0.1]
         # move slightly on x axis to put on top of backlight
         # move again to place in top left hand corner of LCD backlit plane (will need calc function here but for now, plane is 2m x 1.5m) -0.05 for padding
         self.textObj.location = [0.001, -0.95, 0.70]
+        #apply scale --- doesnt work...
+        #self.textObj.transform_apply(location=False, rotation=False, scale=True)
         # set text origin as top left
         self.textObj.data.align_y = 'TOP'
         ####NEXTUP create text box, use b64 string to generate lots of text?

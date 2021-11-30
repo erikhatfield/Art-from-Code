@@ -43,12 +43,12 @@ bpy.ops.object.delete()
 ####    bpy.data.objects['Cube'].select_set(True)
 ####    bpy.ops.object.delete()
 
-
+LCD_MESSAGE_MAIN = "G R I D \n"
 #########
 # WORLD #
-randr = 0.0007 + (0.04-0.0007)*random.random()
-randg = 0.0007 + (0.04-0.0007)*random.random()
-randb = 0.0007 + (0.04-0.0007)*random.random()
+randr = 0.0005 + (0.08-0.0005)*random.random()
+randg = 0.0005 + (0.08-0.0005)*random.random()
+randb = 0.0005 + (0.08-0.0005)*random.random()
 bpy.data.worlds["World"].node_tree.nodes["Background"].inputs[0].default_value = (randr, randg, randb, 1)
 #########
 #########################
@@ -138,65 +138,63 @@ def mountainGenerator(buildcountparameter):
         # so, that is, a range of y that is i.e. 16/ divided by an int in the range of 2,4 through 5,6
         #%#print("Using rangeofy: " + str(rangeofy) )
         
-        #rangeofx is to avoid raising z on verts near the edge of the plane's x cords
-        #rangeofx = ( (PLANESIZE /lol) - 1 )
-        
         # Get the active mesh (in edit mode)
         obj = bpy.context.edit_object
         me = obj.data
-
-        # Get a BMesh representation
-        bm = bmesh.from_edit_mesh(me)
-        bm.faces.active = None
-        bpy.ops.mesh.select_all(action='DESELECT')
-
-        # Generate a random interger between 93-99
-        # Lower numbers represent more vertices selected (93% represents 7% selected) 
-        outlyerVerts = random.randint(93, 99)
-        #%#print("outlyer vertices choosen from " + str(100 - outlyerVerts) + "% of eligable range")
         
-        # Modify the BMesh, can do anything here...
-        for v in bm.verts:
-            ###print(v.co.x, v.co.y, v.co.z)
-            if v.co.y > rangeofyR or v.co.y < -rangeofy:
-                if random.randint(0, 100) > outlyerVerts:
-                    v.select = True
-                    v.co.z += random.random()
-                    #if v.co.x < 2:
-                    #if v.co.x > -rangeofx or v.co.x < rangeofx:
-                    #    v.select = True
-                    #    v.co.z += random.random()
+        # Modify the BMesh for each side of y
+        def modifyBMesh(sideBool):
+            # Get a BMesh representation
+            bm = bmesh.from_edit_mesh(me)
+            bm.faces.active = None
+            bpy.ops.mesh.select_all(action='DESELECT')
+
+            # Generate a random interger between 93-99
+            # Lower numbers represent more vertices selected (93% represents 7% selected) 
+            outlyerVerts = random.randint(93, 99)
+            #%#print("outlyer vertices choosen from " + str(100 - outlyerVerts) + "% of eligable range")
+            for v in bm.verts:
+                ###print(v.co.x, v.co.y, v.co.z)
+                #if v.co.y > rangeofyR or v.co.y < -rangeofy:
+                if sideBool == True and v.co.y > rangeofyR:
+                    if random.randint(0, 100) > outlyerVerts:
+                        v.select = True
+                        v.co.z += random.random()
+                elif sideBool == False and v.co.y < -rangeofy:
+                    if random.randint(0, 100) > outlyerVerts:
+                        v.select = True
+                        v.co.z += random.random()
+                ###    print(v.co.x, v.co.y, v.co.z)
+
+            # Show the updates in the viewport
+            # and recalculate n-gon tessellation.
+            bmesh.update_edit_mesh(me, True)
+
+            #specific range for x
+            min = -0.01
+            max = 0.01
+            #generate a random floating point number for x
+            fx = min + (max-min)*random.random()
             
-            ###if v.co.x == 0:
-            ###    print(v.co.x, v.co.y, v.co.z)
+            #specific range for y
+            min = -0.28
+            max = 0.28
+            #generate a random floating point number for y
+            fy = min + (max-min)*random.random()
 
-        # Show the updates in the viewport
-        # and recalculate n-gon tessellation.
-        bmesh.update_edit_mesh(me, True)
+            #specific range for z
+            min = 0.011
+            max = 1.123
+            #generate a random floating point number for X
+            fz = min + (max-min)*random.random()
 
-        #specific range for x
-        min = -0.01
-        max = 0.01
-        #generate a random floating point number for x
-        fx = min + (max-min)*random.random()
-        
-        #specific range for y
-        min = -0.28
-        max = 0.28
-        #generate a random floating point number for y
-        fy = min + (max-min)*random.random()
+            #print(fz)
 
-        #specific range for z
-        min = 0.111
-        max = 1.111
-        #generate a random floating point number for X
-        fz = min + (max-min)*random.random()
-
-        #print(fz)
-
-        bpy.ops.transform.translate(value=(fx, fy, fz), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', mirror=False, use_proportional_edit=True, proportional_edit_falloff='RANDOM', proportional_size=random.randint(2, 4), use_proportional_connected=True, use_proportional_projected=False)
-        # Show the updates in the viewport (and recalculate n-gon tessellation)
-        bmesh.update_edit_mesh(me, True)
+            bpy.ops.transform.translate(value=(fx, fy, fz), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', mirror=False, use_proportional_edit=True, proportional_edit_falloff='RANDOM', proportional_size=random.randint(2, 4), use_proportional_connected=True, use_proportional_projected=False)
+            # Show the updates in the viewport (and recalculate n-gon tessellation)
+            bmesh.update_edit_mesh(me, True)
+        modifyBMesh(True)
+        modifyBMesh(False)
 
     #################################################################################
     # END def editModeVertZ():                                                      #
@@ -565,11 +563,11 @@ def cockpitLCD():
     bpy.context.selected_objects[0].name = "LCD_CUBE"
     bpy.context.object.parent = bpy.data.objects["Spaceship"]
 
+    # scale object to fit center console
     bpy.context.object.scale[0]= (0.05	 * 0.1)
     bpy.context.object.scale[1]= 0.1
     bpy.context.object.scale[2]= 0.1
-
-
+    # tilt display
     bpy.context.object.rotation_euler[1] = 00.32
 
     bpy.context.scene.tool_settings.use_proportional_edit = False
@@ -595,11 +593,7 @@ def cockpitLCD():
 
     links = lcd_mat.node_tree.links
     new_link = links.new(node_emission.outputs[0], material_output.inputs[0])
-
-
-    bpy.context.area.type = 'VIEW_3D'
-    bpy.ops.view3d.snap_cursor_to_selected()
-    bpy.context.area.type = 'TEXT_EDITOR'
+    #add text block
     bpy.ops.object.text_add(enter_editmode=False, align='WORLD', location=(0, 0, 0), scale=(1, 1, 1))
     bpy.context.selected_objects[0].name = "LCD_TEXT"
     bpy.context.object.parent = bpy.data.objects["LCD_CUBE"]
@@ -633,10 +627,10 @@ def cockpitLCD():
 
     second_timestamp = time.time()
     run_time = int(round(second_timestamp - initial_timestamp))
-    LCD_MESSAGE_CLEANMEUP = 'run_time (before rendering time) is ' + str(run_time) + " seconds."
+    LCD_MESSAGE_OUT = LCD_MESSAGE_MAIN + "\nrun_time (before rendering time) is " + str(run_time) + " seconds."
 
     t4dw=bpy.data.objects['LCD_TEXT']
-    t4dw.data.body = LCD_MESSAGE_CLEANMEUP
+    t4dw.data.body = LCD_MESSAGE_OUT
 
 cockpitLCD()
 

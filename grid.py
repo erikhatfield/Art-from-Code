@@ -401,7 +401,7 @@ if bpy.context.scene.objects.get("Spaceship"):
 action = bpy.data.actions.new("cube_linear")
 action.fcurves.new("location", action_group="location")
 action.fcurves[0].keyframe_points.insert(0, 0)
-action.fcurves[0].keyframe_points.insert(10000, 1000)
+action.fcurves[0].keyframe_points.insert(500, 1000)
 
 action.fcurves[0].extrapolation = 'LINEAR'
 
@@ -615,7 +615,7 @@ def cockpitLCD():
     bpy.context.object.scale[2] = 0.025
 
 
-    # MATERIAL
+    # LCDTEXT TEXT TEXT MATERIAL
     lcd_mat = bpy.data.materials.new(name = "LCD1TEXT")
     bpy.context.object.data.materials.append(lcd_mat)
 
@@ -626,7 +626,7 @@ def cockpitLCD():
     node_emission = nodes.new(type="ShaderNodeEmission")
 
     node_emission.inputs[0].default_value = ( 0.0, 0.9, 1.0, 1.0) # color
-    node_emission.inputs[1].default_value = 2 # strength
+    node_emission.inputs[1].default_value = 25 # strength
 
     links = lcd_mat.node_tree.links
     new_link = links.new(node_emission.outputs[0], material_output.inputs[0])

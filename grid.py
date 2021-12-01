@@ -15,10 +15,13 @@ import bmesh
 import random
 import datetime
 import time
+LCD_MESSAGE_MAIN = "G R I D \n"
 # Record time stamps
 now = datetime.datetime.now()
+LCD_MESSAGE_MAIN = LCD_MESSAGE_MAIN + "\n" + str(now) + "\n"
 initial_timestamp = time.time()
-print('initial_timestamp = ' + str(initial_timestamp))
+LCD_MESSAGE_MAIN = LCD_MESSAGE_MAIN + "\n" + "initial_timestamp = " + str(initial_timestamp) + "\n"
+print(LCD_MESSAGE_MAIN)
 # Set some manual parameters:
 isMinimalDraft = False
 # Remove all objects
@@ -43,7 +46,6 @@ bpy.ops.object.delete()
 ####    bpy.data.objects['Cube'].select_set(True)
 ####    bpy.ops.object.delete()
 
-LCD_MESSAGE_MAIN = "G R I D \n"
 #########
 # WORLD #
 randr = 0.0005 + (0.08-0.0005)*random.random()
@@ -132,9 +134,9 @@ def mountainGenerator(buildcountparameter):
         #######################################################
         # create a rangeofy, for subtle uniqueness every time #
         # range of y is the size (in y) of the effected area on the (y) sides of the plane
-        rangeofy = (PLANESIZE / random.randint((PLANESIZE/(WILDCARD*4)), ((PLANESIZE/4)+WILDCARD)))
+        rangeofy = (PLANESIZE / random.randint((PLANESIZE/(WILDCARD*(PLANESIZE/4))), ((PLANESIZE/4)+WILDCARD)))
         # create a different range of y for the R side
-        rangeofyR = (PLANESIZE / random.randint((PLANESIZE/(WILDCARD*4)), ((PLANESIZE/4)+WILDCARD)))
+        rangeofyR = (PLANESIZE / random.randint((PLANESIZE/(WILDCARD*(PLANESIZE/4))), ((PLANESIZE/4)+WILDCARD)))
         # so, that is, a range of y that is i.e. 16/ divided by an int in the range of 2,4 through 5,6
         #%#print("Using rangeofy: " + str(rangeofy) )
         
@@ -204,7 +206,7 @@ def mountainGenerator(buildcountparameter):
         randomrange = 1
     else:
         # Call the function 2-4 times. Because seperate random numbers are created each time which gives it a slightly different outcome everytime 3 fold.
-        randomrange = random.randint(2, 4) #increasing this range can create heavy blend files
+        randomrange = random.randint(2, 5) #increasing this range can create heavy blend files
 
     for x in range(randomrange):
         editModeVertZ()
@@ -220,15 +222,18 @@ if isMinimalDraft == True:
 else:
     randomrange = random.randint(2, 22) #upper bounds of this range can generate heavy files (1GB) when combined with applied modifiers
 
-
 for x in range(randomrange):
     #update the build count returned from the iteration of the mountainGenerator() function
     buildcount = mountainGenerator(buildcount)
 
+# before exiting edit mode add this plane...
+# just isnt adding this... ?_?
+bpy.ops.mesh.primitive_plane_add(size=4, enter_editmode=True, align='WORLD', location=(0, 0, 0), scale=(1, 1, 1))
+
+#bpy.ops.mesh.primitive_plane_add(size=(PLANESIZE+3), enter_editmode=False, align='WORLD', location=(0, 0, 0), scale=((2*randomrange), 2, 1))
 
 # disable edit mode
 bpy.ops.object.editmode_toggle()
-
 
 ########################
 # ADD MODIFIERS to mountain plane
@@ -507,7 +512,7 @@ def birthOfAStar():
     #this_star.location[0]=( buildcount * 2 )
     #this_star.location[2]=40
     # for some reason, the X is the -Z
-    bpy.context.object.location[2]= ( 768 * -2 ) #distance from camera
+    bpy.context.object.location[2]= ( (random.randint(512, 1024)) * -2 ) #distance from camera
     # and Z is Y
     bpy.context.object.location[1]= random.randint(4, (480 - lensangle*2)) #vertical
     # and Y is X
@@ -522,7 +527,7 @@ def birthOfAStar():
     if random.randint(0, 10000) > specialBoundaries:
         starscale = 10.1 + (45.1-10.1)*random.random()
     else:
-        starscale = 0.001 + (0.1-0.001)*random.random()
+        starscale = 0.004 + (0.5-0.004)*random.random()
 
     bpy.context.object.scale[0]= starscale
     bpy.context.object.scale[1]= starscale
@@ -533,16 +538,15 @@ def birthOfAStar():
     bpy.context.object.data.materials.append(w00t_mat)
 
     w00t_mat.use_nodes = True
-    nodes = w00t_mat.node_tree.nodes
-
-    material_output = nodes.get("Material Output")
-    node_emission = nodes.new(type="ShaderNodeEmission")
+    #nodes = w00t_mat.node_tree.nodes
+    material_output = w00t_mat.node_tree.nodes.get("Material Output")
+    node_emission = w00t_mat.node_tree.nodes.new(type="ShaderNodeEmission")
 
     node_emission.inputs[0].default_value = ( 0.8, 0.8, 0.8, 1.0) # color
     node_emission.inputs[1].default_value = ( 1.23 + (123.45-1.23)*random.random() ) # strength
-
-    links = w00t_mat.node_tree.links
-    new_link = links.new(node_emission.outputs[0], material_output.inputs[0])
+    #links = w00t_mat.node_tree.links
+    #new_link = links.new(node_emission.outputs[0], material_output.inputs[0])
+    w00t_mat.node_tree.links.new(node_emission.outputs[0], material_output.inputs[0])
     
 if isMinimalDraft == True:
     numberofstars = 1

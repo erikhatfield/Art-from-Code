@@ -660,20 +660,22 @@ bpy.context.scene.render.resolution_y = 1080
 bpy.context.scene.render.fps = 30
 bpy.context.scene.render.filepath = "//../output/temp_grid_" + now.strftime('%m%d%y_%H%M') + "-out"
 
-# if isANIM logic needed for easy switch between image and animation (mp4)
-# for now these are controlled at the end of the script - near the f12 command
-#bpy.context.scene.render.image_settings.file_format = 'FFMPEG'
-#bpy.context.scene.render.ffmpeg.format = 'MPEG4'                                          
-                                                       
-bpy.context.scene.render.image_settings.file_format = 'JPEG'
-bpy.context.scene.render.image_settings.quality = 80
-##Render the default render (same as F12 only better)
-bpy.ops.render.render('INVOKE_DEFAULT', animation=False, write_still=True)
+# if animation, render mp4
+isANIM = False
+                                        
+if isANIM == True:
+    bpy.context.scene.render.image_settings.file_format = 'FFMPEG'
+    bpy.context.scene.render.ffmpeg.format = 'MPEG4'
+    ##Render the default render (same as fan-F12 only better)
+    bpy.ops.render.render('INVOKE_DEFAULT', animation=True, write_still=True)
+else:
+    bpy.context.scene.render.image_settings.file_format = 'JPEG'
+    bpy.context.scene.render.image_settings.quality = 80
+    ##Render the default render (same as F12 only better)
+    bpy.ops.render.render('INVOKE_DEFAULT', animation=False, write_still=True)                                                   
 
-#bpy.context.scene.render.image_settings.file_format = 'FFMPEG'
-#bpy.context.scene.render.ffmpeg.format = 'MPEG4'
-##Render the default render (same as fan-F12 only better)
-#bpy.ops.render.render('INVOKE_DEFAULT', animation=True, write_still=True)
+
+
 
 ##########################################################
 ##########################################################

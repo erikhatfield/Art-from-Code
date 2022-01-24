@@ -675,8 +675,6 @@ else:
     bpy.ops.render.render('INVOKE_DEFAULT', animation=False, write_still=True)                                                   
 
 
-
-
 ##########################################################
 ##########################################################
 # print out run time of this py

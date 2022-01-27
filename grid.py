@@ -170,11 +170,12 @@ def mountainGenerator(buildcountparameter):
 
             # Show the updates in the viewport
             # and recalculate n-gon tessellation.
-            bmesh.update_edit_mesh(me, True)
+            ###bmesh.update_edit_mesh(me, True)
+            bmesh.update_edit_mesh(me, loop_triangles=True)
 
             #specific range for x
-            min = -0.01
-            max = 0.01
+            min = -0.04
+            max = 0.04
             #generate a random floating point number for x
             fx = min + (max-min)*random.random()
             
@@ -194,7 +195,8 @@ def mountainGenerator(buildcountparameter):
 
             bpy.ops.transform.translate(value=(fx, fy, fz), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', mirror=False, use_proportional_edit=True, proportional_edit_falloff='RANDOM', proportional_size=random.randint(2, 4), use_proportional_connected=True, use_proportional_projected=False)
             # Show the updates in the viewport (and recalculate n-gon tessellation)
-            bmesh.update_edit_mesh(me, True)
+            ###bmesh.update_edit_mesh(me, True)
+            bmesh.update_edit_mesh(me, loop_triangles=True)
         modifyBMesh(True)
         modifyBMesh(False)
 

@@ -608,7 +608,12 @@ def cockpitLCD():
     #bpy.context.object.rotation_euler[1] = 0.32
     bpy.context.object.rotation_euler[2] = -1.5708
 
-    bpy.context.object.location[0] = -0.51 #IS Z
+    #place text flat with screen surface
+    bpy.context.object.location[0] = -0.51  #X coord
+    # move to left side of LCD
+    bpy.context.object.location[1] = 0.4  #Y coord
+    # move to top of screen a little bit
+    bpy.context.object.location[2] = 0.07 #Z coord
 
     bpy.context.object.scale[0] = 0.025
     bpy.context.object.scale[1] = 0.025

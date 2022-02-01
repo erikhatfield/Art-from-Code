@@ -497,68 +497,73 @@ bpy.ops.object.editmode_toggle()
 ###################or maybe just the recording of settings integrated into the artwork?
 
 #######################################################
-# birthOfAStar()                                      #
+# bigBangTheory and birthOfAStar()                    #
 # create a sphere, assign relation to parent (camera) #
 #######################################################
-def birthOfAStar():
-    # add star with random size floating point (near zero)
-    bpy.ops.mesh.primitive_uv_sphere_add(enter_editmode=False, align='WORLD', location=(0, 0, 0), scale=(1.0, 1.0, 1.0))
-    this_star=bpy.context.active_object
-
-    #make the star's parent relation that of the camera
-    #this_star.parent = obj_camera
-    bpy.context.object.parent = bpy.data.objects["Camera"]
-    bpy.context.object.track_axis = 'POS_X'
-    bpy.context.object.up_axis = 'Z'
-
-    #this_star.location[0]=( buildcount * 2 )
-    #this_star.location[2]=40
-    # for some reason, the X is the -Z
-    bpy.context.object.location[2]= ( (random.randint(512, 1024)) * -2 ) #distance from camera
-    # and Z is Y
-    bpy.context.object.location[1]= random.randint(4, (480 - lensangle*2)) #vertical
-    # and Y is X
-    starrangey = 0.1 + (1280.0-0.1)*random.random() #horizontal
-    
-    if random.randint(1, 2) == 1:
-        starrangey = starrangey * -1 # both sides of center line
-    
-    bpy.context.object.location[0]= starrangey
-
-    specialBoundaries = random.randint(9989, 9999)
-    if random.randint(0, 10000) > specialBoundaries:
-        starscale = 10.1 + (45.1-10.1)*random.random()
-    else:
-        starscale = 0.004 + (0.5-0.004)*random.random()
-
-    bpy.context.object.scale[0]= starscale
-    bpy.context.object.scale[1]= starscale
-    bpy.context.object.scale[2]= starscale
-
+def bigBangTheory():
     # MATERIAL
-    w00t_mat = bpy.data.materials.new(name = "starGlow")
-    bpy.context.object.data.materials.append(w00t_mat)
+    star_mat = bpy.data.materials.new(name = "starGlow")
+    #bpy.context.object.data.materials.append(star_mat)
 
-    w00t_mat.use_nodes = True
+    star_mat.use_nodes = True
     #nodes = w00t_mat.node_tree.nodes
-    material_output = w00t_mat.node_tree.nodes.get("Material Output")
-    node_emission = w00t_mat.node_tree.nodes.new(type="ShaderNodeEmission")
+    material_output = star_mat.node_tree.nodes.get("Material Output")
+    node_emission = star_mat.node_tree.nodes.new(type="ShaderNodeEmission")
 
     node_emission.inputs[0].default_value = ( 0.8, 0.8, 0.8, 1.0) # color
-    node_emission.inputs[1].default_value = ( 1.23 + (123.45-1.23)*random.random() ) # strength
+    node_emission.inputs[1].default_value = ( 12.345 + (123.45-12.345)*random.random() ) # strength
+    #node_emission.inputs[1].default_value = 45.1 # strength
     #links = w00t_mat.node_tree.links
     #new_link = links.new(node_emission.outputs[0], material_output.inputs[0])
-    w00t_mat.node_tree.links.new(node_emission.outputs[0], material_output.inputs[0])
-    
-if isMinimalDraft == True:
-    numberofstars = 1
-else:
-    numberofstars = random.randint(100, 1000)
+    star_mat.node_tree.links.new(node_emission.outputs[0], material_output.inputs[0])
 
-for x in range(numberofstars):
-    birthOfAStar()
+    def birthOfAStar(star_material_arg):
+        # add star with random size floating point (near zero)
+        bpy.ops.mesh.primitive_uv_sphere_add(enter_editmode=False, align='WORLD', location=(0, 0, 0), scale=(1.0, 1.0, 1.0))
+        this_star=bpy.context.active_object
 
+        #make the star's parent relation that of the camera
+        #this_star.parent = obj_camera
+        bpy.context.object.parent = bpy.data.objects["Camera"]
+        bpy.context.object.track_axis = 'POS_X'
+        bpy.context.object.up_axis = 'Z'
 
+        #this_star.location[0]=( buildcount * 2 )
+        #this_star.location[2]=40
+        # for some reason, the X is the -Z
+        bpy.context.object.location[2]= ( (random.randint(512, 1024)) * -2 ) #distance from camera
+        # and Z is Y
+        bpy.context.object.location[1]= random.randint(4, (480 - lensangle*2)) #vertical
+        # and Y is X
+        starrangey = 0.1 + (1280.0-0.1)*random.random() #horizontal
+        
+        if random.randint(1, 2) == 1:
+            starrangey = starrangey * -1 # both sides of center line
+        
+        bpy.context.object.location[0]= starrangey
+
+        specialBoundaries = random.randint(9989, 9999)
+        if random.randint(0, 10000) > specialBoundaries:
+            starscale = 10.1 + (45.1-10.1)*random.random()
+        else:
+            starscale = 0.004 + (0.5-0.004)*random.random()
+
+        bpy.context.object.scale[0]= starscale
+        bpy.context.object.scale[1]= starscale
+        bpy.context.object.scale[2]= starscale
+
+        # APPLY MATERIAL
+        bpy.context.object.data.materials.append(star_material_arg)
+        
+    if isMinimalDraft == True:
+        numberofstars = 1
+    else:
+        numberofstars = random.randint(100, 1000)
+
+    for x in range(numberofstars):
+        birthOfAStar(star_mat)
+
+bigBangTheory()
 
 
 
@@ -570,7 +575,7 @@ def cockpitLCD():
     bpy.context.object.parent = bpy.data.objects["Spaceship"]
 
     # scale object to fit center console
-    bpy.context.object.scale[0]= (0.05	 * 0.1)
+    bpy.context.object.scale[0]= (0.05     * 0.1)
     bpy.context.object.scale[1]= 0.1
     bpy.context.object.scale[2]= 0.1
     # tilt display

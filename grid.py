@@ -668,6 +668,11 @@ bpy.context.scene.render.resolution_x = 1920
 bpy.context.scene.render.resolution_y = 1080
 #bpy.context.scene.render.resolution_x = 400
 #bpy.context.scene.render.resolution_y = 300
+## for mbp16 retina display: 3584x2240, 4096x25560@144
+##bpy.context.scene.render.resolution_x = 3584
+##bpy.context.scene.render.resolution_y = 2240
+##bpy.context.scene.render.resolution_x = 4096
+##bpy.context.scene.render.resolution_y = 2556
 
 bpy.context.scene.render.fps = 30
 bpy.context.scene.render.filepath = "//../output/temp_grid_" + now.strftime('%m%d%y_%H%M') + "-out"

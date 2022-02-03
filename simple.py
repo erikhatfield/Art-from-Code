@@ -9,6 +9,7 @@ shade_of_gray = ( 0.0 + (0.0267-0.0)*random.random() )
 bpy.data.worlds["World"].node_tree.nodes["Background"].inputs[0].default_value = (shade_of_gray, shade_of_gray, shade_of_gray, 1)
 
 # need to add formally in code but this will do for now
+# cannot differentiate between WORLD > SURFACE nodes and WORLD > VOLUME with python...
 bpy.data.worlds["World"].node_tree.nodes["Volume Scatter"].inputs[1].default_value = shade_of_gray
 
 
@@ -56,19 +57,22 @@ nodes = w00t_mat.node_tree.nodes
 
 material_output = nodes.get("Material Output")
 node_emission = nodes.new(type="ShaderNodeEmission")
+node_default = nodes.get("Principled BSDF")
 
 node_emission.inputs[0].default_value = ( 0.1, 0.5, 0.8, 0.9) # color
 node_emission.inputs[1].default_value = ( 1.23 + (11.11-1.23)*random.random() ) # strength
 
+node_default.inputs[19].default_value = ( 0.1, 0.5, 0.8, 0.9) # color
+node_default.inputs[19].default_value = ( 1.23 + (11.11-1.23)*random.random() ) # strength
+
+
 links = w00t_mat.node_tree.links
-new_link = links.new(node_emission.outputs[0], material_output.inputs[0])
+new_link = links.new(node_emission.outputs[0], material_output.inputs[1])
 
 
 # layout view and render settings
 #bpy.context.space_data.shading.type = 'RENDERED'
 bpy.context.scene.eevee.use_bloom = True
-
-
 
 # Camera
 # Active Render Camera
@@ -85,4 +89,3 @@ obj_camera.location[2] = 30.0
 obj_camera.rotation_euler[0] = 1.1
 obj_camera.rotation_euler[1] = 0
 obj_camera.rotation_euler[2] = 0.8
-

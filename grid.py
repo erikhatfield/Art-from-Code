@@ -51,6 +51,7 @@ bpy.ops.object.delete()
 randr = 0.0005 + (0.08-0.0005)*random.random()
 randg = 0.0005 + (0.08-0.0005)*random.random()
 randb = 0.0005 + (0.08-0.0005)*random.random()
+# Note2self: add background gradient to sky. first step: identify node_tree levels as seen in GUI
 bpy.data.worlds["World"].node_tree.nodes["Background"].inputs[0].default_value = (randr, randg, randb, 1)
 #########
 #########################

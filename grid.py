@@ -688,7 +688,8 @@ bpy.context.scene.render.resolution_y = 1080
 ##bpy.context.scene.render.resolution_y = 2560
 
 bpy.context.scene.render.fps = 30
-bpy.context.scene.render.filepath = "//../output/temp_grid_" + now.strftime('%m%d%y_%H%M') + "-out"
+renderedFilepath = "//../output/temp_grid_" + now.strftime('%m%d%y_%H%M') + "-out"
+bpy.context.scene.render.filepath = renderedFilepath
 
 # if animation, render mp4
 isANIM = False

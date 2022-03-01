@@ -15,10 +15,13 @@ import bmesh
 import random
 import datetime
 import time
+LCD_MESSAGE_MAIN = "G R I D \n"
 # Record time stamps
 now = datetime.datetime.now()
+LCD_MESSAGE_MAIN = LCD_MESSAGE_MAIN + "\n" + str(now) + "\n"
 initial_timestamp = time.time()
-print('initial_timestamp = ' + str(initial_timestamp))
+LCD_MESSAGE_MAIN = LCD_MESSAGE_MAIN + "\n" + "initial_timestamp = " + str(initial_timestamp) + "\n"
+print(LCD_MESSAGE_MAIN)
 # Set some manual parameters:
 isMinimalDraft = False
 # Remove all objects
@@ -43,12 +46,12 @@ bpy.ops.object.delete()
 ####    bpy.data.objects['Cube'].select_set(True)
 ####    bpy.ops.object.delete()
 
-LCD_MESSAGE_MAIN = "G R I D \n"
 #########
 # WORLD #
 randr = 0.0005 + (0.08-0.0005)*random.random()
 randg = 0.0005 + (0.08-0.0005)*random.random()
 randb = 0.0005 + (0.08-0.0005)*random.random()
+# Note2self: add background gradient to sky. first step: identify node_tree levels as seen in GUI
 bpy.data.worlds["World"].node_tree.nodes["Background"].inputs[0].default_value = (randr, randg, randb, 1)
 #########
 #########################
@@ -132,9 +135,9 @@ def mountainGenerator(buildcountparameter):
         #######################################################
         # create a rangeofy, for subtle uniqueness every time #
         # range of y is the size (in y) of the effected area on the (y) sides of the plane
-        rangeofy = (PLANESIZE / random.randint((PLANESIZE/(WILDCARD*4)), ((PLANESIZE/4)+WILDCARD)))
+        rangeofy = (PLANESIZE / random.randint((PLANESIZE/(WILDCARD*(PLANESIZE/4))), ((PLANESIZE/4)+WILDCARD)))
         # create a different range of y for the R side
-        rangeofyR = (PLANESIZE / random.randint((PLANESIZE/(WILDCARD*4)), ((PLANESIZE/4)+WILDCARD)))
+        rangeofyR = (PLANESIZE / random.randint((PLANESIZE/(WILDCARD*(PLANESIZE/4))), ((PLANESIZE/4)+WILDCARD)))
         # so, that is, a range of y that is i.e. 16/ divided by an int in the range of 2,4 through 5,6
         #%#print("Using rangeofy: " + str(rangeofy) )
         
@@ -168,11 +171,12 @@ def mountainGenerator(buildcountparameter):
 
             # Show the updates in the viewport
             # and recalculate n-gon tessellation.
-            bmesh.update_edit_mesh(me, True)
+            ###bmesh.update_edit_mesh(me, True)
+            bmesh.update_edit_mesh(me, loop_triangles=True)
 
             #specific range for x
-            min = -0.01
-            max = 0.01
+            min = -0.04
+            max = 0.04
             #generate a random floating point number for x
             fx = min + (max-min)*random.random()
             
@@ -192,7 +196,8 @@ def mountainGenerator(buildcountparameter):
 
             bpy.ops.transform.translate(value=(fx, fy, fz), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', mirror=False, use_proportional_edit=True, proportional_edit_falloff='RANDOM', proportional_size=random.randint(2, 4), use_proportional_connected=True, use_proportional_projected=False)
             # Show the updates in the viewport (and recalculate n-gon tessellation)
-            bmesh.update_edit_mesh(me, True)
+            ###bmesh.update_edit_mesh(me, True)
+            bmesh.update_edit_mesh(me, loop_triangles=True)
         modifyBMesh(True)
         modifyBMesh(False)
 
@@ -204,7 +209,7 @@ def mountainGenerator(buildcountparameter):
         randomrange = 1
     else:
         # Call the function 2-4 times. Because seperate random numbers are created each time which gives it a slightly different outcome everytime 3 fold.
-        randomrange = random.randint(2, 4) #increasing this range can create heavy blend files
+        randomrange = random.randint(2, 5) #increasing this range can create heavy blend files
 
     for x in range(randomrange):
         editModeVertZ()
@@ -220,15 +225,18 @@ if isMinimalDraft == True:
 else:
     randomrange = random.randint(2, 22) #upper bounds of this range can generate heavy files (1GB) when combined with applied modifiers
 
-
 for x in range(randomrange):
     #update the build count returned from the iteration of the mountainGenerator() function
     buildcount = mountainGenerator(buildcount)
 
+# before exiting edit mode add this plane...
+# just isnt adding this... ?_?
+bpy.ops.mesh.primitive_plane_add(size=4, enter_editmode=True, align='WORLD', location=(0, 0, 0), scale=(1, 1, 1))
+
+#bpy.ops.mesh.primitive_plane_add(size=(PLANESIZE+3), enter_editmode=False, align='WORLD', location=(0, 0, 0), scale=((2*randomrange), 2, 1))
 
 # disable edit mode
 bpy.ops.object.editmode_toggle()
-
 
 ########################
 # ADD MODIFIERS to mountain plane
@@ -368,7 +376,7 @@ new_link = links.new(node_emission.outputs[0], material_output.inputs[0])
 #camx = int(-1 * (PLANESIZE / WILDCARD))
 camx = 0
 #camz = WILDCARD * 0.420
-camz = (( 0.1 + (0.7-0.1)*random.random() ) * WILDCARD)
+camz = (( 0.1 + (0.67-0.1)*random.random() ) * WILDCARD)
 bpy.ops.object.camera_add(enter_editmode=False, align='VIEW', location=(camx, 0, camz), rotation=(1.5708, 0, -1.5708), scale=(1, 1, 1))
 bpy.ops.object.transforms_to_deltas(mode='ALL')
 
@@ -490,69 +498,73 @@ bpy.ops.object.editmode_toggle()
 ###################or maybe just the recording of settings integrated into the artwork?
 
 #######################################################
-# birthOfAStar()                                      #
+# bigBangTheory and birthOfAStar()                    #
 # create a sphere, assign relation to parent (camera) #
 #######################################################
-def birthOfAStar():
-    # add star with random size floating point (near zero)
-    bpy.ops.mesh.primitive_uv_sphere_add(enter_editmode=False, align='WORLD', location=(0, 0, 0), scale=(1.0, 1.0, 1.0))
-    this_star=bpy.context.active_object
-
-    #make the star's parent relation that of the camera
-    #this_star.parent = obj_camera
-    bpy.context.object.parent = bpy.data.objects["Camera"]
-    bpy.context.object.track_axis = 'POS_X'
-    bpy.context.object.up_axis = 'Z'
-
-    #this_star.location[0]=( buildcount * 2 )
-    #this_star.location[2]=40
-    # for some reason, the X is the -Z
-    bpy.context.object.location[2]= ( 768 * -2 ) #distance from camera
-    # and Z is Y
-    bpy.context.object.location[1]= random.randint(4, (480 - lensangle*2)) #vertical
-    # and Y is X
-    starrangey = 0.1 + (1280.0-0.1)*random.random() #horizontal
-    
-    if random.randint(1, 2) == 1:
-        starrangey = starrangey * -1 # both sides of center line
-    
-    bpy.context.object.location[0]= starrangey
-
-    specialBoundaries = random.randint(9989, 9999)
-    if random.randint(0, 10000) > specialBoundaries:
-        starscale = 10.1 + (45.1-10.1)*random.random()
-    else:
-        starscale = 0.001 + (0.1-0.001)*random.random()
-
-    bpy.context.object.scale[0]= starscale
-    bpy.context.object.scale[1]= starscale
-    bpy.context.object.scale[2]= starscale
-
+def bigBangTheory():
     # MATERIAL
-    w00t_mat = bpy.data.materials.new(name = "starGlow")
-    bpy.context.object.data.materials.append(w00t_mat)
+    star_mat = bpy.data.materials.new(name = "starGlow")
+    #bpy.context.object.data.materials.append(star_mat)
 
-    w00t_mat.use_nodes = True
-    nodes = w00t_mat.node_tree.nodes
-
-    material_output = nodes.get("Material Output")
-    node_emission = nodes.new(type="ShaderNodeEmission")
+    star_mat.use_nodes = True
+    #nodes = w00t_mat.node_tree.nodes
+    material_output = star_mat.node_tree.nodes.get("Material Output")
+    node_emission = star_mat.node_tree.nodes.new(type="ShaderNodeEmission")
 
     node_emission.inputs[0].default_value = ( 0.8, 0.8, 0.8, 1.0) # color
-    node_emission.inputs[1].default_value = ( 1.23 + (123.45-1.23)*random.random() ) # strength
+    node_emission.inputs[1].default_value = ( 12.345 + (123.45-12.345)*random.random() ) # strength
+    #node_emission.inputs[1].default_value = 45.1 # strength
+    #links = w00t_mat.node_tree.links
+    #new_link = links.new(node_emission.outputs[0], material_output.inputs[0])
+    star_mat.node_tree.links.new(node_emission.outputs[0], material_output.inputs[0])
 
-    links = w00t_mat.node_tree.links
-    new_link = links.new(node_emission.outputs[0], material_output.inputs[0])
-    
-if isMinimalDraft == True:
-    numberofstars = 1
-else:
-    numberofstars = random.randint(100, 1000)
+    def birthOfAStar(star_material_arg):
+        # add star with random size floating point (near zero)
+        bpy.ops.mesh.primitive_uv_sphere_add(enter_editmode=False, align='WORLD', location=(0, 0, 0), scale=(1.0, 1.0, 1.0))
+        this_star=bpy.context.active_object
 
-for x in range(numberofstars):
-    birthOfAStar()
+        #make the star's parent relation that of the camera
+        #this_star.parent = obj_camera
+        bpy.context.object.parent = bpy.data.objects["Camera"]
+        bpy.context.object.track_axis = 'POS_X'
+        bpy.context.object.up_axis = 'Z'
 
+        #this_star.location[0]=( buildcount * 2 )
+        #this_star.location[2]=40
+        # for some reason, the X is the -Z
+        bpy.context.object.location[2]= ( (random.randint(512, 1024)) * -2 ) #distance from camera
+        # and Z is Y
+        bpy.context.object.location[1]= random.randint(4, (480 - lensangle*2)) #vertical
+        # and Y is X
+        starrangey = 0.1 + (1280.0-0.1)*random.random() #horizontal
+        
+        if random.randint(1, 2) == 1:
+            starrangey = starrangey * -1 # both sides of center line
+        
+        bpy.context.object.location[0]= starrangey
 
+        specialBoundaries = random.randint(9989, 9999)
+        if random.randint(0, 10000) > specialBoundaries:
+            starscale = 10.1 + (45.1-10.1)*random.random()
+        else:
+            starscale = 0.004 + (0.5-0.004)*random.random()
+
+        bpy.context.object.scale[0]= starscale
+        bpy.context.object.scale[1]= starscale
+        bpy.context.object.scale[2]= starscale
+
+        # APPLY MATERIAL
+        bpy.context.object.data.materials.append(star_material_arg)
+        
+    if isMinimalDraft == True:
+        numberofstars = 1
+    else:
+        numberofstars = random.randint(100, 1000)
+
+    for x in range(numberofstars):
+        birthOfAStar(star_mat)
+
+bigBangTheory()
 
 
 
@@ -564,7 +576,7 @@ def cockpitLCD():
     bpy.context.object.parent = bpy.data.objects["Spaceship"]
 
     # scale object to fit center console
-    bpy.context.object.scale[0]= (0.05	 * 0.1)
+    bpy.context.object.scale[0]= (0.05     * 0.1)
     bpy.context.object.scale[1]= 0.1
     bpy.context.object.scale[2]= 0.1
     # tilt display
@@ -602,7 +614,12 @@ def cockpitLCD():
     #bpy.context.object.rotation_euler[1] = 0.32
     bpy.context.object.rotation_euler[2] = -1.5708
 
-    bpy.context.object.location[0] = -0.51 #IS Z
+    #place text flat with screen surface
+    bpy.context.object.location[0] = -0.51  #X coord
+    # move to left side of LCD
+    bpy.context.object.location[1] = 0.4  #Y coord
+    # move to top of screen a little bit
+    bpy.context.object.location[2] = 0.07 #Z coord
 
     bpy.context.object.scale[0] = 0.025
     bpy.context.object.scale[1] = 0.025
@@ -652,24 +669,29 @@ bpy.context.scene.render.resolution_x = 1920
 bpy.context.scene.render.resolution_y = 1080
 #bpy.context.scene.render.resolution_x = 400
 #bpy.context.scene.render.resolution_y = 300
+## for mbp16 retina display: 3584x2240, 4096x2560@144
+##bpy.context.scene.render.resolution_x = 3584
+##bpy.context.scene.render.resolution_y = 2240
+##bpy.context.scene.render.resolution_x = 4096
+##bpy.context.scene.render.resolution_y = 2560
 
 bpy.context.scene.render.fps = 30
 bpy.context.scene.render.filepath = "//../output/temp_grid_" + now.strftime('%m%d%y_%H%M') + "-out"
 
-# if isANIM logic needed for easy switch between image and animation (mp4)
-# for now these are controlled at the end of the script - near the f12 command
-#bpy.context.scene.render.image_settings.file_format = 'FFMPEG'
-#bpy.context.scene.render.ffmpeg.format = 'MPEG4'                                          
-                                                       
-bpy.context.scene.render.image_settings.file_format = 'JPEG'
-bpy.context.scene.render.image_settings.quality = 80
-##Render the default render (same as F12 only better)
-bpy.ops.render.render('INVOKE_DEFAULT', animation=False, write_still=True)
+# if animation, render mp4
+isANIM = False
+                                        
+if isANIM == True:
+    bpy.context.scene.render.image_settings.file_format = 'FFMPEG'
+    bpy.context.scene.render.ffmpeg.format = 'MPEG4'
+    ##Render the default render (same as fan-F12 only better)
+    bpy.ops.render.render('INVOKE_DEFAULT', animation=True, write_still=True)
+else:
+    bpy.context.scene.render.image_settings.file_format = 'JPEG'
+    bpy.context.scene.render.image_settings.quality = 80
+    ##Render the default render (same as F12 only better)
+    bpy.ops.render.render('INVOKE_DEFAULT', animation=False, write_still=True)                                                   
 
-#bpy.context.scene.render.image_settings.file_format = 'FFMPEG'
-#bpy.context.scene.render.ffmpeg.format = 'MPEG4'
-##Render the default render (same as fan-F12 only better)
-#bpy.ops.render.render('INVOKE_DEFAULT', animation=True, write_still=True)
 
 ##########################################################
 ##########################################################

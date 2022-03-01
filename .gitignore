@@ -1,6 +1,7 @@
 /output/*
 !/output/grid*
 !/output/simple.jpg
+!/output/latest*
 /BL/temp_*
 *.blend1
 .DS_Store

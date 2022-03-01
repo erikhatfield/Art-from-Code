@@ -1,7 +1,8 @@
 #!/bin/sh
 
 #blender
-open ~/Dev/BL/art-from-code
+
+#open ~/Dev/BL/art-from-code
 
 cd ~/Dev/BL/art-from-code
 

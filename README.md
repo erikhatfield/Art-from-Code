@@ -9,6 +9,9 @@ Using Blender's Python coding environment to output visual art
 ###### Grid output (JPG)
 ![JPG OUTPUT](/output/grid.jpg)
 
+###### Grid output [[LATEST]]
+![JPG OUTPUT](/output/latest.jpg)
+
 ###### Simple output 
 ![GIF OUTPUT](/output/simple.jpg)
 

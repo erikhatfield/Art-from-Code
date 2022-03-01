@@ -522,7 +522,11 @@ def bigBangTheory():
         # add star with random size floating point (near zero)
         bpy.ops.mesh.primitive_uv_sphere_add(enter_editmode=False, align='WORLD', location=(0, 0, 0), scale=(1.0, 1.0, 1.0))
         this_star=bpy.context.active_object
-
+        
+        # name it Star
+        #bpy.context.selected_objects[0].name = "Star"
+        bpy.context.object.name = "Star"
+        
         #make the star's parent relation that of the camera
         #this_star.parent = obj_camera
         bpy.context.object.parent = bpy.data.objects["Camera"]
@@ -564,6 +568,14 @@ def bigBangTheory():
     for x in range(numberofstars):
         birthOfAStar(star_mat)
 
+    # Join all stars into one object
+    for o in bpy.context.scene.objects:
+        if o.name.startswith("Star"):
+            o.select_set(True)
+        else:
+            o.select_set(False)
+    bpy.ops.object.join()
+    
 bigBangTheory()
 
 

@@ -384,7 +384,8 @@ obj_camera = bpy.data.objects["Camera"]
 #lensangle = random.randint(18, 135)
 lensangle = random.randint(20, 70) #35 max zoom for spaceship cockpit for now
 obj_camera.data.lens = lensangle
-obj_camera.data.clip_end = 5000
+bpy.context.object.data.clip_start = 0.25 # default is .01
+obj_camera.data.clip_end = 10000
 
 
 # if exists- attach spaceship to camera

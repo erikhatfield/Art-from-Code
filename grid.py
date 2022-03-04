@@ -382,7 +382,7 @@ bpy.ops.object.transforms_to_deltas(mode='ALL')
 
 obj_camera = bpy.data.objects["Camera"]
 #lensangle = random.randint(18, 135)
-lensangle = random.randint(20, 70) #35 max zoom for spaceship cockpit for now
+lensangle = random.randint(35, 70) #35 min zoom for spaceship cockpit for now
 obj_camera.data.lens = lensangle
 bpy.context.object.data.clip_start = 0.25 # default is .01
 obj_camera.data.clip_end = 10000

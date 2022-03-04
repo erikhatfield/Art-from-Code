@@ -77,7 +77,7 @@ bpy.context.scene.eevee.use_volumetric_shadows = True
 bpy.context.scene.render.hair_type = 'STRAND'
 bpy.context.scene.render.hair_subdiv = 2
 # Animation timeline
-bpy.context.scene.frame_end = 500
+bpy.context.scene.frame_end = 1000
 
 #########################################################################
 # create a few CONSTANTS, for subtle uniqueness at the foundation level #
@@ -210,6 +210,7 @@ def mountainGenerator(buildcountparameter):
     else:
         # Call the function 2-4 times. Because seperate random numbers are created each time which gives it a slightly different outcome everytime 3 fold.
         randomrange = random.randint(2, 5) #increasing this range can create heavy blend files
+        print("editModeVertZ() instances: " + str(randomrange))
 
     for x in range(randomrange):
         editModeVertZ()
@@ -224,6 +225,7 @@ if isMinimalDraft == True:
     randomrange = 1
 else:
     randomrange = random.randint(2, 22) #upper bounds of this range can generate heavy files (1GB) when combined with applied modifiers
+    print("mountainGenerator() instances: " + str(randomrange))
 
 for x in range(randomrange):
     #update the build count returned from the iteration of the mountainGenerator() function
@@ -408,7 +410,7 @@ if bpy.context.scene.objects.get("Spaceship"):
 action = bpy.data.actions.new("cube_linear")
 action.fcurves.new("location", action_group="location")
 action.fcurves[0].keyframe_points.insert(0, 0)
-action.fcurves[0].keyframe_points.insert(500, 1000)
+action.fcurves[0].keyframe_points.insert(1000, 1000)
 
 action.fcurves[0].extrapolation = 'LINEAR'
 
@@ -424,7 +426,7 @@ obj_camera.keyframe_insert(data_path="location", frame=0)
 camx_end = (2 * ((buildcount*2) - PLANESIZE) )
 obj_camera.location = (camx_end, 0.0, camz)
 # setting it for frame 250
-obj_camera.keyframe_insert(data_path="location", frame=500)
+obj_camera.keyframe_insert(data_path="location", frame=1000)
 
 #Finish with camera obj (DESELECT)
 #obj_camera.select_all(action='DESELECT')

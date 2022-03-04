@@ -233,9 +233,77 @@ for x in range(randomrange):
 
 # before exiting edit mode add this plane...
 # just isnt adding this... ?_?
-bpy.ops.mesh.primitive_plane_add(size=4, enter_editmode=True, align='WORLD', location=(0, 0, 0), scale=(1, 1, 1))
+###bpy.ops.mesh.primitive_plane_add(size=4, enter_editmode=True, align='WORLD', location=(0, 0, 0), scale=(1, 1, 1))
 
 #bpy.ops.mesh.primitive_plane_add(size=(PLANESIZE+3), enter_editmode=False, align='WORLD', location=(0, 0, 0), scale=((2*randomrange), 2, 1))
+#########################################################
+# calculate and add base plate before exiting edit mode #
+#########################################################
+def calcBasePlate():
+    #########################################################
+    # 
+    # Get the active mesh (in edit mode)
+    obj = bpy.context.edit_object
+    me = obj.data
+    
+    # Get a BMesh representation
+    bm = bmesh.from_edit_mesh(me)
+    
+    bm.faces.active = None
+    
+    #initial value 0
+    highestX = 0
+    highestY = 0
+    lowestX = 0
+    lowestY = 0
+    
+    for v in bm.verts:
+        #print("x: " + str(v.co.x) + ", y: " + str(v.co.y) + ", z: "  + str(v.co.z))
+        if v.co.x >= highestX and v.co.y >= highestY:
+            highestX = v.co.x
+            highestY = v.co.y
+            cornerHighXY = v
+        
+        if v.co.x <= lowestX and v.co.y <= lowestY:
+            lowestX = v.co.x
+            lowestY = v.co.y
+            cornerLowXY = v
+    #end for loop
+    
+    #initial value 0
+    highestX = 0
+    highestY = 0
+    lowestX = 0
+    lowestY = 0
+
+    for v in bm.verts:
+        if v.co.x >= highestX and v.co.y <= lowestY:
+            highestX = v.co.x
+            lowestY = v.co.y
+            cornerHighX = v
+        
+        if v.co.x <= lowestX and v.co.y >= highestY:
+            lowestX = v.co.x
+            highestY = v.co.y
+            cornerHighY = v
+    #end for loop
+    
+    cornerHighXY.select = True
+    cornerLowXY.select = True
+    cornerHighX.select = True
+    cornerHighY.select = True
+
+    # with select verts (corners) create a convex hull; a base plate
+    bpy.ops.mesh.convex_hull()
+    
+    bmesh.update_edit_mesh(me, loop_triangles=True)
+    #########################################################
+
+#########################################################
+# END def calcBasePlate():                              #
+#########################################################
+
+#calcBasePlate()
 
 # disable edit mode
 bpy.ops.object.editmode_toggle()
@@ -444,43 +512,11 @@ bpy.ops.object.select_all(action='DESELECT')
 #######################################################################################
 mountains = bpy.context.scene.objects.get("MountainPlane")      # Get the object
 bpy.context.view_layer.objects.active = mountains               # Make it the the active object 
-bpy.ops.object.editmode_toggle()
 
-#########################################################
-# calculate and add base plate before exiting edit mode #
-#########################################################
-def calcBasePlate():
-    #########################################################
-    # 
-    # Get the active mesh (in edit mode)
-    obj = bpy.context.edit_object
-    me = obj.data
-
-    # Get a BMesh representation
-    bm = bmesh.from_edit_mesh(me)
-    bm.faces.active = None
-    bpy.ops.mesh.select_all(action='DESELECT')
-
-    # Modify the BMesh, can do anything here...
-    for v in bm.verts:
-        #print(v.co)
-        if v.co.x == 0:
-            print(v.co)
-            v.select = True
-
-    # Show the updates in the viewport
-    # and recalculate n-gon tessellation.
-    bmesh.update_edit_mesh(me, True)
-    #########################################################
-
-#########################################################
-# END def calcBasePlate():                              #
-#########################################################
-
-#calcBasePlate()
+#bpy.ops.object.editmode_toggle()
 
 # disable edit mode
-bpy.ops.object.editmode_toggle()
+#bpy.ops.object.editmode_toggle()
 
 #######################################################################################
 

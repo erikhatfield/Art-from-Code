@@ -15,6 +15,7 @@ import bmesh
 import random
 import datetime
 import time
+import math
 LCD_MESSAGE_MAIN = "G R I D \n"
 # Record time stamps
 now = datetime.datetime.now()
@@ -41,18 +42,16 @@ bpy.ops.object.delete()
 ####bpy.ops.wm.save_as_mainfile(filepath=bpy.data.filepath)
 ####bpy.ops.wm.open_mainfile(filepath=bpy.data.filepath)
 
-# Remove Cube, because.
-####if bpy.context.scene.objects.get("Cube"):
-####    bpy.data.objects['Cube'].select_set(True)
-####    bpy.ops.object.delete()
-
 #########
 # WORLD #
-randr = 0.0005 + (0.08-0.0005)*random.random()
-randg = 0.0005 + (0.08-0.0005)*random.random()
-randb = 0.0005 + (0.08-0.0005)*random.random()
+randr = 0.0004 + (0.07-0.0004)*random.random()
+randg = 0.0004 + (0.07-0.0004)*random.random()
+randb = 0.0004 + (0.07-0.0004)*random.random()
 # Note2self: add background gradient to sky. first step: identify node_tree levels as seen in GUI
 bpy.data.worlds["World"].node_tree.nodes["Background"].inputs[0].default_value = (randr, randg, randb, 1)
+# Also add the color to the viewport world
+bpy.context.scene.world.color = (randr, randg, randb)
+
 #########
 #########################
 # EEVEE RENDER SETTINGS #
@@ -188,15 +187,16 @@ def mountainGenerator(buildcountparameter):
 
             #specific range for z
             min = 0.011
-            max = 1.123
-            #generate a random floating point number for X
+            max = 1.234
+            #generate a random floating point number for Z
             fz = min + (max-min)*random.random()
 
-            #print(fz)
+            if fz >= 1:
+                fz = fz*fz
 
             bpy.ops.transform.translate(value=(fx, fy, fz), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', mirror=False, use_proportional_edit=True, proportional_edit_falloff='RANDOM', proportional_size=random.randint(2, 4), use_proportional_connected=True, use_proportional_projected=False)
             # Show the updates in the viewport (and recalculate n-gon tessellation)
-            ###bmesh.update_edit_mesh(me, True)
+            ###bmesh.update_edit_mesh(me, True) #blender 2.9
             bmesh.update_edit_mesh(me, loop_triangles=True)
         modifyBMesh(True)
         modifyBMesh(False)
@@ -222,7 +222,7 @@ def mountainGenerator(buildcountparameter):
 ##################################################################################################
 
 if isMinimalDraft == True:
-    randomrange = 1
+    randomrange = 2
 else:
     randomrange = random.randint(2, 22) #upper bounds of this range can generate heavy files (1GB) when combined with applied modifiers
     print("mountainGenerator() instances: " + str(randomrange))
@@ -231,11 +231,6 @@ for x in range(randomrange):
     #update the build count returned from the iteration of the mountainGenerator() function
     buildcount = mountainGenerator(buildcount)
 
-# before exiting edit mode add this plane...
-# just isnt adding this... ?_?
-###bpy.ops.mesh.primitive_plane_add(size=4, enter_editmode=True, align='WORLD', location=(0, 0, 0), scale=(1, 1, 1))
-
-#bpy.ops.mesh.primitive_plane_add(size=(PLANESIZE+3), enter_editmode=False, align='WORLD', location=(0, 0, 0), scale=((2*randomrange), 2, 1))
 #########################################################
 # calculate and add base plate before exiting edit mode #
 #########################################################
@@ -248,8 +243,8 @@ def calcBasePlate():
     
     # Get a BMesh representation
     bm = bmesh.from_edit_mesh(me)
-    
     bm.faces.active = None
+    bpy.ops.mesh.select_all(action='DESELECT')
     
     #initial value 0
     highestX = 0
@@ -259,39 +254,33 @@ def calcBasePlate():
     
     for v in bm.verts:
         #print("x: " + str(v.co.x) + ", y: " + str(v.co.y) + ", z: "  + str(v.co.z))
-        if v.co.x >= highestX and v.co.y >= highestY:
-            highestX = v.co.x
-            highestY = v.co.y
-            cornerHighXY = v
-        
-        if v.co.x <= lowestX and v.co.y <= lowestY:
-            lowestX = v.co.x
-            lowestY = v.co.y
-            cornerLowXY = v
-    #end for loop
+        if v.co.z == 0:
+            if v.co.x >= highestX:
+                highestX = v.co.x
+            if v.co.y >= highestY:
+                highestY = v.co.y
+            
+            if v.co.x <= lowestX:
+                lowestX = v.co.x
+            if v.co.y <= lowestY:
+                lowestY = v.co.y
     
-    #initial value 0
-    highestX = 0
-    highestY = 0
-    lowestX = 0
-    lowestY = 0
-
+    basePlateZindex=-12
+    bm.verts.new((highestX, highestY, basePlateZindex))
+    bm.verts.new((highestX, lowestY, basePlateZindex))
+    bm.verts.new((lowestX, highestY, basePlateZindex))
+    bm.verts.new((lowestX, lowestY, basePlateZindex))
+    
     for v in bm.verts:
-        if v.co.x >= highestX and v.co.y <= lowestY:
-            highestX = v.co.x
-            lowestY = v.co.y
-            cornerHighX = v
+        #print("x: " + str(v.co.x) + ", y: " + str(v.co.y) + ", z: "  + str(v.co.z))
+        if v.co.z == basePlateZindex:
+            v.select = True
         
-        if v.co.x <= lowestX and v.co.y >= highestY:
-            lowestX = v.co.x
-            highestY = v.co.y
-            cornerHighY = v
-    #end for loop
-    
-    cornerHighXY.select = True
-    cornerLowXY.select = True
-    cornerHighX.select = True
-    cornerHighY.select = True
+        if v.co.z == 0:
+            if v.co.x == highestX or v.co.x == lowestX:
+                v.select = True
+            if v.co.y == highestY or v.co.y == lowestY:
+                v.select = True
 
     # with select verts (corners) create a convex hull; a base plate
     bpy.ops.mesh.convex_hull()
@@ -303,7 +292,7 @@ def calcBasePlate():
 # END def calcBasePlate():                              #
 #########################################################
 
-#calcBasePlate()
+calcBasePlate()
 
 # disable edit mode
 bpy.ops.object.editmode_toggle()
@@ -326,15 +315,13 @@ arrayOfMountains.count = mountainArrayCount
 # Add wireframe modifier
 wireframedMountains = mountains.modifiers.new("wireframeArray", "WIREFRAME")
 wireframedMountains.use_replace = False
-wireframeThickness = 0.0009 + (0.02-0.0009)*random.random()
+wireframeThickness = 0.002 + (0.022-0.002)*random.random()
 wireframedMountains.thickness = wireframeThickness
 wireframedMountains.material_offset = random.randint(0, 7) #0 creates a moonlit scene :)
 
 # Apply wireframeArray modifier here for a different material application
 #bpy.ops.object.modifier_apply(modifier="mountainMirror")
 #bpy.ops.object.modifier_apply(modifier="mountainArray")
-
-
 
 # Add materials to mountains
 ###################
@@ -351,22 +338,24 @@ else:
     mountains.data.materials.append(mountainBaseMat)
 
 mountainBaseMat.use_nodes = True
+####################################################
 #generate three random r,g,b floating points
-randr = 0.0007 + (0.07-0.0007)*random.random()
-randg = 0.0007 + (0.07-0.0007)*random.random()
-randb = 0.0007 + (0.07-0.0007)*random.random()
-#Use random floats on subsurface color, the base color recieves input from magic texture
-#mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[0].default_value = (randr, randg, randb, 1)
+randr = 0.00007 + (0.123-0.00007)*random.random()
+randg = 0.00007 + (0.123-0.00007)*random.random()
+randb = 0.00007 + (0.123-0.00007)*random.random()
 ####################################################
 # randomize a bunch of values within principled BSDF
+#mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[0].default_value = (randr, randg, randb, 1) 
+#Use random floats on subsurface color, the base color recieves input from magic texture
 mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[1].default_value = 0.007 + (1.0-0.007)*random.random() #subsurface
 mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[3].default_value = (randr, randg, randb, 1)
+bpy.context.object.active_material.diffuse_color = (randr, randg, randb, 1) # set material zcolor of viewport + workbench => same as subsurface
 mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[4].default_value = ((random.randint(5, 8)) * 0.111)
 mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[5].default_value = ((random.randint(2, 8)) * 0.111) #specular
 mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[6].default_value = ((random.randint(1, 9)) * 0.111) #specular tint
 mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[7].default_value = 0.007 + (1.0-0.007)*random.random() #roughness
 mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[8].default_value = ((random.randint(0, 5)) * 0.111) #anisotropic
-mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[9].default_value = ((random.randint(0, 9)) * 0.111) #anisotropic rotation
+mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[9].default_value = ((random.randint(2, 9)) * 0.111) #anisotropic rotation
 mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[10].default_value = ((random.randint(0, 5)) * 0.111) #sheen
 mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[11].default_value = ((random.randint(4, 7)) * 0.111) #sheen tint
 mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[12].default_value = ((random.randint(0, 8)) * 0.111) #clearcoat
@@ -376,7 +365,6 @@ mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[15].default_value = 0.
 mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[16].default_value = 0.007 + (1.0-0.007)*random.random() #transmission roughness
 ####################################################
 
-
 # add magic texture as base color to principled BSDF base color input
 # ref: https://docs.blender.org/api/current/bpy.types.html
 ######################################################################################
@@ -384,7 +372,6 @@ magicTextureNode = mountainBaseMat.node_tree.nodes.new(type="ShaderNodeTexMagic"
 magicTextureNode.turbulence_depth = random.randint(0, 3)
 magicTextureNode.inputs[1].default_value = ( 0.007 + (0.420-0.007)*random.random() ) #scale
 magicTextureNode.inputs[2].default_value = ( 0.1 + (11.11-0.1)*random.random() ) #distortion
-
 ######################################################################################
 #magic texture color output TO base color input
 mountainBaseMat.node_tree.links.new(magicTextureNode.outputs[0], mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[0])
@@ -392,7 +379,7 @@ mountainBaseMat.node_tree.links.new(magicTextureNode.outputs[0], mountainBaseMat
 mountainBaseMat.node_tree.links.new(magicTextureNode.outputs[1], mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[2])
 #magic texture color output TO emission color input (17)
 mountainBaseMat.node_tree.links.new(magicTextureNode.outputs[0], mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[17])
-mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[18].default_value = 0.00004 + (0.0003-0.00004)*random.random() #emission strength
+mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[18].default_value = 0.00004 + (0.0005-0.00004)*random.random() #emission strength
 
 #magic texture Fac output TO normal (20) or clearcoat normal (21) or tangent (22)
 mountainBaseMat.node_tree.links.new(magicTextureNode.outputs[1], mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[20])
@@ -417,7 +404,7 @@ randg = 0.09 + (0.9-0.09)*random.random()
 randb = 0.09 + (0.9-0.09)*random.random()
 node_emission.inputs[0].default_value = (randr, randg, randb, 1) # color
 #node_emission.inputs[0].default_value = ( 0.1, 0.5, 0.8, 0.9) # color
-randstrength = random.randint(2, 108)
+randstrength = random.randint(2, 59)
 node_emission.inputs[1].default_value = randstrength # strength
 
 links = mountainGlowMat.node_tree.links
@@ -452,7 +439,7 @@ bpy.ops.object.transforms_to_deltas(mode='ALL')
 
 obj_camera = bpy.data.objects["Camera"]
 #lensangle = random.randint(18, 135)
-lensangle = random.randint(35, 70) #35 min zoom for spaceship cockpit for now
+lensangle = random.randint(28, 70) #28 min zoom for spaceship cockpit for now
 obj_camera.data.lens = lensangle
 bpy.context.object.data.clip_start = 0.25 # default is .01
 obj_camera.data.clip_end = 10000
@@ -512,29 +499,7 @@ bpy.ops.object.select_all(action='DESELECT')
 #######################################################################################
 mountains = bpy.context.scene.objects.get("MountainPlane")      # Get the object
 bpy.context.view_layer.objects.active = mountains               # Make it the the active object 
-
-#bpy.ops.object.editmode_toggle()
-
-# disable edit mode
-#bpy.ops.object.editmode_toggle()
-
 #######################################################################################
-
-#######################################################################################
-#print(buildcount)
-
-# add base plate
-#bpy.ops.mesh.primitive_plane_add(size=PLANESIZE, enter_editmode=False, align='WORLD', location=(0,0,0), scale=(1, 1, 1))
-
-#bpy.ops.transform.resize(value=((buildcount/PLANESIZE), 1, 1), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(True, False, False), mirror=True, use_proportional_edit=False, proportional_edit_falloff='RANDOM', proportional_size=1.61051, use_proportional_connected=False, use_proportional_projected=False)
-
-#bpy.ops.transform.translate(value=(((buildcount/2)+(PLANESIZE/2)), 0, 0), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(True, False, False), mirror=True, use_proportional_edit=False, proportional_edit_falloff='RANDOM', proportional_size=1.61051, use_proportional_connected=False, use_proportional_projected=False)
-
-
-###########################IDEADROP:
-##################the ability to save settings. when u really like the artwork produced
-#################and therefore, the ability to load settings too
-###################or maybe just the recording of settings integrated into the artwork?
 
 #######################################################
 # bigBangTheory and birthOfAStar()                    #
@@ -617,8 +582,6 @@ def bigBangTheory():
     
 bigBangTheory()
 
-
-
 def cockpitLCD():
     #add a plane and enter edit mode (use build count on the x axis)
     bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=True, align='WORLD', location=(0, 0, 0), scale=(1, 1, 1))
@@ -668,13 +631,13 @@ def cockpitLCD():
     #place text flat with screen surface
     bpy.context.object.location[0] = -0.51  #X coord
     # move to left side of LCD
-    bpy.context.object.location[1] = 0.4  #Y coord
+    bpy.context.object.location[1] = 0.3  #Y coord
     # move to top of screen a little bit
-    bpy.context.object.location[2] = 0.07 #Z coord
+    bpy.context.object.location[2] = 0.05 #Z coord
 
-    bpy.context.object.scale[0] = 0.025
-    bpy.context.object.scale[1] = 0.025
-    bpy.context.object.scale[2] = 0.025
+    bpy.context.object.scale[0] = 0.04
+    bpy.context.object.scale[1] = 0.04
+    bpy.context.object.scale[2] = 0.04
 
 
     # LCDTEXT TEXT TEXT MATERIAL
@@ -701,8 +664,6 @@ def cockpitLCD():
     t4dw.data.body = LCD_MESSAGE_OUT
 
 cockpitLCD()
-
-
 
 ##########################################################
 #   _______  ________ __    __ _______  ________ _______  
@@ -732,7 +693,7 @@ bpy.context.scene.render.filepath = renderedFilepath
 
 # if animation, render mp4
 isANIM = False
-                                        
+
 if isANIM == True:
     bpy.context.scene.render.image_settings.file_format = 'FFMPEG'
     bpy.context.scene.render.ffmpeg.format = 'MPEG4'
@@ -744,10 +705,9 @@ else:
     ##Render the default render (same as F12 only better)
     bpy.ops.render.render('INVOKE_DEFAULT', animation=False, write_still=True)                                                   
 
-
 ##########################################################
 ##########################################################
 # print out run time of this py
 second_timestamp = time.time()
 run_time = int(round(second_timestamp - initial_timestamp))
-print('run_time (before rendering time) is ' + str(run_time) + " seconds.")
+print('COMPLETED. run_time (before rendering time) is ' + str(run_time) + " seconds.")

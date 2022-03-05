@@ -187,11 +187,11 @@ def mountainGenerator(buildcountparameter):
 
             #specific range for z
             min = 0.011
-            max = 1.234
+            max = 1.667
             #generate a random floating point number for Z
             fz = min + (max-min)*random.random()
 
-            if fz >= 1:
+            if fz >= 1.234:
                 fz = fz*fz
 
             bpy.ops.transform.translate(value=(fx, fy, fz), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', mirror=False, use_proportional_edit=True, proportional_edit_falloff='RANDOM', proportional_size=random.randint(2, 4), use_proportional_connected=True, use_proportional_projected=False)
@@ -340,9 +340,9 @@ else:
 mountainBaseMat.use_nodes = True
 ####################################################
 #generate three random r,g,b floating points
-randr = 0.00007 + (0.123-0.00007)*random.random()
-randg = 0.00007 + (0.123-0.00007)*random.random()
-randb = 0.00007 + (0.123-0.00007)*random.random()
+randr = 0.00007 + (0.09-0.00007)*random.random()
+randg = 0.00007 + (0.09-0.00007)*random.random()
+randb = 0.00007 + (0.09-0.00007)*random.random()
 ####################################################
 # randomize a bunch of values within principled BSDF
 #mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[0].default_value = (randr, randg, randb, 1) 
@@ -439,9 +439,9 @@ bpy.ops.object.transforms_to_deltas(mode='ALL')
 
 obj_camera = bpy.data.objects["Camera"]
 #lensangle = random.randint(18, 135)
-lensangle = random.randint(28, 70) #28 min zoom for spaceship cockpit for now
+lensangle = random.randint(32, 85) #35 min zoom for spaceship cockpit for now
 obj_camera.data.lens = lensangle
-bpy.context.object.data.clip_start = 0.25 # default is .01
+bpy.context.object.data.clip_start = 0.2 # default is .01
 obj_camera.data.clip_end = 10000
 
 
@@ -631,14 +631,13 @@ def cockpitLCD():
     #place text flat with screen surface
     bpy.context.object.location[0] = -0.51  #X coord
     # move to left side of LCD
-    bpy.context.object.location[1] = 0.3  #Y coord
+    bpy.context.object.location[1] = 0.42  #Y coord
     # move to top of screen a little bit
-    bpy.context.object.location[2] = 0.05 #Z coord
+    bpy.context.object.location[2] = 0.08 #Z coord
 
-    bpy.context.object.scale[0] = 0.04
-    bpy.context.object.scale[1] = 0.04
-    bpy.context.object.scale[2] = 0.04
-
+    bpy.context.object.scale[0] = 0.039
+    bpy.context.object.scale[1] = 0.039
+    bpy.context.object.scale[2] = 0.039
 
     # LCDTEXT TEXT TEXT MATERIAL
     lcd_mat = bpy.data.materials.new(name = "LCD1TEXT")
@@ -651,7 +650,7 @@ def cockpitLCD():
     node_emission = nodes.new(type="ShaderNodeEmission")
 
     node_emission.inputs[0].default_value = ( 0.0, 0.9, 1.0, 1.0) # color
-    node_emission.inputs[1].default_value = 25 # strength
+    node_emission.inputs[1].default_value = 22 # strength
 
     links = lcd_mat.node_tree.links
     new_link = links.new(node_emission.outputs[0], material_output.inputs[0])
@@ -701,7 +700,7 @@ if isANIM == True:
     bpy.ops.render.render('INVOKE_DEFAULT', animation=True, write_still=True)
 else:
     bpy.context.scene.render.image_settings.file_format = 'JPEG'
-    bpy.context.scene.render.image_settings.quality = 80
+    bpy.context.scene.render.image_settings.quality = 86
     ##Render the default render (same as F12 only better)
     bpy.ops.render.render('INVOKE_DEFAULT', animation=False, write_still=True)                                                   
 

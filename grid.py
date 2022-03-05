@@ -44,9 +44,9 @@ bpy.ops.object.delete()
 
 #########
 # WORLD #
-randr = 0.0004 + (0.07-0.0004)*random.random()
-randg = 0.0004 + (0.07-0.0004)*random.random()
-randb = 0.0004 + (0.07-0.0004)*random.random()
+randr = 0.0002 + (0.07-0.0002)*random.random()
+randg = 0.0002 + (0.07-0.0002)*random.random()
+randb = 0.0002 + (0.07-0.0002)*random.random()
 # Note2self: add background gradient to sky. first step: identify node_tree levels as seen in GUI
 bpy.data.worlds["World"].node_tree.nodes["Background"].inputs[0].default_value = (randr, randg, randb, 1)
 # Also add the color to the viewport world
@@ -70,7 +70,7 @@ bpy.context.scene.eevee.use_ssr = True
 bpy.context.scene.eevee.use_ssr_refraction = True
 # Volumetrics
 bpy.context.scene.eevee.use_volumetric_lights = True
-bpy.context.scene.eevee.volumetric_end = 250
+bpy.context.scene.eevee.volumetric_end = 500
 bpy.context.scene.eevee.use_volumetric_shadows = True
 # Hair
 bpy.context.scene.render.hair_type = 'STRAND'

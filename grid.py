@@ -174,8 +174,8 @@ def mountainGenerator(buildcountparameter):
             bmesh.update_edit_mesh(me, loop_triangles=True)
 
             #specific range for x
-            min = -0.04
-            max = 0.04
+            min = -0.07
+            max = 0.07
             #generate a random floating point number for x
             fx = min + (max-min)*random.random()
             
@@ -537,8 +537,6 @@ def bigBangTheory():
         bpy.context.object.track_axis = 'POS_X'
         bpy.context.object.up_axis = 'Z'
 
-        #this_star.location[0]=( buildcount * 2 )
-        #this_star.location[2]=40
         # for some reason, the X is the -Z
         bpy.context.object.location[2]= ( (random.randint(512, 1024)) * -2 ) #distance from camera
         # and Z is Y
@@ -678,8 +676,6 @@ cockpitLCD()
 # Set a few render/output influences #
 bpy.context.scene.render.resolution_x = 1920
 bpy.context.scene.render.resolution_y = 1080
-#bpy.context.scene.render.resolution_x = 400
-#bpy.context.scene.render.resolution_y = 300
 ## for mbp16 retina display: 3584x2240, 4096x2560@144
 ##bpy.context.scene.render.resolution_x = 3584
 ##bpy.context.scene.render.resolution_y = 2240

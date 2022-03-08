@@ -340,9 +340,9 @@ else:
 mountainBaseMat.use_nodes = True
 ####################################################
 #generate three random r,g,b floating points
-randr = 0.00007 + (0.09-0.00007)*random.random()
-randg = 0.00007 + (0.09-0.00007)*random.random()
-randb = 0.00007 + (0.09-0.00007)*random.random()
+randr = 0.000007 + (0.09-0.000007)*random.random()
+randg = 0.000007 + (0.09-0.000007)*random.random()
+randb = 0.000007 + (0.09-0.000007)*random.random()
 ####################################################
 # randomize a bunch of values within principled BSDF
 #mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[0].default_value = (randr, randg, randb, 1) 
@@ -404,7 +404,7 @@ randg = 0.09 + (0.9-0.09)*random.random()
 randb = 0.09 + (0.9-0.09)*random.random()
 node_emission.inputs[0].default_value = (randr, randg, randb, 1) # color
 #node_emission.inputs[0].default_value = ( 0.1, 0.5, 0.8, 0.9) # color
-randstrength = random.randint(2, 59)
+randstrength = random.randint(1, 45)
 node_emission.inputs[1].default_value = randstrength # strength
 
 links = mountainGlowMat.node_tree.links

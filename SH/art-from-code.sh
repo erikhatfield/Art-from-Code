@@ -21,4 +21,4 @@ cp -a ~/Dev/BL/art-from-code/BL/grid.blend ~/Dev/BL/art-from-code/BL/temp_auto_g
 #                                                                             #
 ###############################################################################
 
-#open ~/Dev/BL/art-from-code/output
+open ~/Dev/BL/art-from-code/output

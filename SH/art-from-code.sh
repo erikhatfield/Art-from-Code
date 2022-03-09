@@ -14,7 +14,11 @@ cp -a ~/Dev/BL/art-from-code/BL/grid.blend ~/Dev/BL/art-from-code/BL/temp_auto_g
 #blender -b ~/Dev/BL/art-from-code/BL/temp_auto_grid.blend -P ~/Dev/BL/art-from-code/grid.py
 # echo "alias blender=/Applications/Blender.app/Contents/MacOS/blender" >> ~/.bash_profile
 #source ~/.bash_profile
-/Applications/Blender.app/Contents/MacOS/blender ~/Dev/BL/art-from-code/BL/temp_auto_grid.blend -P ~/Dev/BL/art-from-code/grid.py
+
+# Without arguements (previous version)
+#Applications/Blender.app/Contents/MacOS/blender ~/Dev/BL/art-from-code/BL/temp_auto_grid.blend -P ~/Dev/BL/art-from-code/grid.py
+# With arguements provided:
+/Applications/Blender.app/Contents/MacOS/blender ~/Dev/BL/art-from-code/BL/temp_auto_grid.blend -P ~/Dev/BL/art-from-code/grid.py -- $1 $2 $3
 
 
 ###############################################################################

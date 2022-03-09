@@ -16,6 +16,10 @@ import random
 import datetime
 import time
 import math
+import sys
+argv = sys.argv #pass in parameters/arguements from the command line
+argv = argv[argv.index("--") + 1:]  # get all args after "--"
+# argv example command: % blender /the/path/file.blend -P /the/path/of/script.py -- smurf berries
 LCD_MESSAGE_MAIN = "G R I D \n"
 # Record time stamps
 now = datetime.datetime.now()
@@ -706,3 +710,9 @@ else:
 second_timestamp = time.time()
 run_time = int(round(second_timestamp - initial_timestamp))
 print('COMPLETED. run_time (before rendering time) is ' + str(run_time) + " seconds.")
+
+if argv[0] == "automated":
+    print('AUTOMATED_MODE active: exiting in 459 seconds.')
+    time.sleep(459)
+    #sys.exit(0)
+    bpy.ops.wm.quit_blender()

@@ -9,7 +9,7 @@ print(" \▓▓    ▓▓ ▓▓  | ▓▓   ▓▓ \ ▓▓    ▓▓ ")
 print("  \▓▓▓▓▓▓ \▓▓   \▓▓\▓▓▓▓▓▓\▓▓▓▓▓▓▓  ")
 print("                                    ")
 print("GRID.PY a blender render art program")
-print("                                    ")
+print("\n\n\n")
 import bpy
 import bmesh
 import random
@@ -20,15 +20,16 @@ import sys
 argv = sys.argv #pass in parameters/arguements from the command line
 argv = argv[argv.index("--") + 1:]  # get all args after "--"
 # argv example command: % blender /the/path/file.blend -P /the/path/of/script.py -- smurf berries
-LCD_MESSAGE_MAIN = "G R I D \n"
+LCD0_MSG = "G R I D \n"
 # Record time stamps
 now = datetime.datetime.now()
-LCD_MESSAGE_MAIN = LCD_MESSAGE_MAIN + "\n" + str(now) + "\n"
+print("NOW-> datetime.now(): " + str(now) + "\n\n");
+LCD0_MSG = LCD0_MSG + "\n" + str(now) + "\n"
 initial_timestamp = time.time()
-LCD_MESSAGE_MAIN = LCD_MESSAGE_MAIN + "\n" + "initial_timestamp = " + str(initial_timestamp) + "\n"
-print(LCD_MESSAGE_MAIN)
+LCD0_MSG = LCD0_MSG + "\n" + "initial_timestamp = " + str(initial_timestamp) + "\n"
+print("\n"+LCD0_MSG+"\n")
 # Set some manual parameters:
-isMinimalDraft = False
+minimalModeEnabled = False
 # Remove all objects
 # ^^^ useful for multiple runs of this script
 # except for spaceship (for now)
@@ -106,13 +107,13 @@ def mountainGenerator(buildcountparameter):
     # number of cuts of the plane's subdivision op
     numberofcuts = (( PLANESIZE + (PLANESIZE / WILDCARD) ) / wildcard)
     ############################################################
-    
+
     #print build parameters
-    print("Build parameters of mountainGenerator(" + str(buildcountparameter) + ") are " + 
+    print("Build parameters of mountainGenerator(" + str(buildcountparameter) + ") are " +
     "wildcard: " + str(wildcard) + ", "
     "numberofcuts: " + str(numberofcuts)
     )
-    
+
     #add a plane and enter edit mode (use build count on the x axis)
     bpy.ops.mesh.primitive_plane_add(size=PLANESIZE, enter_editmode=True, align='WORLD', location=(buildcountparameter, 0, 0), scale=(1, 1, 1))
     bpy.context.selected_objects[0].name = "MountainPlane"
@@ -143,11 +144,11 @@ def mountainGenerator(buildcountparameter):
         rangeofyR = (PLANESIZE / random.randint((PLANESIZE/(WILDCARD*(PLANESIZE/4))), ((PLANESIZE/4)+WILDCARD)))
         # so, that is, a range of y that is i.e. 16/ divided by an int in the range of 2,4 through 5,6
         #%#print("Using rangeofy: " + str(rangeofy) )
-        
+
         # Get the active mesh (in edit mode)
         obj = bpy.context.edit_object
         me = obj.data
-        
+
         # Modify the BMesh for each side of y
         def modifyBMesh(sideBool):
             # Get a BMesh representation
@@ -156,7 +157,7 @@ def mountainGenerator(buildcountparameter):
             bpy.ops.mesh.select_all(action='DESELECT')
 
             # Generate a random interger between 93-99
-            # Lower numbers represent more vertices selected (93% represents 7% selected) 
+            # Lower numbers represent more vertices selected (93% represents 7% selected)
             outlyerVerts = random.randint(93, 99)
             #%#print("outlyer vertices choosen from " + str(100 - outlyerVerts) + "% of eligable range")
             for v in bm.verts:
@@ -182,7 +183,7 @@ def mountainGenerator(buildcountparameter):
             max = 0.07
             #generate a random floating point number for x
             fx = min + (max-min)*random.random()
-            
+
             #specific range for y
             min = -0.28
             max = 0.28
@@ -208,8 +209,8 @@ def mountainGenerator(buildcountparameter):
     #################################################################################
     # END def editModeVertZ():                                                      #
     #################################################################################
-    
-    if isMinimalDraft == True:
+
+    if minimalModeEnabled == True:
         randomrange = 1
     else:
         # Call the function 2-4 times. Because seperate random numbers are created each time which gives it a slightly different outcome everytime 3 fold.
@@ -225,7 +226,7 @@ def mountainGenerator(buildcountparameter):
 ##################################################################################################
 ##################################################################################################
 
-if isMinimalDraft == True:
+if minimalModeEnabled == True:
     randomrange = 2
 else:
     randomrange = random.randint(2, 22) #upper bounds of this range can generate heavy files (1GB) when combined with applied modifiers
@@ -240,22 +241,22 @@ for x in range(randomrange):
 #########################################################
 def calcBasePlate():
     #########################################################
-    # 
+    #
     # Get the active mesh (in edit mode)
     obj = bpy.context.edit_object
     me = obj.data
-    
+
     # Get a BMesh representation
     bm = bmesh.from_edit_mesh(me)
     bm.faces.active = None
     bpy.ops.mesh.select_all(action='DESELECT')
-    
+
     #initial value 0
     highestX = 0
     highestY = 0
     lowestX = 0
     lowestY = 0
-    
+
     for v in bm.verts:
         #print("x: " + str(v.co.x) + ", y: " + str(v.co.y) + ", z: "  + str(v.co.z))
         if v.co.z == 0:
@@ -263,23 +264,23 @@ def calcBasePlate():
                 highestX = v.co.x
             if v.co.y >= highestY:
                 highestY = v.co.y
-            
+
             if v.co.x <= lowestX:
                 lowestX = v.co.x
             if v.co.y <= lowestY:
                 lowestY = v.co.y
-    
+
     basePlateZindex=-12
     bm.verts.new((highestX, highestY, basePlateZindex))
     bm.verts.new((highestX, lowestY, basePlateZindex))
     bm.verts.new((lowestX, highestY, basePlateZindex))
     bm.verts.new((lowestX, lowestY, basePlateZindex))
-    
+
     for v in bm.verts:
         #print("x: " + str(v.co.x) + ", y: " + str(v.co.y) + ", z: "  + str(v.co.z))
         if v.co.z == basePlateZindex:
             v.select = True
-        
+
         if v.co.z == 0:
             if v.co.x == highestX or v.co.x == lowestX:
                 v.select = True
@@ -288,7 +289,7 @@ def calcBasePlate():
 
     # with select verts (corners) create a convex hull; a base plate
     bpy.ops.mesh.convex_hull()
-    
+
     bmesh.update_edit_mesh(me, loop_triangles=True)
     #########################################################
 
@@ -349,7 +350,7 @@ randg = 0.000007 + (0.09-0.000007)*random.random()
 randb = 0.000007 + (0.09-0.000007)*random.random()
 ####################################################
 # randomize a bunch of values within principled BSDF
-#mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[0].default_value = (randr, randg, randb, 1) 
+#mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[0].default_value = (randr, randg, randb, 1)
 #Use random floats on subsurface color, the base color recieves input from magic texture
 mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[1].default_value = 0.007 + (1.0-0.007)*random.random() #subsurface
 mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[3].default_value = (randr, randg, randb, 1)
@@ -420,8 +421,8 @@ new_link = links.new(node_emission.outputs[0], material_output.inputs[0])
 #bpy.ops.object.modifier_apply(modifier="wireframeArray")
 
 ###############################################################
-#    ______   ______  __       __ ________ _______   ______  
-#   /      \ /      \|  \     /  \        \       \ /      \ 
+#    ______   ______  __       __ ________ _______   ______
+#   /      \ /      \|  \     /  \        \       \ /      \
 #  |  ▓▓▓▓▓▓\  ▓▓▓▓▓▓\ ▓▓\   /  ▓▓ ▓▓▓▓▓▓▓▓ ▓▓▓▓▓▓▓\  ▓▓▓▓▓▓\
 #  | ▓▓   \▓▓ ▓▓__| ▓▓ ▓▓▓\ /  ▓▓▓ ▓▓__   | ▓▓__| ▓▓ ▓▓__| ▓▓
 #  | ▓▓     | ▓▓    ▓▓ ▓▓▓▓\  ▓▓▓▓ ▓▓  \  | ▓▓    ▓▓ ▓▓    ▓▓
@@ -429,8 +430,8 @@ new_link = links.new(node_emission.outputs[0], material_output.inputs[0])
 #  | ▓▓__/  \ ▓▓  | ▓▓ ▓▓ \▓▓▓| ▓▓ ▓▓_____| ▓▓  | ▓▓ ▓▓  | ▓▓
 #   \▓▓    ▓▓ ▓▓  | ▓▓ ▓▓  \▓ | ▓▓ ▓▓     \ ▓▓  | ▓▓ ▓▓  | ▓▓
 #    \▓▓▓▓▓▓ \▓▓   \▓▓\▓▓      \▓▓\▓▓▓▓▓▓▓▓\▓▓   \▓▓\▓▓   \▓▓
-#                                                          
-# CAMERA TWEEKS                                                          
+#
+# CAMERA TWEEKS
 ########## ASCII ART GEN: texteditor.com/multiline-text-art/
 
 # position default camera on the ground
@@ -460,8 +461,8 @@ if bpy.context.scene.objects.get("Spaceship"):
 
     spaceshipPOVX = ((0.15 + (0.25-0.15)*random.random()) *-1)
     spaceshipPOVZ = 0.009 + (0.02-0.009)*random.random()
-    bpy.data.objects['Spaceship'].location[1] = spaceshipPOVZ # y is actually z... 
-    bpy.data.objects['Spaceship'].location[2] = spaceshipPOVX # z is actually x... 
+    bpy.data.objects['Spaceship'].location[1] = spaceshipPOVZ # y is actually z...
+    bpy.data.objects['Spaceship'].location[2] = spaceshipPOVX # z is actually x...
 
 # need solution for linear interpolation curve so the camera y movement is steady
 #bpy.ops.action.interpolation_type(type='LINEAR')
@@ -498,11 +499,11 @@ bpy.ops.object.select_all(action='DESELECT')
 #Example on how to select a certain object in the scene and make it the active object #
 #ob = bpy.context.scene.objects["MountainPlane"]         # Get the object
 #bpy.ops.object.select_all(action='DESELECT')            # Deselect all objects
-#bpy.context.view_layer.objects.active = ob              # Make the MountainPlane the active object 
-#ob.select_set(True)           
+#bpy.context.view_layer.objects.active = ob              # Make the MountainPlane the active object
+#ob.select_set(True)
 #######################################################################################
 mountains = bpy.context.scene.objects.get("MountainPlane")      # Get the object
-bpy.context.view_layer.objects.active = mountains               # Make it the the active object 
+bpy.context.view_layer.objects.active = mountains               # Make it the the active object
 #######################################################################################
 
 #######################################################
@@ -530,11 +531,11 @@ def bigBangTheory():
         # add star with random size floating point (near zero)
         bpy.ops.mesh.primitive_uv_sphere_add(enter_editmode=False, align='WORLD', location=(0, 0, 0), scale=(1.0, 1.0, 1.0))
         this_star=bpy.context.active_object
-        
+
         # name it Star
         #bpy.context.selected_objects[0].name = "Star"
         bpy.context.object.name = "Star"
-        
+
         #make the star's parent relation that of the camera
         #this_star.parent = obj_camera
         bpy.context.object.parent = bpy.data.objects["Camera"]
@@ -547,10 +548,10 @@ def bigBangTheory():
         bpy.context.object.location[1]= random.randint(4, (480 - lensangle*2)) #vertical
         # and Y is X
         starrangey = 0.1 + (1280.0-0.1)*random.random() #horizontal
-        
+
         if random.randint(1, 2) == 1:
             starrangey = starrangey * -1 # both sides of center line
-        
+
         bpy.context.object.location[0]= starrangey
 
         specialBoundaries = random.randint(9989, 9999)
@@ -565,8 +566,8 @@ def bigBangTheory():
 
         # APPLY MATERIAL
         bpy.context.object.data.materials.append(star_material_arg)
-        
-    if isMinimalDraft == True:
+
+    if minimalModeEnabled == True:
         numberofstars = 1
     else:
         numberofstars = random.randint(100, 1000)
@@ -581,7 +582,7 @@ def bigBangTheory():
         else:
             o.select_set(False)
     bpy.ops.object.join()
-    
+
 bigBangTheory()
 
 def cockpitLCD():
@@ -659,7 +660,7 @@ def cockpitLCD():
 
     second_timestamp = time.time()
     run_time = int(round(second_timestamp - initial_timestamp))
-    LCD_MESSAGE_OUT = LCD_MESSAGE_MAIN + "\nrun_time (before rendering time) is " + str(run_time) + " seconds."
+    LCD_MESSAGE_OUT = LCD0_MSG + "\nrun_time (before rendering time) is " + str(run_time) + " seconds."
 
     t4dw=bpy.data.objects['LCD_TEXT']
     t4dw.data.body = LCD_MESSAGE_OUT
@@ -667,8 +668,8 @@ def cockpitLCD():
 cockpitLCD()
 
 ##########################################################
-#   _______  ________ __    __ _______  ________ _______  
-#  |       \|        \  \  |  \       \|        \       \ 
+#   _______  ________ __    __ _______  ________ _______
+#  |       \|        \  \  |  \       \|        \       \
 #  | ▓▓▓▓▓▓▓\ ▓▓▓▓▓▓▓▓ ▓▓\ | ▓▓ ▓▓▓▓▓▓▓\ ▓▓▓▓▓▓▓▓ ▓▓▓▓▓▓▓\
 #  | ▓▓__| ▓▓ ▓▓__   | ▓▓▓\| ▓▓ ▓▓  | ▓▓ ▓▓__   | ▓▓__| ▓▓
 #  | ▓▓    ▓▓ ▓▓  \  | ▓▓▓▓\ ▓▓ ▓▓  | ▓▓ ▓▓  \  | ▓▓    ▓▓
@@ -676,7 +677,7 @@ cockpitLCD()
 #  | ▓▓  | ▓▓ ▓▓_____| ▓▓ \▓▓▓▓ ▓▓__/ ▓▓ ▓▓_____| ▓▓  | ▓▓
 #  | ▓▓  | ▓▓ ▓▓     \ ▓▓  \▓▓▓ ▓▓    ▓▓ ▓▓     \ ▓▓  | ▓▓
 #   \▓▓   \▓▓\▓▓▓▓▓▓▓▓\▓▓   \▓▓\▓▓▓▓▓▓▓ \▓▓▓▓▓▓▓▓\▓▓   \▓▓
-#                                                         
+#
 # Set a few render/output influences #
 bpy.context.scene.render.resolution_x = 1920
 bpy.context.scene.render.resolution_y = 1080
@@ -702,7 +703,7 @@ else:
     bpy.context.scene.render.image_settings.file_format = 'JPEG'
     bpy.context.scene.render.image_settings.quality = 86
     ##Render the default render (same as F12 only better)
-    bpy.ops.render.render('INVOKE_DEFAULT', animation=False, write_still=True)                                                   
+    bpy.ops.render.render('INVOKE_DEFAULT', animation=False, write_still=True)
 
 ##########################################################
 ##########################################################

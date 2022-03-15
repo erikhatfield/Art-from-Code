@@ -712,8 +712,13 @@ second_timestamp = time.time()
 run_time = int(round(second_timestamp - initial_timestamp))
 print('COMPLETED. run_time (before rendering time) is ' + str(run_time) + " seconds.")
 
-if argv[0] == "automated":
-    print('AUTOMATED_MODE active: exiting in 459 seconds.')
-    time.sleep(459)
-    #sys.exit(0)
-    bpy.ops.wm.quit_blender()
+try:
+    argv[0]
+    if argv[0] == "automated":
+        print('AUTOMATED_MODE active: exiting in INT seconds.')
+        time.sleep(259)
+        #sys.exit(0)
+        bpy.ops.wm.quit_blender()
+except IndexError:
+    print('execption occuring ('+ str(IndexError) +') no parameters entered')
+# FIN

@@ -105,7 +105,7 @@ def mountainGenerator(buildcountparameter):
     # create a few variables, for subtle uniqueness every time #
     wildcard = random.randint(1, 3)
     # number of cuts of the plane's subdivision op
-    numberofcuts = (( PLANESIZE + (PLANESIZE / WILDCARD) ) / wildcard)
+    numberofcuts = int(( PLANESIZE + (PLANESIZE / WILDCARD) ) / wildcard)
     ############################################################
 
     #print build parameters

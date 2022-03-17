@@ -20,6 +20,8 @@ import sys
 argv = sys.argv #pass in parameters/arguements from the command line
 argv = argv[argv.index("--") + 1:]  # get all args after "--"
 # argv example command: % blender /the/path/file.blend -P /the/path/of/script.py -- smurf berries
+# implement a fileout if no filein file handler that stores the randomly generatored floats
+# useful for future development and extending the wow(); class
 LCD0_MSG = "G R I D \n"
 # Record time stamps
 now = datetime.datetime.now()

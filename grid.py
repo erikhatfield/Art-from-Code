@@ -20,8 +20,6 @@ import sys
 argv = sys.argv #pass in parameters/arguements from the command line
 argv = argv[argv.index("--") + 1:]  # get all args after "--"
 # argv example command: % blender /the/path/file.blend -P /the/path/of/script.py -- smurf berries
-# implement a fileout if no filein file handler that stores the randomly generatored floats
-# useful for future development and extending the wow(); class
 LCD0_MSG = "G R I D \n"
 # Record time stamps
 now = datetime.datetime.now()
@@ -30,6 +28,13 @@ LCD0_MSG = LCD0_MSG + "\n" + str(now) + "\n"
 initial_timestamp = time.time()
 LCD0_MSG = LCD0_MSG + "\n" + "initial_timestamp = " + str(initial_timestamp) + "\n"
 print("\n"+LCD0_MSG+"\n")
+# time stamp used for output graphics file and text file
+renderedFilepathTimeStamp = now.strftime('%m%d%y_%H%M')
+# implement a render settings file out/in method
+#renderedSettingsFilepath = "./output/temp_grid_" + renderedFilepathTimeStamp + "-out.txt"
+#outTxtFile = open(renderedSettingsFilepath,'w')  #write, read or append the file 'w', 'r' or 'a' respectively
+#outTxtFile.write("GRID\n")
+#outTxtFile.close()
 # Set some manual parameters:
 minimalModeEnabled = False
 # Remove all objects
@@ -690,7 +695,7 @@ bpy.context.scene.render.resolution_y = 1080
 ##bpy.context.scene.render.resolution_y = 2560
 
 bpy.context.scene.render.fps = 30
-renderedFilepath = "//../output/temp_grid_" + now.strftime('%m%d%y_%H%M') + "-out"
+renderedFilepath = "//../output/temp_grid_" + renderedFilepathTimeStamp + "-out"
 bpy.context.scene.render.filepath = renderedFilepath
 
 # if animation, render mp4

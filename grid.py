@@ -31,10 +31,8 @@ print("\n"+LCD0_MSG+"\n")
 # time stamp used for output graphics file and text file
 renderedFilepathTimeStamp = now.strftime('%m%d%y_%H%M')
 # implement a render settings file out/in method
-#renderedSettingsFilepath = "./output/temp_grid_" + renderedFilepathTimeStamp + "-out.txt"
-#outTxtFile = open(renderedSettingsFilepath,'w')  #write, read or append the file 'w', 'r' or 'a' respectively
-#outTxtFile.write("GRID\n")
-#outTxtFile.close()
+renderedSettingsFilepath = "./output/temp_grid_" + renderedFilepathTimeStamp + "-out.txt"
+outTxtFile = open(renderedSettingsFilepath,'w')  #write, read or append the file 'w', 'r' or 'a' respectively
 # Set some manual parameters:
 minimalModeEnabled = False
 # Remove all objects
@@ -50,20 +48,21 @@ for o in bpy.context.scene.objects:
 bpy.ops.object.delete()
 
 # CONSIDER performing garbage collection
-# Save and re-open the file to clean up the data blocks
 ####bpy.ops.wm.save_as_mainfile(filepath=bpy.data.filepath)
 ####bpy.ops.wm.open_mainfile(filepath=bpy.data.filepath)
 
 #########
 # WORLD #
-randr = 0.0002 + (0.07-0.0002)*random.random()
-randg = 0.0002 + (0.07-0.0002)*random.random()
-randb = 0.0002 + (0.07-0.0002)*random.random()
+randr = round(0.0002 + (0.07-0.0002)*random.random(), 4)
+randg = round(0.0002 + (0.07-0.0002)*random.random(), 4)
+randb = round(0.0002 + (0.07-0.0002)*random.random(), 4)
 # Note2self: add background gradient to sky. first step: identify node_tree levels as seen in GUI
 bpy.data.worlds["World"].node_tree.nodes["Background"].inputs[0].default_value = (randr, randg, randb, 1)
 # Also add the color to the viewport world
 bpy.context.scene.world.color = (randr, randg, randb)
-
+# Add to settings file
+outTxtFile.write("wrgb:" + str(randr) +"," + str(randg) + "," + str(randb) + "\n")
+outTxtFile.close()
 #########
 #########################
 # EEVEE RENDER SETTINGS #

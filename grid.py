@@ -47,10 +47,6 @@ for o in bpy.context.scene.objects:
 # Call the operator only once (best-practice practice?)
 bpy.ops.object.delete()
 
-# CONSIDER performing garbage collection
-####bpy.ops.wm.save_as_mainfile(filepath=bpy.data.filepath)
-####bpy.ops.wm.open_mainfile(filepath=bpy.data.filepath)
-
 #########
 # WORLD #
 randr = round(0.0002 + (0.07-0.0002)*random.random(), 4)
@@ -457,7 +453,6 @@ obj_camera.data.lens = lensangle
 bpy.context.object.data.clip_start = 0.2 # default is .01
 obj_camera.data.clip_end = 10000
 
-
 # if exists- attach spaceship to camera
 if bpy.context.scene.objects.get("Spaceship"):
     bpy.data.objects['Spaceship'].parent = bpy.data.objects["Camera"]
@@ -479,7 +474,6 @@ action = bpy.data.actions.new("cube_linear")
 action.fcurves.new("location", action_group="location")
 action.fcurves[0].keyframe_points.insert(0, 0)
 action.fcurves[0].keyframe_points.insert(1000, 1000)
-
 action.fcurves[0].extrapolation = 'LINEAR'
 
 obj_camera.animation_data_create()
@@ -719,6 +713,10 @@ else:
 second_timestamp = time.time()
 run_time = int(round(second_timestamp - initial_timestamp))
 print('COMPLETED. run_time (before rendering time) is ' + str(run_time) + " seconds.")
+
+# CONSIDER performing garbage collection
+bpy.ops.wm.save_as_mainfile(filepath=bpy.data.filepath)
+####bpy.ops.wm.open_mainfile(filepath=bpy.data.filepath)
 
 try:
     argv[0]

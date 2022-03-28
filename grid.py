@@ -236,6 +236,8 @@ else:
 
 for x in range(randomrange):
     #update the build count returned from the iteration of the mountainGenerator() function
+    print("###############################")
+    print("mountainGenerator instance: " + str(x))
     buildcount = mountainGenerator(buildcount)
 
 #########################################################

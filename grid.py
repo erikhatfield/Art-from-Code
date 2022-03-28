@@ -726,5 +726,5 @@ try:
         #sys.exit(0)
         bpy.ops.wm.quit_blender()
 except IndexError:
-    print('execption occuring ('+ str(IndexError) +') no parameters entered')
+    print('no parameters entered [[exeception handled]]')
 # FIN

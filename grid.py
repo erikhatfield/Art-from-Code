@@ -227,7 +227,12 @@ def mountainGenerator(buildcountparameter):
 ##################################################################################################
 ##################################################################################################
 ##################################################################################################
-
+################################################################
+def printCharacterLine(numberOf,character):
+    for c in range(numberOf):
+        print(character, end ="")
+    print("")
+################################################################
 if minimalModeEnabled == True:
     randomrange = 2
 else:
@@ -236,8 +241,9 @@ else:
 
 for x in range(randomrange):
     #update the build count returned from the iteration of the mountainGenerator() function
-    print("###############################")
-    print("mountainGenerator instance: " + str(x))
+    print("")
+    printCharacterLine(x, "#^^#")
+    print("mountainGenerator instance: " + str(x)+ "/" + str(randomrange-1))
     buildcount = mountainGenerator(buildcount)
 
 #########################################################
@@ -574,7 +580,7 @@ def bigBangTheory():
     if minimalModeEnabled == True:
         numberofstars = 1
     else:
-        numberofstars = random.randint(100, 1000)
+        numberofstars = random.randint(200, 1200)
 
     for x in range(numberofstars):
         birthOfAStar(star_mat)

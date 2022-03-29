@@ -31,7 +31,7 @@ print("\n"+LCD0_MSG+"\n")
 # time stamp used for output graphics file and text file
 renderedFilepathTimeStamp = now.strftime('%m%d%y_%H%M')
 # implement a render settings file out/in method
-renderedSettingsFilepath = "./output/temp_grid_" + renderedFilepathTimeStamp + "-out.txt"
+renderedSettingsFilepath = "./output/temp_settings_txt/grid_settings_" + renderedFilepathTimeStamp + ".txt"
 outTxtFile = open(renderedSettingsFilepath,'w')  #write, read or append the file 'w', 'r' or 'a' respectively
 # Set some manual parameters:
 minimalModeEnabled = False

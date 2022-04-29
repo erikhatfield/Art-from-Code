@@ -17,6 +17,7 @@ import datetime
 import time
 import math
 import sys
+import os
 argv = sys.argv #pass in parameters/arguements from the command line
 argv = argv[argv.index("--") + 1:]  # get all args after "--"
 # argv example command: % blender /the/path/file.blend -P /the/path/of/script.py -- smurf berries
@@ -729,8 +730,8 @@ bpy.ops.wm.save_as_mainfile(filepath=bpy.data.filepath)
 try:
     argv[0]
     if argv[0] == "automated":
-        print('AUTOMATED_MODE active: exiting in INT seconds.')
-        time.sleep(259)
+        print('AUTOMATED_MODE active: exiting in 159 seconds.')
+        time.sleep(159)
         #sys.exit(0)
         bpy.ops.wm.quit_blender()
 except IndexError:

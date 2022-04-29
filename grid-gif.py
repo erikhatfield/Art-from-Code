@@ -53,5 +53,5 @@ bpy.ops.render.render('INVOKE_DEFAULT', animation=True, write_still=True)
 
 frame_calc_delay = (scene_frame_end / scene_frame_step) * 59
 print('exiting in '+str(frame_calc_delay)+' seconds.')
-time.sleep(frame_calc_delay)
+time.sleep(int(frame_calc_delay))
 bpy.ops.wm.quit_blender()

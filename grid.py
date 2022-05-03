@@ -450,7 +450,7 @@ if random.randint(0, 100) > outlyerVerts:
     zScaleFac = zScaleFac*1.67
     bpy.context.object.scale[2] = zScaleFac
 else:
-    yScaleFac = (random.randint(0, 2) + (WILDCARD*WILDCARD))
+    yScaleFac = (random.randint(1, 4) + (WILDCARD*WILDCARD))
 bpy.context.object.scale[1] = yScaleFac
 ######################################
 ###############################################################

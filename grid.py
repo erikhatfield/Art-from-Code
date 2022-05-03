@@ -432,7 +432,25 @@ new_link = links.new(node_emission.outputs[0], material_output.inputs[0])
 ####bpy.ops.object.modifier_apply(modifier="mountainMirror")
 ####bpy.ops.object.modifier_apply(modifier="mountainArray")
 #bpy.ops.object.modifier_apply(modifier="wireframeArray")
-
+###################
+######################################
+#scale Y and Z of entire mountainPlane
+#calc an zScaleFac that is only near the ground in outlying cases
+outlyerVerts = random.randint(86, 99)
+if random.randint(0, 100) > outlyerVerts:
+    zScaleFac = (( 0.1 + (0.67-0.1)*random.random() ) * WILDCARD)
+    bpy.context.object.scale[2] = zScaleFac + 1
+else:
+    zScaleFac = (( 0.67 + (3.67-0.67)*random.random() ) * WILDCARD)
+    bpy.context.object.scale[2] = zScaleFac * 2
+#calc an yScaleFac that is only near the ground in outlying cases
+outlyerVerts = random.randint(95, 99)
+if random.randint(0, 100) > outlyerVerts:
+    yScaleFac = 12
+else:
+    yScaleFac = (random.randint(0, 2) + (WILDCARD*WILDCARD))
+bpy.context.object.scale[1] = yScaleFac
+######################################
 ###############################################################
 #    ______   ______  __       __ ________ _______   ______
 #   /      \ /      \|  \     /  \        \       \ /      \
@@ -450,8 +468,8 @@ new_link = links.new(node_emission.outputs[0], material_output.inputs[0])
 # position default camera on the ground
 #camx = int(-1 * (PLANESIZE / WILDCARD))
 camx = 0
-#camz = WILDCARD * 0.420
-camz = (( 0.1 + (0.67-0.1)*random.random() ) * WILDCARD)
+#camz is altitude of ship
+camz = zScaleFac
 bpy.ops.object.camera_add(enter_editmode=False, align='VIEW', location=(camx, 0, camz), rotation=(1.5708, 0, -1.5708), scale=(1, 1, 1))
 bpy.ops.object.transforms_to_deltas(mode='ALL')
 
@@ -460,7 +478,7 @@ obj_camera = bpy.data.objects["Camera"]
 lensangle = random.randint(32, 85) #35 min zoom for spaceship cockpit for now
 obj_camera.data.lens = lensangle
 bpy.context.object.data.clip_start = 0.2 # default is .01
-obj_camera.data.clip_end = 10000
+obj_camera.data.clip_end = 15000
 
 # if exists- attach spaceship to camera
 if bpy.context.scene.objects.get("Spaceship"):

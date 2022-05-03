@@ -446,7 +446,7 @@ else:
 #calc an yScaleFac that is only near the ground in outlying cases
 outlyerVerts = random.randint(95, 99)
 if random.randint(0, 100) > outlyerVerts:
-    yScaleFac = 12
+    yScaleFac = 24
 else:
     yScaleFac = (random.randint(0, 2) + (WILDCARD*WILDCARD))
 bpy.context.object.scale[1] = yScaleFac

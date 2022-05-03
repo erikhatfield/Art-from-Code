@@ -3,7 +3,7 @@
 #blender
 
 #open ~/Dev/BL/art-from-code
-if [ $2 == "gif" ]; then
+if [ "$2" == "gif" ]; then
     mkdir -p ~/Dev/BL/art-from-code/output/temp_gif/
     cd ~/Dev/BL/art-from-code/output/temp_gif/
     rm -rf *.jpg
@@ -29,7 +29,7 @@ mkdir -p ~/Dev/BL/art-from-code/output/temp_settings_txt/
 /Applications/Blender.app/Contents/MacOS/blender ~/Dev/BL/art-from-code/BL/temp_auto_grid.blend -P ~/Dev/BL/art-from-code/grid.py -- $1 $2 $3
 
 #blender ~/Dev/BL/art-from-code/BL/temp_auto_grid.blend --frame-start 2 --frame-end 1000 --frame-jump 249 --render-output //../output/temp_gif/
-if [ $2 == "gif" ]; then
+if [ "$2" == "gif" ]; then
     /Applications/Blender.app/Contents/MacOS/blender ~/Dev/BL/art-from-code/BL/temp_auto_grid.blend -P ~/Dev/BL/art-from-code/grid-gif.py
 fi
 ###############################################################################
@@ -37,7 +37,7 @@ fi
 ###############################################################################
 
 
-if [ $2 == "gif" ]; then
+if [ "$2" == "gif" ]; then
     open ~/Dev/BL/art-from-code/output/temp_gif/
     echo "GIF option enabled"
     cd ~/Dev/BL/art-from-code/output/temp_gif/

@@ -710,13 +710,13 @@ cockpitLCD()
 #   \▓▓   \▓▓\▓▓▓▓▓▓▓▓\▓▓   \▓▓\▓▓▓▓▓▓▓ \▓▓▓▓▓▓▓▓\▓▓   \▓▓
 #
 # Set a few render/output influences #
-bpy.context.scene.render.resolution_x = 1920
-bpy.context.scene.render.resolution_y = 1080
+###bpy.context.scene.render.resolution_x = 1920
+###bpy.context.scene.render.resolution_y = 1080
 ## for mbp16 retina display: 3584x2240, 4096x2560@144
 ##bpy.context.scene.render.resolution_x = 3584
 ##bpy.context.scene.render.resolution_y = 2240
-##bpy.context.scene.render.resolution_x = 4096
-##bpy.context.scene.render.resolution_y = 2560
+bpy.context.scene.render.resolution_x = 4096
+bpy.context.scene.render.resolution_y = 2560
 
 bpy.context.scene.render.fps = 30
 renderedFilepath = "//../output/temp_grid_" + renderedFilepathTimeStamp + "-out"

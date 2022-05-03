@@ -439,14 +439,16 @@ new_link = links.new(node_emission.outputs[0], material_output.inputs[0])
 outlyerVerts = random.randint(86, 99)
 if random.randint(0, 100) > outlyerVerts:
     zScaleFac = (( 0.1 + (0.67-0.1)*random.random() ) * WILDCARD)
-    bpy.context.object.scale[2] = zScaleFac + 1
+    bpy.context.object.scale[2] = zScaleFac + 0.67
 else:
-    zScaleFac = (( 0.67 + (3.67-0.67)*random.random() ) * WILDCARD)
-    bpy.context.object.scale[2] = zScaleFac * 2
+    zScaleFac = (( 0.67 + (3.67-0.67)*random.random() ) + (1/WILDCARD) + WILDCARD)
+    bpy.context.object.scale[2] = zScaleFac
 #calc an yScaleFac that is only near the ground in outlying cases
 outlyerVerts = random.randint(95, 99)
 if random.randint(0, 100) > outlyerVerts:
-    yScaleFac = 24
+    yScaleFac = 16.7
+    zScaleFac = zScaleFac*1.67
+    bpy.context.object.scale[2] = zScaleFac
 else:
     yScaleFac = (random.randint(0, 2) + (WILDCARD*WILDCARD))
 bpy.context.object.scale[1] = yScaleFac

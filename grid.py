@@ -443,7 +443,7 @@ if random.randint(0, 100) > outlyerVerts:
 else:
     zScaleFac = (( 0.67 + (3.67-0.67)*random.random() ) + (1/WILDCARD) + WILDCARD)
     bpy.context.object.scale[2] = zScaleFac
-#calc an yScaleFac that is only near the ground in outlying cases
+#calc an yScaleFac is large and effects z scale in outlying cases
 outlyerVerts = random.randint(95, 99)
 if random.randint(0, 100) > outlyerVerts:
     yScaleFac = 16.7

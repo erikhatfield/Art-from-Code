@@ -759,8 +759,9 @@ bpy.ops.wm.save_as_mainfile(filepath=bpy.data.filepath)
 try:
     argv[0]
     if argv[0] == "automated":
-        print('AUTOMATED_MODE active: exiting in 159 seconds.')
-        time.sleep(159)
+        print('AUTOMATED_MODE active: exiting in 259 seconds.')
+        # Need dynamic delay here, in some rare cases 259 is not enough delay to finish render
+        time.sleep(259)
         #sys.exit(0)
         bpy.ops.wm.quit_blender()
 except IndexError:

@@ -3,6 +3,8 @@ Using Blender's Python coding environment to output visual art
 
 ## Output samples
 
+###Grid.py:
+
 ###### Grid output (GIF)
 ![GIF OUTPUT](/output/grid.gif)
 
@@ -12,7 +14,14 @@ Using Blender's Python coding environment to output visual art
 ###### Grid output [[LATEST]]
 ![JPG OUTPUT](/output/latest.jpg)
 
-###### Simple output 
+###### Grid automated gif [[SHELL]]
+![GIF OUTPUT](/output/latest.gif)
+> **RESULT FROM THE SH COMMAND W/ PARAMETERS:** `% SH/art-from-code.sh -- automated gif`
+>> * Requires imagick/convert *
+
+###Simple.py:
+
+###### Simple output
 ![GIF OUTPUT](/output/simple.jpg)
 
 ## Project Objectives:

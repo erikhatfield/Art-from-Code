@@ -17,7 +17,7 @@ Using Blender's Python coding environment to output visual art
 ###### Grid automated gif [[SHELL]]
 ![GIF OUTPUT](/output/latest.gif)
 > RESULT FROM THE SH COMMAND W/ PARAMETERS: `% SH/art-from-code.sh -- automated gif`
->> *Requires imagick/convert*
+>> *Gif automation requires **imagick's convert***
 
 ##*Simple.py:*
 

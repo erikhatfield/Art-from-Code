@@ -3,7 +3,7 @@ Using Blender's Python coding environment to output visual art
 
 ## Output samples
 
-##*Grid.py:*
+## *Grid.py:*
 
 ###### Grid output (GIF)
 ![GIF OUTPUT](/output/grid.gif)
@@ -19,7 +19,7 @@ Using Blender's Python coding environment to output visual art
 > RESULT FROM THE SH COMMAND W/ PARAMETERS: `% SH/art-from-code.sh -- automated gif`
 >> *Gif automation requires **imagick's convert***
 
-##*Simple.py:*
+## *Simple.py:*
 
 ###### Simple output
 ![GIF OUTPUT](/output/simple.jpg)

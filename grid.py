@@ -651,6 +651,10 @@ def cockpitLCD():
     node_emission.inputs[0].default_value = ( 0.0, 0.004, 0.027, 1.0) # color
     node_emission.inputs[1].default_value = 2 # strength
 
+    # update viewport display (aka workbench render)
+    lcd_mat.diffuse_color = (0, 0, 0.259, 1)
+    lcd_mat.roughness = 0
+
     links = lcd_mat.node_tree.links
     new_link = links.new(node_emission.outputs[0], material_output.inputs[0])
     #add text block
@@ -685,6 +689,11 @@ def cockpitLCD():
 
     node_emission.inputs[0].default_value = ( 0.0, 0.9, 1.0, 1.0) # color
     node_emission.inputs[1].default_value = 22 # strength
+
+    # update viewport display (aka workbench render)
+    lcd_mat.diffuse_color = (0, 0.667, 0.667, 1)
+    lcd_mat.metallic = 1 #SAME AS #bpy.context.object.active_material.metallic = 1
+    lcd_mat.roughness = 0.667
 
     links = lcd_mat.node_tree.links
     new_link = links.new(node_emission.outputs[0], material_output.inputs[0])

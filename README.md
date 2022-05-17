@@ -1,10 +1,9 @@
 # Art-from-Code
 Using Blender's Python coding environment to output visual art
 
-## Output samples
+## Output samples:
 
-## *Grid.py:*
-
+###### *Grid.py:*
 ###### Grid output (GIF)
 ![GIF OUTPUT](/output/grid.gif)
 
@@ -18,12 +17,13 @@ Using Blender's Python coding environment to output visual art
 ![GIF OUTPUT](/output/latest.gif)
 > RESULT FROM THE SH COMMAND W/ PARAMETERS: `% SH/art-from-code.sh -- automated gif`
 >> *Gif automation requires **imagick's convert***
+>
 
-## *Simple.py:*
-
+###### *Simple.py:*
 ###### Simple output
-![GIF OUTPUT](/output/simple.jpg)
+![JPG OUTPUT](/output/simple.jpg)
+
 
 ## Project Objectives:
  - Practice good practices in areas of (A) project management and documentation, (B) Object Oriented Programming
- - Primary: utilize good ol fashion art with security once again. e.g.: operating system resource audit and manipulation during times of load. ¡∞§CL4551F;
+ - Primary: utilize good ol fashion art with security once again. e.g.: operating system resource audit and manipulation during times of load. *¡∞§CL4551F;*

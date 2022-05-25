@@ -25,7 +25,7 @@ LCD0_MSG = "G R I D \n"
 # Record time stamps
 now = datetime.datetime.now()
 nice_formatted_time = '{0:%A %B %d, %Y @%H%M [%z %Z]}'.format(now)
-print("NOW-> datetime.now(): " + str(now) + "\n\n");
+print("datetime.datetime.now() -> " + str(now) + "\n\n");
 LCD0_MSG = LCD0_MSG + "\n" + str(nice_formatted_time) + "\n"
 init_timestamp = time.time()
 LCD0_MSG = LCD0_MSG + "\n init_timestamp = " + str(init_timestamp) + "\n"

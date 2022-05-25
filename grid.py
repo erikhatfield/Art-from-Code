@@ -588,7 +588,7 @@ def bigBangTheory():
         #above random number isnt large enough in some cases, as it places stars in front of mountains.
         bpy.context.object.location[2]= ( (random.randint(terraindepth, (terraindepth+2048))) * -1 ) #distance from camera
         # and Z is Y
-        bpy.context.object.location[1]= random.randint(4, ((buildcount*3) - lensangle*2)) #vertical
+        bpy.context.object.location[1]= random.randint(4, ((buildcount*4) - lensangle*2)) #vertical
         starrangey = 0.1 + ((buildcount*6)-0.1)*random.random() #horizontal
 
         if random.randint(1, 2) == 1:

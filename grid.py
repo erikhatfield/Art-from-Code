@@ -345,6 +345,10 @@ outTxtFile.write("mOffset:" + str(materialOffsetInt) + "\n")
 #bpy.ops.object.modifier_apply(modifier="mountainMirror")
 #bpy.ops.object.modifier_apply(modifier="mountainArray")
 
+#update buildcount as an estimate of generated terrain depth
+#(buildcount * 2) for mirror mod
+terraindepth = (buildcount * 2) * mountainArrayCount
+
 # Add materials to mountains
 ###################
 # Add base material
@@ -580,11 +584,12 @@ def bigBangTheory():
         bpy.context.object.up_axis = 'Z'
 
         # for some reason, the X is the -Z
-        bpy.context.object.location[2]= ( (random.randint(512, 1024)) * -2 ) #distance from camera
+        #bpy.context.object.location[2]= ( (random.randint(512, 1024)) * -2 ) #distance from camera
+        #above random number isnt large enough in some cases, as it places stars in front of mountains.
+        bpy.context.object.location[2]= ( (random.randint(terraindepth, (terraindepth+2048))) * -1 ) #distance from camera
         # and Z is Y
-        bpy.context.object.location[1]= random.randint(4, (480 - lensangle*2)) #vertical
-        # and Y is X
-        starrangey = 0.1 + (1280.0-0.1)*random.random() #horizontal
+        bpy.context.object.location[1]= random.randint(4, ((buildcount*3) - lensangle*2)) #vertical
+        starrangey = 0.1 + ((buildcount*6)-0.1)*random.random() #horizontal
 
         if random.randint(1, 2) == 1:
             starrangey = starrangey * -1 # both sides of center line
@@ -595,7 +600,7 @@ def bigBangTheory():
         if random.randint(0, 10000) > specialBoundaries:
             starscale = 10.1 + (45.1-10.1)*random.random()
         else:
-            starscale = 0.004 + (0.5-0.004)*random.random()
+            starscale = 0.004 + (0.75-0.004)*random.random()
 
         bpy.context.object.scale[0]= starscale
         bpy.context.object.scale[1]= starscale

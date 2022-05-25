@@ -57,7 +57,7 @@ randb = round(0.0002 + (0.07-0.0002)*random.random(), 4)
 bpy.data.worlds["World"].node_tree.nodes["Background"].inputs[0].default_value = (randr, randg, randb, 1)
 # Also add the color to the viewport world
 bpy.context.scene.world.color = (randr, randg, randb)
-######################### # # # # # # # # # # # # # # # #
+##%%##%%##%%##%%##%%##%%# # # # # # # # # # # # # # # # #
 ####WRITE##TO##TEXTFILE##worldRGB//world background color
 outTxtFile.write("wrgb:" + str(randr) +"," + str(randg) + "," + str(randb) + "\n")
 #########
@@ -331,11 +331,11 @@ arrayOfMountains.count = mountainArrayCount
 # Add wireframe modifier
 wireframedMountains = mountains.modifiers.new("wireframeArray", "WIREFRAME")
 wireframedMountains.use_replace = False
-wireframeThickness = round((0.002 + (0.022-0.002)*random.random()), 5)#limit to 5 digit decimal prescesion 
+wireframeThickness = round((0.002 + (0.022-0.002)*random.random()), 7)#limit to 7 digit decimal prescesion 
 wireframedMountains.thickness = wireframeThickness
 materialOffsetInt = random.randint(0, 7) #0 creates a moonlit scene :)
 wireframedMountains.material_offset = materialOffsetInt
-######################### # # # # # # # # # # # # # # # # # # #
+##%%##%%##%%##%%##%%##%%# # # # # # # # # # # # # # # # # # # #
 ####WRITE##TO##TEXTFILE##wireframe thickness and material offset
 outTxtFile.write("wThick:" + str(wireframeThickness) + "\n")
 outTxtFile.write("mOffset:" + str(materialOffsetInt) + "\n")

@@ -331,7 +331,7 @@ arrayOfMountains.count = mountainArrayCount
 # Add wireframe modifier
 wireframedMountains = mountains.modifiers.new("wireframeArray", "WIREFRAME")
 wireframedMountains.use_replace = False
-wireframeThickness = 0.002 + (0.022-0.002)*random.random()
+wireframeThickness = round((0.002 + (0.022-0.002)*random.random()), 5)#limit to 5 digit decimal prescesion 
 wireframedMountains.thickness = wireframeThickness
 materialOffsetInt = random.randint(0, 7) #0 creates a moonlit scene :)
 wireframedMountains.material_offset = materialOffsetInt

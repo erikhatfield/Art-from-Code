@@ -57,16 +57,16 @@ randb = round(0.0002 + (0.07-0.0002)*random.random(), 4)
 bpy.data.worlds["World"].node_tree.nodes["Background"].inputs[0].default_value = (randr, randg, randb, 1)
 # Also add the color to the viewport world
 bpy.context.scene.world.color = (randr, randg, randb)
-# Add to settings file
+######################### # # # # # # # # # # # # # # # #
+####WRITE##TO##TEXTFILE##worldRGB//world background color
 outTxtFile.write("wrgb:" + str(randr) +"," + str(randg) + "," + str(randb) + "\n")
-outTxtFile.close()
 #########
 #########################
 # EEVEE RENDER SETTINGS #
 bpy.context.scene.eevee.taa_render_samples = 64
 # Ambient Occlusions
 bpy.context.scene.eevee.use_gtao = True
-bpy.context.scene.eevee.gtao_distance = 1200
+bpy.context.scene.eevee.gtao_distance = 1500
 bpy.context.scene.eevee.gtao_quality = 0.86
 
 # Bloom
@@ -78,7 +78,7 @@ bpy.context.scene.eevee.use_ssr = True
 bpy.context.scene.eevee.use_ssr_refraction = True
 # Volumetrics
 bpy.context.scene.eevee.use_volumetric_lights = True
-bpy.context.scene.eevee.volumetric_end = 500
+bpy.context.scene.eevee.volumetric_end = 1500
 bpy.context.scene.eevee.use_volumetric_shadows = True
 # Hair
 bpy.context.scene.render.hair_type = 'STRAND'
@@ -333,7 +333,12 @@ wireframedMountains = mountains.modifiers.new("wireframeArray", "WIREFRAME")
 wireframedMountains.use_replace = False
 wireframeThickness = 0.002 + (0.022-0.002)*random.random()
 wireframedMountains.thickness = wireframeThickness
-wireframedMountains.material_offset = random.randint(0, 7) #0 creates a moonlit scene :)
+materialOffsetInt = random.randint(0, 7) #0 creates a moonlit scene :)
+wireframedMountains.material_offset = materialOffsetInt
+######################### # # # # # # # # # # # # # # # # # # #
+####WRITE##TO##TEXTFILE##wireframe thickness and material offset
+outTxtFile.write("wThick:" + str(wireframeThickness) + "\n")
+outTxtFile.write("mOffset:" + str(materialOffsetInt) + "\n")
 
 # Apply wireframeArray modifier here for a different material application
 #bpy.ops.object.modifier_apply(modifier="mountainMirror")
@@ -706,6 +711,13 @@ def cockpitLCD():
     t4dw.data.body = LCD_MESSAGE_OUT
 
 cockpitLCD()
+
+##########################################################
+
+###############################
+####CLOSE##SETTINGS##TEXTFILE##
+outTxtFile.close()#############
+###############################
 
 ##########################################################
 #   _______  ________ __    __ _______  ________ _______

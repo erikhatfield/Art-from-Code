@@ -24,10 +24,11 @@ argv = argv[argv.index("--") + 1:]  # get all args after "--"
 LCD0_MSG = "G R I D \n"
 # Record time stamps
 now = datetime.datetime.now()
+nice_formatted_time = '{0:%A %B %d, %Y @%H%M [%z %Z]}'.format(now)
 print("NOW-> datetime.now(): " + str(now) + "\n\n");
-LCD0_MSG = LCD0_MSG + "\n" + str(now) + "\n"
-initial_timestamp = time.time()
-LCD0_MSG = LCD0_MSG + "\n" + "initial_timestamp = " + str(initial_timestamp) + "\n"
+LCD0_MSG = LCD0_MSG + "\n" + str(nice_formatted_time) + "\n"
+init_timestamp = time.time()
+LCD0_MSG = LCD0_MSG + "\n init_timestamp = " + str(init_timestamp) + "\n"
 print("\n"+LCD0_MSG+"\n")
 # time stamp used for output graphics file and text file
 renderedFilepathTimeStamp = now.strftime('%m%d%y_%H%M')
@@ -704,7 +705,7 @@ def cockpitLCD():
     new_link = links.new(node_emission.outputs[0], material_output.inputs[0])
 
     second_timestamp = time.time()
-    run_time = int(round(second_timestamp - initial_timestamp))
+    run_time = int(round(second_timestamp - init_timestamp))
     LCD_MESSAGE_OUT = LCD0_MSG + "\nrun_time (before rendering time) is " + str(run_time) + " seconds."
 
     t4dw=bpy.data.objects['LCD_TEXT']
@@ -761,7 +762,7 @@ else:
 ##########################################################
 # print out run time of this py
 second_timestamp = time.time()
-run_time = int(round(second_timestamp - initial_timestamp))
+run_time = int(round(second_timestamp - init_timestamp))
 print('COMPLETED. run_time (before rendering time) is ' + str(run_time) + " seconds.")
 
 # CONSIDER performing garbage collection

@@ -487,10 +487,10 @@ bpy.ops.object.transforms_to_deltas(mode='ALL')
 
 obj_camera = bpy.data.objects["Camera"]
 #lensangle = random.randint(18, 135)
-lensangle = random.randint(32, 85) #35 min zoom for spaceship cockpit for now
+lensangle = random.randint(31, 86) #31 min zoom for spaceship cockpit for now
 obj_camera.data.lens = lensangle
 bpy.context.object.data.clip_start = 0.2 # default is .01
-obj_camera.data.clip_end = 15000
+obj_camera.data.clip_end = 26777
 
 # if exists- attach spaceship to camera
 if bpy.context.scene.objects.get("Spaceship"):
@@ -588,8 +588,8 @@ def bigBangTheory():
         #above random number isnt large enough in some cases, as it places stars in front of mountains.
         bpy.context.object.location[2]= ( (random.randint(terraindepth, (terraindepth+2048))) * -1 ) #distance from camera
         # and Z is Y
-        bpy.context.object.location[1]= random.randint(4, ((buildcount*4) - lensangle*2)) #vertical
-        starrangey = 0.1 + ((buildcount*6)-0.1)*random.random() #horizontal
+        bpy.context.object.location[1]= random.randint(4, ((buildcount*3) - lensangle*2)) #vertical
+        starrangey = 0.1 + ((buildcount*5)-0.1)*random.random() #horizontal
 
         if random.randint(1, 2) == 1:
             starrangey = starrangey * -1 # both sides of center line
@@ -600,7 +600,7 @@ def bigBangTheory():
         if random.randint(0, 10000) > specialBoundaries:
             starscale = 10.1 + (45.1-10.1)*random.random()
         else:
-            starscale = 0.004 + (0.86-0.004)*random.random()
+            starscale = 0.004 + (0.88-0.004)*random.random()
 
         bpy.context.object.scale[0]= starscale
         bpy.context.object.scale[1]= starscale

@@ -600,7 +600,7 @@ def bigBangTheory():
         if random.randint(0, 10000) > specialBoundaries:
             starscale = 10.1 + (45.1-10.1)*random.random()
         else:
-            starscale = 0.004 + (0.88-0.004)*random.random()
+            starscale = 0.004 + (0.94-0.004)*random.random()
 
         bpy.context.object.scale[0]= starscale
         bpy.context.object.scale[1]= starscale

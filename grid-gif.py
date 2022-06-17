@@ -36,22 +36,18 @@ bpy.context.scene.frame_step = scene_frame_step
 #  | ▓▓▓▓▓▓▓\ ▓▓▓▓▓  | ▓▓\▓▓ ▓▓ ▓▓  | ▓▓ ▓▓▓▓▓  | ▓▓▓▓▓▓▓\
 #  | ▓▓  | ▓▓ ▓▓_____| ▓▓ \▓▓▓▓ ▓▓__/ ▓▓ ▓▓_____| ▓▓  | ▓▓
 #  | ▓▓  | ▓▓ ▓▓     \ ▓▓  \▓▓▓ ▓▓    ▓▓ ▓▓     \ ▓▓  | ▓▓
-#   \▓▓   \▓▓\▓▓▓▓▓▓▓▓\▓▓   \▓▓\▓▓▓▓▓▓▓ \▓▓▓▓▓▓▓▓\▓▓   \▓▓
-#
-# Set a few render/output influences #
+#  \ ▓▓   \▓▓\▓▓▓▓▓▓▓▓\▓▓   \▓▓\▓▓▓▓▓▓▓ \▓▓▓▓▓▓▓▓\▓▓   \▓▓
+#                                         RENDER SETTINGS:
 bpy.context.scene.render.resolution_x = 720
 bpy.context.scene.render.resolution_y = 480
-
 bpy.context.scene.render.filepath = "//../output/temp_gif/"
-
 bpy.context.scene.render.image_settings.file_format = 'JPEG'
-bpy.context.scene.render.image_settings.quality = 86
+bpy.context.scene.render.image_settings.quality = 80
 bpy.ops.render.render('INVOKE_DEFAULT', animation=True, write_still=True)
-
 ##########################################################
-##########################################################
-
-frame_calc_delay = (scene_frame_end / scene_frame_step) * 59
+###############################################################
+###############################################################################################
+frame_calc_delay = (scene_frame_end / scene_frame_step) * 37 ## each frame takes 37 seconds max
 print('exiting in '+str(frame_calc_delay)+' seconds.')
 time.sleep(int(frame_calc_delay))
 bpy.ops.wm.quit_blender()

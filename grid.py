@@ -28,7 +28,7 @@ nice_formatted_time = '{0:%A, %B %d, %Y @%H%M [%z %Z]}'.format(now)
 print("datetime.datetime.now() -> " + str(now) + "\n\n");
 LCD0_MSG = LCD0_MSG + "\n" + str(nice_formatted_time) + "\n"
 init_timestamp = time.time()
-LCD0_MSG = LCD0_MSG + "\n init_timestamp = " + str(init_timestamp) + "\n"
+LCD0_MSG = LCD0_MSG + "\n:: init_timestamp = " + str(init_timestamp) + "\n"
 print("\n"+LCD0_MSG+"\n")
 # time stamp used for output graphics file and text file
 renderedFilepathTimeStamp = now.strftime('%m%d%y_%H%M')
@@ -332,7 +332,7 @@ arrayOfMountains.count = mountainArrayCount
 # Add wireframe modifier
 wireframedMountains = mountains.modifiers.new("wireframeArray", "WIREFRAME")
 wireframedMountains.use_replace = False
-wireframeThickness = round((0.002 + (0.022-0.002)*random.random()), 7)#limit to 7 digit decimal prescesion 
+wireframeThickness = round((0.002 + (0.022-0.002)*random.random()), 7)#limit to 7 digit decimal prescesion
 wireframedMountains.thickness = wireframeThickness
 materialOffsetInt = random.randint(0, 7) #0 creates a moonlit scene :)
 wireframedMountains.material_offset = materialOffsetInt
@@ -600,7 +600,7 @@ def bigBangTheory():
         if random.randint(0, 10000) > specialBoundaries:
             starscale = 10.1 + (45.1-10.1)*random.random()
         else:
-            starscale = 0.004 + (0.94-0.004)*random.random()
+            starscale = 0.004 + (1.59-0.004)*random.random()
 
         bpy.context.object.scale[0]= starscale
         bpy.context.object.scale[1]= starscale
@@ -612,7 +612,7 @@ def bigBangTheory():
     if minimalModeEnabled == True:
         numberofstars = 1
     else:
-        numberofstars = random.randint(200, 1200)
+        numberofstars = random.randint(159, 1234)
 
     for x in range(numberofstars):
         birthOfAStar(star_mat)

@@ -746,7 +746,7 @@ print("  | ▓▓▓▓▓▓▓\ ▓▓▓▓▓  | ▓▓\▓▓ ▓▓ ▓▓
 print("  | ▓▓  | ▓▓ ▓▓_____| ▓▓ \▓▓▓▓ ▓▓__/ ▓▓ ▓▓_____| ▓▓  | ▓▓ ")
 print("  | ▓▓  | ▓▓ ▓▓     \ ▓▓  \▓▓▓ ▓▓    ▓▓ ▓▓     \ ▓▓  | ▓▓ ")
 print("   \▓▓   \▓▓\▓▓▓▓▓▓▓▓\▓▓   \▓▓\▓▓▓▓▓▓▓ \▓▓▓▓▓▓▓▓\▓▓   \▓▓ ")
-print("    \n    \\--> Setting a few render/output influences\n\n")
+print("   \\\n     \\--> Setting a few render/output influences  ")
 # Set a few render/output influences #
 ###bpy.context.scene.render.resolution_x = 1920
 ###bpy.context.scene.render.resolution_y = 1080

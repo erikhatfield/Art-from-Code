@@ -1,6 +1,6 @@
 print("  ______  _______  ______ _______   ")
 print(" /      \|       \|      \       \  ")
-print("|  ▓▓▓▓▓▓\ ▓▓▓▓▓▓▓\\▓▓▓▓▓▓ ▓▓▓▓▓▓▓\ ")
+print("|  ▓▓▓▓▓▓\ ▓▓▓▓▓▓▓\ ▓▓▓▓▓▓ ▓▓▓▓▓▓▓\ ")
 print("| ▓▓ __\▓▓ ▓▓__| ▓▓ | ▓▓ | ▓▓  | ▓▓ ")
 print("| ▓▓|    \ ▓▓    ▓▓ | ▓▓ | ▓▓  | ▓▓ ")
 print("| ▓▓ \▓▓▓▓ ▓▓▓▓▓▓▓\ | ▓▓ | ▓▓  | ▓▓ ")
@@ -217,9 +217,10 @@ def mountainGenerator(buildcountparameter):
     if minimalModeEnabled == True:
         randomrange = 1
     else:
-        # Call the function 2-4 times. Because seperate random numbers are created each time which gives it a slightly different outcome everytime 3 fold.
+        # Call the function 2-5 times. Because seperate random numbers are created each time which gives it a slightly different outcome everytime 3 fold.
         randomrange = random.randint(2, 5) #increasing this range can create heavy blend files
-        print("editModeVertZ() instances: " + str(randomrange))
+        buildCharacterStr = buildGoodCharacter(randomrange, "▓")
+        print(str(buildCharacterStr) + " " + str(randomrange) + " instances of editModeVertZ()")
 
     for x in range(randomrange):
         editModeVertZ()
@@ -229,6 +230,13 @@ def mountainGenerator(buildcountparameter):
 ##################################################################################################
 ##################################################################################################
 ##################################################################################################
+################################################################
+def buildGoodCharacter(numberOf,character):
+    buildGood = character
+    for i in range(numberOf):
+        buildGood = str(buildGood) + str(character)
+    return buildGood
+################################################################
 ################################################################
 def printCharacterLine(numberOf,character):
     for c in range(numberOf):
@@ -240,12 +248,15 @@ if minimalModeEnabled == True:
 else:
     randomrange = random.randint(2, 22) #upper bounds of this range can generate heavy files (1GB) when combined with applied modifiers
     print("mountainGenerator() instances: " + str(randomrange))
+    printCharacterLine((randomrange-1), "▓▓▓▓")
+    print("\n\n")
 
 for x in range(randomrange):
-    #update the build count returned from the iteration of the mountainGenerator() function
-    print("")
-    printCharacterLine(x, "#^^#")
+    printCharacterLine(randomrange, "____")
+    printCharacterLine((x+1), "▓▓▓▓") #add to lcd?
+    printCharacterLine((x+1), " - -")
     print("mountainGenerator instance: " + str(x)+ "/" + str(randomrange-1))
+    #update the build count returned from the iteration of the mountainGenerator() function
     buildcount = mountainGenerator(buildcount)
 
 #########################################################
@@ -735,7 +746,7 @@ print("  | ▓▓▓▓▓▓▓\ ▓▓▓▓▓  | ▓▓\▓▓ ▓▓ ▓▓
 print("  | ▓▓  | ▓▓ ▓▓_____| ▓▓ \▓▓▓▓ ▓▓__/ ▓▓ ▓▓_____| ▓▓  | ▓▓ ")
 print("  | ▓▓  | ▓▓ ▓▓     \ ▓▓  \▓▓▓ ▓▓    ▓▓ ▓▓     \ ▓▓  | ▓▓ ")
 print("   \▓▓   \▓▓\▓▓▓▓▓▓▓▓\▓▓   \▓▓\▓▓▓▓▓▓▓ \▓▓▓▓▓▓▓▓\▓▓   \▓▓ ")
-print("    \n\ --> Setting a few render/output influences   \n\n\n ")
+print("    \n    \\--> Setting a few render/output influences\n\n")
 # Set a few render/output influences #
 ###bpy.context.scene.render.resolution_x = 1920
 ###bpy.context.scene.render.resolution_y = 1080

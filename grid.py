@@ -247,9 +247,10 @@ if minimalModeEnabled == True:
     randomrange = 2
 else:
     randomrange = random.randint(2, 22) #upper bounds of this range can generate heavy files (1GB) when combined with applied modifiers
-    print("mountainGenerator() instances: " + str(randomrange))
+    printCharacterLine((randomrange-1), "____")
     printCharacterLine((randomrange-1), "▓▓▓▓")
-    print("\n\n")
+    printCharacterLine((randomrange-1), "- - ")
+    print("mountainGenerator() instances: " + str(randomrange))
 
 for x in range(randomrange):
     printCharacterLine(randomrange, "____")
@@ -746,7 +747,7 @@ print("  | ▓▓▓▓▓▓▓\ ▓▓▓▓▓  | ▓▓\▓▓ ▓▓ ▓▓
 print("  | ▓▓  | ▓▓ ▓▓_____| ▓▓ \▓▓▓▓ ▓▓__/ ▓▓ ▓▓_____| ▓▓  | ▓▓ ")
 print("  | ▓▓  | ▓▓ ▓▓     \ ▓▓  \▓▓▓ ▓▓    ▓▓ ▓▓     \ ▓▓  | ▓▓ ")
 print("   \▓▓   \▓▓\▓▓▓▓▓▓▓▓\▓▓   \▓▓\▓▓▓▓▓▓▓ \▓▓▓▓▓▓▓▓\▓▓   \▓▓ ")
-print("   \\\n     \\--> Setting a few render/output influences  ")
+print("    \\\n     \\--> Setting a few render/output influences ")
 # Set a few render/output influences #
 ###bpy.context.scene.render.resolution_x = 1920
 ###bpy.context.scene.render.resolution_y = 1080

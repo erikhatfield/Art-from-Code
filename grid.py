@@ -53,17 +53,17 @@ bpy.ops.object.delete()
 
 #########
 # WORLD
-randr = round(0.0002 + (0.0888-0.0002)*random.random(), 4)
-randg = round(0.0002 + (0.0888-0.0002)*random.random(), 4)
-randb = round(0.0002 + (0.0888-0.0002)*random.random(), 4)
+randr = round(0.0002 + (0.0712-0.0002)*random.random(), 4)
+randg = round(0.0002 + (0.0712-0.0002)*random.random(), 4)
+randb = round(0.0002 + (0.0712-0.0002)*random.random(), 4)
 # Note2self: add background gradient to sky. first step: identify node_tree levels as seen in GUI
 bpy.data.worlds["World"].node_tree.nodes["Background"].inputs[0].default_value = (randr, randg, randb, 1)
 wellSometimes = random.randint(77, 99)
 # well sometimes
 if random.randint(0, 100) > wellSometimes:
-    randa = 0.222 + (1.167-0.222)*random.random()
-else:
     randa = 1.23 + (11.67-1.23)*random.random()
+else:
+    randa = 0.451 + (1.167-0.451)*random.random()
 # set the strength of the backgroud color ^_^
 bpy.data.worlds["World"].node_tree.nodes["Background"].inputs[1].default_value = randa
 

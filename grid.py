@@ -1,5 +1,5 @@
 print("  ______  _______  ______ _______   ")
-print(" /      \|       \|      \       \  ")
+print(" /      \|       \†      \       \  ")
 print("|  ▓▓▓▓▓▓\ ▓▓▓▓▓▓▓\ ▓▓▓▓▓▓ ▓▓▓▓▓▓▓\ ")
 print("| ▓▓ __\▓▓ ▓▓__| ▓▓ | ▓▓ | ▓▓  | ▓▓ ")
 print("| ▓▓|    \ ▓▓    ▓▓ | ▓▓ | ▓▓  | ▓▓ ")
@@ -18,8 +18,10 @@ import time
 import math
 import sys
 import os
-argv = sys.argv #pass in parameters/arguements from the command line
-argv = argv[argv.index("--") + 1:]  # get all args after "--"
+#argv = sys.argv #pass in parameters/arguements from the command line
+#argv = argv[argv.index("--") + 1:]  # get all args after "--"
+if "--" in sys.argv:
+    argv = sys.argv[sys.argv.index("--") + 1:]
 # argv example command: % blender /the/path/file.blend -P /the/path/of/script.py -- smurf berries
 LCD0_MSG = "G R I D \n"
 # Record time stamps
@@ -50,12 +52,21 @@ for o in bpy.context.scene.objects:
 bpy.ops.object.delete()
 
 #########
-# WORLD #
-randr = round(0.0002 + (0.07-0.0002)*random.random(), 4)
-randg = round(0.0002 + (0.07-0.0002)*random.random(), 4)
-randb = round(0.0002 + (0.07-0.0002)*random.random(), 4)
+# WORLD
+randr = round(0.0002 + (0.0888-0.0002)*random.random(), 4)
+randg = round(0.0002 + (0.0888-0.0002)*random.random(), 4)
+randb = round(0.0002 + (0.0888-0.0002)*random.random(), 4)
 # Note2self: add background gradient to sky. first step: identify node_tree levels as seen in GUI
 bpy.data.worlds["World"].node_tree.nodes["Background"].inputs[0].default_value = (randr, randg, randb, 1)
+wellSometimes = random.randint(77, 99)
+# well sometimes
+if random.randint(0, 100) > wellSometimes:
+    randa = 0.222 + (1.167-0.222)*random.random()
+else:
+    randa = 1.23 + (11.67-1.23)*random.random()
+# set the strength of the backgroud color ^_^
+bpy.data.worlds["World"].node_tree.nodes["Background"].inputs[1].default_value = randa
+
 # Also add the color to the viewport world
 bpy.context.scene.world.color = (randr, randg, randb)
 ##%%##%%##%%##%%##%%##%%# # # # # # # # # # # # # # # # #

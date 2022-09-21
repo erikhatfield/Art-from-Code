@@ -24,6 +24,7 @@ if "--" in sys.argv:
     argv = sys.argv[sys.argv.index("--") + 1:]
 # argv example command: % blender /the/path/file.blend -P /the/path/of/script.py -- smurf berries
 LCD0_MSG = "G R I D \n"
+LCD1_MSG = "LCD_R \n"
 # Record time stamps
 now = datetime.datetime.now()
 nice_formatted_time = '{0:%A, %B %d, %Y @%H%M [%z %Z]}'.format(now)
@@ -249,24 +250,27 @@ def buildGoodCharacter(numberOf,character):
     return buildGood
 ################################################################
 ################################################################
-def printCharacterLine(numberOf,character):
+def printCharacterLine(numberOf,character,strOut):
     for c in range(numberOf):
         print(character, end ="")
+        strOut=strOut + character
     print("")
+    strOut=strOut + "\n"
+    return strOut
 ################################################################
 if minimalModeEnabled == True:
     randomrange = 2
 else:
     randomrange = random.randint(2, 22) #upper bounds of this range can generate heavy files (1GB) when combined with applied modifiers
-    printCharacterLine((randomrange-1), "____")
-    printCharacterLine((randomrange-1), "▓▓▓▓")
-    printCharacterLine((randomrange-1), "- - ")
+    LCD1_MSG = printCharacterLine((randomrange-1), "____", LCD1_MSG)
+    LCD1_MSG = printCharacterLine((randomrange-1), "▓▓▓▓", LCD1_MSG)
+    LCD1_MSG = printCharacterLine((randomrange-1), "- - ", LCD1_MSG)
     print("mountainGenerator() instances: " + str(randomrange))
 
 for x in range(randomrange):
-    printCharacterLine(randomrange, "____")
-    printCharacterLine((x+1), "▓▓▓▓") #add to lcd?
-    printCharacterLine((x+1), " - -")
+    LCD1_MSG = printCharacterLine(randomrange, "____", LCD1_MSG)
+    LCD1_MSG = printCharacterLine((x+1), "▓▓▓▓", LCD1_MSG)
+    LCD1_MSG = printCharacterLine((x+1), " - -", LCD1_MSG)
     print("mountainGenerator instance: " + str(x)+ "/" + str(randomrange-1))
     #update the build count returned from the iteration of the mountainGenerator() function
     buildcount = mountainGenerator(buildcount)
@@ -650,11 +654,15 @@ def bigBangTheory():
 
 bigBangTheory()
 
-def cockpitLCD():
+countLCD = 0
+def cockpitLCD(countLCD,locationX,locationY,locationZ,rotateY,rotateZ,scaleXYZ,LCD_MESSAGE_OUT):
+    #create vars per instances
+    lcd_cube_name = "LCD_CUBE_" + str(countLCD)
+    lcd_text_name = "LCD_TEXT_" + str(countLCD)
     #add a plane and enter edit mode (use build count on the x axis)
     bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=True, align='WORLD', location=(0, 0, 0), scale=(1, 1, 1))
 
-    bpy.context.selected_objects[0].name = "LCD_CUBE"
+    bpy.context.selected_objects[0].name = lcd_cube_name
     bpy.context.object.parent = bpy.data.objects["Spaceship"]
 
     # scale object to fit center console
@@ -662,13 +670,14 @@ def cockpitLCD():
     bpy.context.object.scale[1]= 0.1
     bpy.context.object.scale[2]= 0.1
     # tilt display
-    bpy.context.object.rotation_euler[1] = 00.32
+    bpy.context.object.rotation_euler[1] = rotateY
+    bpy.context.object.rotation_euler[2] = rotateZ
 
     bpy.context.scene.tool_settings.use_proportional_edit = False
     #bpy.context.object.data.use_mirror_y = True
-    bpy.context.object.location[0] = 0.67
-    #bpy.context.object.location[1] = 0
-    bpy.context.object.location[2] = -0.125
+    bpy.context.object.location[0] = locationX
+    bpy.context.object.location[1] = locationY
+    bpy.context.object.location[2] = locationZ
 
     bpy.ops.object.editmode_toggle()
 
@@ -693,8 +702,8 @@ def cockpitLCD():
     new_link = links.new(node_emission.outputs[0], material_output.inputs[0])
     #add text block
     bpy.ops.object.text_add(enter_editmode=False, align='WORLD', location=(0, 0, 0), scale=(1, 1, 1))
-    bpy.context.selected_objects[0].name = "LCD_TEXT"
-    bpy.context.object.parent = bpy.data.objects["LCD_CUBE"]
+    bpy.context.selected_objects[0].name = lcd_text_name
+    bpy.context.object.parent = bpy.data.objects[lcd_cube_name]
 
     bpy.context.object.rotation_euler[0] = 1.5708
     #bpy.context.object.rotation_euler[1] = 0.32
@@ -707,9 +716,9 @@ def cockpitLCD():
     # move to top of screen a little bit
     bpy.context.object.location[2] = 0.08 #Z coord
 
-    bpy.context.object.scale[0] = 0.039
-    bpy.context.object.scale[1] = 0.039
-    bpy.context.object.scale[2] = 0.039
+    bpy.context.object.scale[0] = scaleXYZ
+    bpy.context.object.scale[1] = scaleXYZ
+    bpy.context.object.scale[2] = scaleXYZ
 
     # LCDTEXT TEXT TEXT MATERIAL
     lcd_mat = bpy.data.materials.new(name = "LCD1TEXT")
@@ -732,15 +741,19 @@ def cockpitLCD():
     links = lcd_mat.node_tree.links
     new_link = links.new(node_emission.outputs[0], material_output.inputs[0])
 
-    second_timestamp = time.time()
-    run_time = int(round(second_timestamp - init_timestamp))
-    LCD_MESSAGE_OUT = LCD0_MSG + "\nrun_time (before rendering time) is " + str(run_time) + " seconds."
-
-    t4dw=bpy.data.objects['LCD_TEXT']
+    t4dw=bpy.data.objects[lcd_text_name]
     t4dw.data.body = LCD_MESSAGE_OUT
 
-cockpitLCD()
+    countLCD = (countLCD + 1)
+    return countLCD
 
+
+second_timestamp = time.time()
+run_time = int(round(second_timestamp - init_timestamp))
+LCD0_MSG = LCD0_MSG + "\nrun_time (before rendering time) is " + str(run_time) + " seconds."
+
+countLCD = cockpitLCD(countLCD,.67,0,-.125,.32,0,.039,LCD0_MSG)
+countLCD = cockpitLCD(countLCD,.67,-.137,-.15,.32,-.32,.01,LCD1_MSG)
 ##########################################################
 
 ###############################

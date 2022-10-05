@@ -655,7 +655,7 @@ def bigBangTheory():
 bigBangTheory()
 
 countLCD = 0
-def cockpitLCD(countLCD,locationX,locationY,locationZ,rotateY,rotateZ,scaleXYZ,LCD_MESSAGE_OUT):
+def cockpitLCD(countLCD,locationX,locationY,locationZ,rotateY,rotateZ,scaleXYZ,LCD_MESSAGE_OUT,tLocX,tLocY,tLocZ):
     #create vars per instances
     lcd_cube_name = "LCD_CUBE_" + str(countLCD)
     lcd_text_name = "LCD_TEXT_" + str(countLCD)
@@ -710,11 +710,11 @@ def cockpitLCD(countLCD,locationX,locationY,locationZ,rotateY,rotateZ,scaleXYZ,L
     bpy.context.object.rotation_euler[2] = -1.5708
 
     #place text flat with screen surface
-    bpy.context.object.location[0] = -0.51  #X coord
+    bpy.context.object.location[0] = tLocX  #X coord
     # move to left side of LCD
-    bpy.context.object.location[1] = 0.42  #Y coord
+    bpy.context.object.location[1] = tLocY  #Y coord
     # move to top of screen a little bit
-    bpy.context.object.location[2] = 0.08 #Z coord
+    bpy.context.object.location[2] = tLocZ #Z coord
 
     bpy.context.object.scale[0] = scaleXYZ
     bpy.context.object.scale[1] = scaleXYZ
@@ -752,8 +752,22 @@ second_timestamp = time.time()
 run_time = int(round(second_timestamp - init_timestamp))
 LCD0_MSG = LCD0_MSG + "\nrun_time (before rendering time) is " + str(run_time) + " seconds."
 
-countLCD = cockpitLCD(countLCD,.67,0,-.125,.32,0,.039,LCD0_MSG)
-countLCD = cockpitLCD(countLCD,.67,-.137,-.15,.32,-.32,.01,LCD1_MSG)
+##################################
+################################
+##############################
+#################LCD instance
+text01LocationX = -.56
+text01LocationY = .42
+text01LocationZ = .29
+countLCD = cockpitLCD(countLCD,.67,0,-.15,.32,0,.039,LCD0_MSG,text01LocationX,text01LocationY,text01LocationZ)
+##################################
+################################
+##############################
+#################LCD instance
+text01LocationX = -.56
+text01LocationY = .467
+text01LocationZ = .467
+countLCD = cockpitLCD(countLCD,.67,-.137,-.18,.32,-.32,.01,LCD1_MSG,text01LocationX,text01LocationY,text01LocationZ)
 ##########################################################
 
 ###############################

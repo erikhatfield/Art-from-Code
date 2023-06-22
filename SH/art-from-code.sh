@@ -31,11 +31,13 @@ mkdir -p $ART_FROM_CODE_DIRPATH/output/temp_settings_txt/
 #Applications/Blender.app/Contents/MacOS/blender ~/Dev/BL/art-from-code/BL/temp_auto_grid.blend -P ~/Dev/BL/art-from-code/grid.py
 ########################################################################
 # With arguements provided:
-/Applications/Blender.app/Contents/MacOS/blender $ART_FROM_CODE_DIRPATH/BL/temp_auto_grid.blend -P $ART_FROM_CODE_DIRPATH/grid.py -- $1 $2 $3
+#~/Applications/Blender.app/Contents/MacOS/blender $ART_FROM_CODE_DIRPATH/BL/temp_auto_grid.blend -P $ART_FROM_CODE_DIRPATH/grid.py -- $1 $2 $3
+blender $ART_FROM_CODE_DIRPATH/BL/temp_auto_grid.blend -P $ART_FROM_CODE_DIRPATH/grid.py -- $1 $2 $3
 
 #blender ~/Dev/BL/art-from-code/BL/temp_auto_grid.blend --frame-start 2 --frame-end 1000 --frame-jump 249 --render-output //../output/temp_gif/
 if [ "$2" == "gif" ]; then
-    /Applications/Blender.app/Contents/MacOS/blender $ART_FROM_CODE_DIRPATH/BL/temp_auto_grid.blend -P $ART_FROM_CODE_DIRPATH/grid-gif.py
+    #~/Applications/Blender.app/Contents/MacOS/blender $ART_FROM_CODE_DIRPATH/BL/temp_auto_grid.blend -P $ART_FROM_CODE_DIRPATH/grid-gif.py
+    blender $ART_FROM_CODE_DIRPATH/BL/temp_auto_grid.blend -P $ART_FROM_CODE_DIRPATH/grid-gif.py
 fi
 
 

@@ -23,7 +23,7 @@ import os
 if "--" in sys.argv:
     argv = sys.argv[sys.argv.index("--") + 1:]
 # argv example command: % blender /the/path/file.blend -P /the/path/of/script.py -- smurf berries
-LCD0_MSG = "G R I D \n"
+LCD0_MSG = "A M P 0 P 5 E C\n"
 LCD1_MSG = "LCD_R \n"
 # Record time stamps
 now = datetime.datetime.now()

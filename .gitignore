@@ -5,6 +5,8 @@
 /BL/temp_*
 *.blend1
 .DS_Store
+Icon?
+Icon\r
 
 ##From python ignore template
 # Byte-compiled / optimized / DLL files

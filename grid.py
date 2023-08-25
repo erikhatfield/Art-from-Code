@@ -9,7 +9,7 @@ print(" \▓▓    ▓▓ ▓▓  | ▓▓   ▓▓ \ ▓▓    ▓▓ ")
 print("  \▓▓▓▓▓▓ \▓▓   \▓▓\▓▓▓▓▓▓\▓▓▓▓▓▓▓  ")
 print("                 †††                ")
 print("GRID.PY a blender render art program")
-print("\n\n\n")
+print("\n\n")
 import bpy
 import bmesh
 import random
@@ -202,12 +202,12 @@ def mountainGenerator(buildcountparameter):
 
             #specific range for y
             min = -0.28
-            max = 0.28
+            max = 0.29
             #generate a random floating point number for y
             fy = min + (max-min)*random.random()
 
             #specific range for z
-            min = 0.011
+            min = 0.012
             max = 1.667
             #generate a random floating point number for Z
             fz = min + (max-min)*random.random()
@@ -359,7 +359,7 @@ arrayOfMountains.count = mountainArrayCount
 # Add wireframe modifier
 wireframedMountains = mountains.modifiers.new("wireframeArray", "WIREFRAME")
 wireframedMountains.use_replace = False
-wireframeThickness = round((0.002 + (0.022-0.002)*random.random()), 7)#limit to 7 digit decimal prescesion
+wireframeThickness = round((0.002 + (0.023-0.002)*random.random()), 7)#limit to 7 digit decimal prescesion
 wireframedMountains.thickness = wireframeThickness
 materialOffsetInt = random.randint(0, 7) #0 creates a moonlit scene :)
 wireframedMountains.material_offset = materialOffsetInt

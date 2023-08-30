@@ -79,19 +79,19 @@ outTxtFile.write("wrgb:" + str(randr) +"," + str(randg) + "," + str(randb) + "\n
 bpy.context.scene.eevee.taa_render_samples = 64
 # Ambient Occlusions
 bpy.context.scene.eevee.use_gtao = True
-bpy.context.scene.eevee.gtao_distance = 1500
+bpy.context.scene.eevee.gtao_distance = 1667
 bpy.context.scene.eevee.gtao_quality = 0.86
 
 # Bloom
 bpy.context.scene.eevee.use_bloom = True
 # Subsurface Scattering
-bpy.context.scene.eevee.sss_jitter_threshold = 0.8
+bpy.context.scene.eevee.sss_jitter_threshold = 0.67
 # Screen Space Reflections
 bpy.context.scene.eevee.use_ssr = True
 bpy.context.scene.eevee.use_ssr_refraction = True
 # Volumetrics
 bpy.context.scene.eevee.use_volumetric_lights = True
-bpy.context.scene.eevee.volumetric_end = 1500
+bpy.context.scene.eevee.volumetric_end = 1667
 bpy.context.scene.eevee.use_volumetric_shadows = True
 # Hair
 bpy.context.scene.render.hair_type = 'STRAND'

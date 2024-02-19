@@ -2,12 +2,13 @@
 
 #########################################
 #setup ~/Art dir and art cmd-line alias #
+#note: does not setup git repo			#
 #########################################
 realpath() {
     [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
 }
 relative_path=$(realpath "$0")
-INIT_SETUP_PATH=$(dirname $relative_path)"/../.."
+INIT_SETUP_PATH=$(dirname $relative_path)"/.."
 cd $INIT_SETUP_PATH
 INIT_SETUP_PATH=$(pwd)
 echo "INIT_SETUP_PATH="$INIT_SETUP_PATH
@@ -22,9 +23,11 @@ ART_DIR_PATH=$home_path"/Art/BL/art-from-code"
 ################
 if [ ! -d $ART_DIR_PATH ];
 	then
-	    echo "Setting up art-from-code @ $ART_DIR_PATH"
+	  echo "Setting up art-from-code @ $ART_DIR_PATH"
       mkdir -p $ART_DIR_PATH
-      cp -a $INIT_SETUP_PATH"/art-from-code/*" $INIT_SETUP_PATH"/art-from-code/.*" $ART_DIR_PATH
+      cp -a $INIT_SETUP_PATH/* $ART_DIR_PATH/
+      echo "cp -a $INIT_SETUP_PATH/* $ART_DIR_PATH/"
+      #cp -a $INIT_SETUP_PATH/.* $ART_DIR_PATH/
 
 	else
     echo "The art-from-code dir already exists @ $ART_DIR_PATH"

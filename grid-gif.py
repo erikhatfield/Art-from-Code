@@ -20,9 +20,9 @@ import sys
 import os
 
 # Animation timeline
-scene_frame_start = 25
+scene_frame_start = 20
 scene_frame_end = 1000
-scene_frame_step = 25
+scene_frame_step = 20
 bpy.context.scene.frame_start = scene_frame_start
 bpy.context.scene.frame_end = scene_frame_end
 bpy.context.scene.frame_step = scene_frame_step

@@ -261,7 +261,7 @@ def printCharacterLine(numberOf,character,strOut):
 if minimalModeEnabled == True:
     randomrange = 2
 else:
-    randomrange = random.randint(2, 22) #upper bounds of this range can generate heavy files (1GB) when combined with applied modifiers
+    randomrange = random.randint(3, 14) #upper bounds of this range can generate heavy files (1GB) when combined with applied modifiers
     LCD1_MSG = printCharacterLine((randomrange-1), "____", LCD1_MSG)
     LCD1_MSG = printCharacterLine((randomrange-1), "▓▓▓▓", LCD1_MSG)
     LCD1_MSG = printCharacterLine((randomrange-1), "- - ", LCD1_MSG)
@@ -401,7 +401,8 @@ randb = 0.000007 + (0.09-0.000007)*random.random()
 #mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[0].default_value = (randr, randg, randb, 1)
 #Use random floats on subsurface color, the base color recieves input from magic texture
 mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[1].default_value = 0.007 + (1.0-0.007)*random.random() #subsurface
-mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[3].default_value = (randr, randg, randb, 1)
+#0 was 3???
+mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[0].default_value = (randr, randg, randb, 1)
 bpy.context.object.active_material.diffuse_color = (randr, randg, randb, 1) # set material zcolor of viewport + workbench => same as subsurface
 mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[4].default_value = ((random.randint(5, 8)) * 0.111)
 mountainBaseMat.node_tree.nodes["Principled BSDF"].inputs[5].default_value = ((random.randint(2, 8)) * 0.111) #specular
@@ -800,9 +801,20 @@ renderedFilepath = "//../output/temp_grid_" + renderedFilepathTimeStamp + "-out"
 bpy.context.scene.render.filepath = renderedFilepath
 
 # if animation, render mp4
-isANIM = False
+try:
+    argv[0]
+    if argv[0] == "anim":
+        print("isANIM = True => rendering as mp4")
+        isANIM = True
+    else:
+        isANIM = False
+except IndexError:
+    isANIM = False
+
 
 if isANIM == True:
+    bpy.context.scene.render.resolution_x = 1920
+    bpy.context.scene.render.resolution_y = 1080
     bpy.context.scene.render.image_settings.file_format = 'FFMPEG'
     bpy.context.scene.render.ffmpeg.format = 'MPEG4'
     ##Render the default render (same as fan-F12 only better)

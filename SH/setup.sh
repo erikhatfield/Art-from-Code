@@ -8,8 +8,9 @@ realpath() {
 }
 relative_path=$(realpath "$0")
 INIT_SETUP_PATH=$(dirname $relative_path)"/../.."
-
-cd $INIT_SETUP_PATH && pwd
+cd $INIT_SETUP_PATH
+INIT_SETUP_PATH=$(pwd)
+echo "INIT_SETUP_PATH="$INIT_SETUP_PATH
 
 #store username in variable for dynamicness. $id -un <=> $whoami
 whoamilol="$(id -un)"

@@ -2,7 +2,7 @@
 
 #########################################
 #setup ~/Art dir and art cmd-line alias #
-#note: does not setup git repo			#
+#note: does not setup git repo		#
 #########################################
 realpath() {
     [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"

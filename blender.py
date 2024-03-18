@@ -2,6 +2,7 @@
 import bpy
 import mathutils
 import math
+import random
 
 # using python to operate Blender has several key objectives
 # 0 # document what I learn without having to document anything
@@ -23,9 +24,10 @@ import math
 # Remove everything to start:
 def sceneClean():
     for o in bpy.context.scene.objects:
-        if o.name == 'Unicorn':
+        if o.name == 'Leprechaun':
             o.select_set(False)
         else:
+            #otherwise select set for deletion
             o.select_set(True)
     # Call the operator only once (best-practice practice?)
     bpy.ops.object.delete()
@@ -153,7 +155,12 @@ class LiquidCrystalDisplay:
             matColor = (0, 1, 1, 1)
             mat.node_tree.nodes.get("Principled BSDF").inputs[0].default_value = matColor # base color
             mat.node_tree.nodes.get("Principled BSDF").inputs[7].default_value = 0 # roughness
-            mat.node_tree.nodes.get("Principled BSDF").inputs[17].default_value = matColor # emission color
+            #mat.node_tree.nodes.get("Principled BSDF").inputs[17].default_value = matColor # emission color
+            #####previous blender versions had slightly different node_tree.node mappings...
+            #mat.node_tree.nodes.get("Principled BSDF").inputs[19].default_value = matColor # emission color
+            mat.node_tree.nodes.get("Principled BSDF").inputs[19].default_value = (0.0811477, 1, 0, 1)
+            bpy.data.materials["defaultTextLCD"].node_tree.nodes["Principled BSDF"].inputs[20].default_value = 4
+
             mat.node_tree.nodes.get("Principled BSDF").inputs[18].default_value = 4.0 # emission strength
             # set viewport display settings
             mat.diffuse_color = matColor
@@ -171,7 +178,15 @@ class LiquidCrystalDisplay:
 lcd1 = LiquidCrystalDisplay()
 lcd2 = LiquidCrystalDisplay()
 
-lcd2.textObj.data.body = str(lcd2.textObj.data.body) + "w00000\n"
+#randomDirectional is either left (-1), center (0), or right (+1)
+randomDirectional = random.randint(1, 2) - random.randint(1, 2)
+lcd2.textObj.data.body = str(lcd2.textObj.data.body) + "LINE BREAK \n \n #randomDirectional is either left (-1), center (0), or right (+1)\n \n generated randomDirectional => " + str(randomDirectional) 
+randomDirectional = random.randint(1, 2) - random.randint(1, 2)
+lcd2.textObj.data.body = str(lcd2.textObj.data.body) + "\n generated randomDirectional => " + str(randomDirectional) 
+randomDirectional = random.randint(1, 2) - random.randint(1, 2)
+lcd2.textObj.data.body = str(lcd2.textObj.data.body) + "\n generated randomDirectional => " + str(randomDirectional) 
+
+
 lcd2.backLitPlane.location = [0,2,0]
 
 lcd1.backLitPlane.location = [0,-2,0]

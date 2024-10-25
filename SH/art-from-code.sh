@@ -10,7 +10,7 @@ relative_path=$(realpath "$0")
 ART_FROM_CODE_DIRPATH=$(dirname $relative_path)"/.."
 
 #ART_FROM_CODE_DIRPATH=~/Art/BL/art-from-code
-BLENDER_PATH="~/Applications/Blender.app/Contents/MacOS/Blender"
+BLENDER_PATH="/Applications/Blender.app/Contents/MacOS/Blender"
 ######################################################################################
 #blender version? 3 is good. ... blender 4 rearranged some material values so it hangs
 eval $BLENDER_PATH -v
@@ -23,7 +23,15 @@ if [ "$2" == "gif" ]; then
 fi
 cd $ART_FROM_CODE_DIRPATH
 
-git pull https://github.com/erikhatfield/Art-from-Code.git
+###########################################################################
+#check if command-line tools are setup (for git) otherwise skip git portion
+if type xcode-select >&- && xpath=$( xcode-select --print-path ) &&
+   test -d "${xpath}" && test -x "${xpath}" ; then
+   git pull https://github.com/erikhatfield/Art-from-Code.git
+else
+   echo "command-line tools not installed, skipping % git"
+fi
+###########################################################################
 
 # make dir for text output if doesnt exist
 mkdir -p $ART_FROM_CODE_DIRPATH/output/temp_settings_txt/

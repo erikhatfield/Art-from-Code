@@ -366,7 +366,7 @@ wireframedMountains.material_offset = materialOffsetInt
 ##%%##%%##%%##%%##%%##%%# # # # # # # # # # # # # # # # # # # #
 ####WRITE##TO##TEXTFILE##wireframe thickness and material offset
 ####outTxtFile.write("wThick:" + str(wireframeThickness) + "\n")
-outTxtFile.write("mOffset:" + str(materialOffsetInt) + "\n")
+####outTxtFile.write("mOffset:" + str(materialOffsetInt) + "\n")
 
 # Apply wireframeArray modifier here for a different material application
 #bpy.ops.object.modifier_apply(modifier="mountainMirror")

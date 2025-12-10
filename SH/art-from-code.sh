@@ -34,7 +34,7 @@ fi
 ###########################################################################
 
 # make dir for text output if doesnt exist
-mkdir -p $ART_FROM_CODE_DIRPATH/output/temp_settings_txt/
+####mkdir -p $ART_FROM_CODE_DIRPATH/output/temp_settings_txt/
 
 ########################################################################
 #remants of the past, sir. consider smurfing

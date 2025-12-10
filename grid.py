@@ -35,9 +35,9 @@ LCD0_MSG = LCD0_MSG + "\n:: init_timestamp = " + str(init_timestamp) + "\n"
 print("\n"+LCD0_MSG+"\n")
 # time stamp used for output graphics file and text file
 renderedFilepathTimeStamp = now.strftime('%m%d%y_%H%M')
-# implement a render settings file out/in method
-renderedSettingsFilepath = "./output/temp_settings_txt/grid_settings_" + renderedFilepathTimeStamp + ".txt"
-outTxtFile = open(renderedSettingsFilepath,'w')  #write, read or append the file 'w', 'r' or 'a' respectively
+#### # implement a render settings file out/in method
+####renderedSettingsFilepath = "./output/temp_settings_txt/grid_settings_" + renderedFilepathTimeStamp + ".txt"
+####outTxtFile = open(renderedSettingsFilepath,'w')  #write, read or append the file 'w', 'r' or 'a' respectively
 # Set some manual parameters:
 minimalModeEnabled = False
 # Remove all objects
@@ -72,7 +72,7 @@ bpy.data.worlds["World"].node_tree.nodes["Background"].inputs[1].default_value =
 bpy.context.scene.world.color = (randr, randg, randb)
 ##%%##%%##%%##%%##%%##%%# # # # # # # # # # # # # # # # #
 ####WRITE##TO##TEXTFILE##worldRGB//world background color
-outTxtFile.write("wrgb:" + str(randr) +"," + str(randg) + "," + str(randb) + "\n")
+####outTxtFile.write("wrgb:" + str(randr) +"," + str(randg) + "," + str(randb) + "\n")
 #########
 #########################
 # EEVEE RENDER SETTINGS #
@@ -365,7 +365,7 @@ materialOffsetInt = random.randint(0, 7) #0 creates a moonlit scene :)
 wireframedMountains.material_offset = materialOffsetInt
 ##%%##%%##%%##%%##%%##%%# # # # # # # # # # # # # # # # # # # #
 ####WRITE##TO##TEXTFILE##wireframe thickness and material offset
-outTxtFile.write("wThick:" + str(wireframeThickness) + "\n")
+####outTxtFile.write("wThick:" + str(wireframeThickness) + "\n")
 outTxtFile.write("mOffset:" + str(materialOffsetInt) + "\n")
 
 # Apply wireframeArray modifier here for a different material application
@@ -773,7 +773,7 @@ countLCD = cockpitLCD(countLCD,.67,-.137,-.18,.32,-.32,.01,LCD1_MSG,text01Locati
 
 ###############################
 ####CLOSE##SETTINGS##TEXTFILE##
-outTxtFile.close()#############
+####outTxtFile.close()#############
 ###############################
 
 ###################################################################
